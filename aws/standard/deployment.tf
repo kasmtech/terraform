@@ -17,7 +17,6 @@ module "standard" {
   ec2_ami               = "ami-0747bdcabd34c712a"
 
 
-  s3_unique_id          = "f3g2dc"
   ssh_access_cidr        = "0.0.0.0/0"
   database_password     = "changeme"
   redis_password        = "changeme"

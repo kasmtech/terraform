@@ -1,5 +1,5 @@
 resource "aws_vpc" "kasm-default-vpc" {
-  cidr_block = "10.${var.master_subnet_id}.0.0/16"
+  cidr_block = "10.0.0.0/16"
   tags = {
     Name = "${var.project_name}-kasm-db-vpc"
   }
@@ -19,4 +19,7 @@ resource "aws_route" "internet_access" {
 }
 
 
+output "primary_vpc_id" {
+  value = "${aws_vpc.kasm-default-vpc.id}"
+}
 

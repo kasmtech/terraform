@@ -30,7 +30,6 @@ resource "aws_security_group" "kasm-webapp-sg" {
   description = "Allow access to webapps"
   vpc_id      = "${aws_vpc.kasm-default-vpc.id}"
 
-  # SSH access from bastion
   ingress {
     from_port   = 22
     to_port     = 22
@@ -38,7 +37,6 @@ resource "aws_security_group" "kasm-webapp-sg" {
     cidr_blocks = ["${var.ssh_access_cidr}"]
   }
 
-  # Allow HTTPS only from the load balancer
   ingress {
     from_port   = 443
     to_port     = 443
@@ -46,7 +44,6 @@ resource "aws_security_group" "kasm-webapp-sg" {
     security_groups = ["${aws_security_group.kasm-default-elb-sg.id}"]
   }
 
-  # Allow direct HTTP connections via Agents
   ingress {
     from_port   = 443
     to_port     = 443
@@ -54,7 +51,6 @@ resource "aws_security_group" "kasm-webapp-sg" {
     cidr_blocks = ["${aws_subnet.kasm-agent-subnet.cidr_block}"]
   }
 
-  # outbound internet access
   egress {
     from_port   = 0
     to_port     = 0
@@ -73,7 +69,6 @@ resource "aws_security_group" "kasm-agent-sg" {
   description = "Allow access to agents"
   vpc_id      = "${aws_vpc.kasm-default-vpc.id}"
 
-  # SSH access from bastion
   ingress {
     from_port   = 22
     to_port     = 22
@@ -88,7 +83,6 @@ resource "aws_security_group" "kasm-agent-sg" {
     cidr_blocks = ["${aws_subnet.kasm-webapp-subnet.cidr_block}", "${aws_subnet.kasm-webapp-subnet-2.cidr_block}" ]
   }
 
-  # outbound internet access
   egress {
     from_port   = 0
     to_port     = 0
@@ -104,7 +98,6 @@ resource "aws_security_group" "kasm-db-sg" {
   description = "Allow access to webapps"
   vpc_id      = "${aws_vpc.kasm-default-vpc.id}"
 
-  # SSH access from bastion
   ingress {
     from_port   = 22
     to_port     = 22
@@ -112,7 +105,6 @@ resource "aws_security_group" "kasm-db-sg" {
     cidr_blocks = ["${var.ssh_access_cidr}"]
   }
 
-  # Allow HTTPS only from the load balancer
   ingress {
     from_port   = 5432
     to_port     = 5432
@@ -120,7 +112,6 @@ resource "aws_security_group" "kasm-db-sg" {
     cidr_blocks = ["${aws_subnet.kasm-webapp-subnet.cidr_block}"]
   }
 
-  # Allow direct HTTP connections via Agents
   ingress {
     from_port   = 6379
     to_port     = 6379
@@ -128,7 +119,6 @@ resource "aws_security_group" "kasm-db-sg" {
     cidr_blocks = ["${aws_subnet.kasm-webapp-subnet.cidr_block}"]
   }
 
-  # outbound internet access
   egress {
     from_port   = 0
     to_port     = 0

@@ -1,14 +1,14 @@
 resource "aws_vpc" "kasm-default-vpc" {
-  cidr_block = "10.${var.master_subnet_id}.0.0/16"
+  cidr_block = "10.0.0.0/16"
   tags = {
-    Name = "${var.project_name}-kasm-db-vpc"
+    Name = "${var.project_name}-${var.zone_name}-kasm-vpc"
   }
 }
 
 resource "aws_internet_gateway" "kasm-default-ig" {
   vpc_id = "${aws_vpc.kasm-default-vpc.id}"
   tags = {
-    Name = "${var.project_name}-kasm-ig"
+    Name = "${var.project_name}-${var.zone_name}-kasm-ig"
   }
 }
 
@@ -17,6 +17,3 @@ resource "aws_route" "internet_access" {
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = "${aws_internet_gateway.kasm-default-ig.id}"
 }
-
-
-

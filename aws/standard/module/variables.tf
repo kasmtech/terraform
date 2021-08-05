@@ -36,7 +36,7 @@ variable "num_webapps" {
 
 variable "webapp_instance_type" {
   default     = "t3.small"
-  description = "The instance type for the Agents"
+  description = "The instance type for the webapps"
 }
 
 
@@ -61,11 +61,6 @@ variable "ec2_ami" {
 
 variable "kasm_build" {
   description = "The URL for the Kasm Workspaces build"
-}
-
-variable "s3_unique_id" {
-  default     = "4id0"
-  description = "A unique id to give to the S3 buckets so they are globally unique"
 }
 
 variable "master_subnet_id" {
