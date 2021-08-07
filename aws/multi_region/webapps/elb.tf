@@ -1,13 +1,40 @@
-data "aws_route53_zone" "kasm-route53-zone" {
-  name         =  "${var.aws_domain_name}"
+resource "aws_security_group" "kasm-default-elb-sg" {
+  name        = "${var.project_name}-${var.zone_name}-kasm-allow-elb-access"
+  description = "Security Group for ELB"
+  vpc_id      = "${var.primary_vpc_id}"
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${var.project_name}-${var.zone_name}-kasm-allow-access"
+  }
 }
 
 resource "aws_s3_bucket" "kasm-s3-logs" {
   bucket_prefix = "${var.project_name}-${var.zone_name}-"
   acl    = "private"
   force_destroy = true
-}
 
+}
 
 resource "aws_s3_bucket_policy" "kasm-s3-logs-policy" {
   bucket = aws_s3_bucket.kasm-s3-logs.id
@@ -35,15 +62,15 @@ POLICY
 
 }
 
+
 data "aws_elb_service_account" "main" {}
 
-
 resource "aws_lb" "kasm-alb" {
-  name               = "${var.project_name}-lb"
+  name               = "${var.project_name}-${var.zone_name}-kasm-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = ["${aws_security_group.kasm-default-elb-sg.id}"]
-  subnets            = ["${aws_subnet.kasm-webapp-subnet.id}", "${aws_subnet.kasm-webapp-subnet-2.id}"]
+  subnets            = ["${var.webapp_subnet_id_1}", "${var.webapp_subnet_id_2}"]
 
   access_logs {
     bucket  = "${aws_s3_bucket.kasm-s3-logs.bucket}"
@@ -52,10 +79,10 @@ resource "aws_lb" "kasm-alb" {
 }
 
 resource "aws_lb_target_group" "kasm-target-group" {
-  name     = "${var.project_name}-target-group"
+  name     = "${var.project_name}-${var.zone_name}-tg"
   port     = 443
   protocol = "HTTPS"
-  vpc_id   = "${aws_vpc.kasm-default-vpc.id}"
+  vpc_id   = "${var.primary_vpc_id}"
 
   health_check {
     path                = "/api/__healthcheck"
@@ -64,20 +91,22 @@ resource "aws_lb_target_group" "kasm-target-group" {
   }
 }
 
+data "aws_route53_zone" "kasm-route53-zone" {
+  name         =  "${var.aws_domain_name}"
+  private_zone = false
+}
 
 resource "aws_lb_listener" "kasm-alb-listener" {
   load_balancer_arn = aws_lb.kasm-alb.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   =  "${aws_acm_certificate_validation.kasm-elb-certificate-validation.certificate_arn}"
+  certificate_arn   =  "${var.certificate_arn}"
 
-   default_action {
+  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.kasm-target-group.arn
   }
 }
-
-
 
 resource "aws_lb_target_group_attachment" "kasm-target-group-attachment" {
   count            = "${var.num_webapps}"
@@ -85,6 +114,9 @@ resource "aws_lb_target_group_attachment" "kasm-target-group-attachment" {
   target_id        = aws_instance.kasm-web-app[count.index].id
   port             = 443
 }
+
+
+
 
 resource "aws_route53_record" "kasm-route53-elb-record" {
   zone_id = data.aws_route53_zone.kasm-route53-zone.zone_id
@@ -112,7 +144,7 @@ resource "aws_route53_record" "kasm-app-url" {
   }
 
   latency_routing_policy {
-    region = "${var.aws_region}"
+    region = "${var.faux_aws_region}"
   }
 }
 

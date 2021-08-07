@@ -5,4 +5,5 @@ Administators should review the projects and add additional customizations and s
 
 
 # AWS
-- [Multi-Serrver Single Region](aws/standard/README.md)
+- [Multi-Server Single Region](aws/standard/README.md)
+- [Multi-Region](aws/multi_region/README.md)
