@@ -1,4 +1,4 @@
-# OPC Single Server
+# OCI Single Server
 This project will deploy Kasm Workspaces in a single-server deployment in OCI.
 
 
