@@ -16,7 +16,7 @@ Consider creating a new Compartment for the Kasm Workspaces deployment.
 In OCI create a public DNS zone that matches the desired domain name for the deployment. e.g `kasm.contoso.com`.
 
 ### API Keys
-Create an administative user the OCI console that will be used for the terraform deployment. Add the user to the
+Create an administative user in the OCI console that will be used for the terraform deployment. Add the user to the
 **Administrators** Group. Generate an API Key for the user. The API Key Fingerprint will be used as a variable
 in the deployment configuration. Save the private key to the local directory replacing `oci-private-key.pem`.
 
