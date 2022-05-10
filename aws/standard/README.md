@@ -41,7 +41,7 @@ can be found in `module/variables.tf`
 
 4. Deploy
 
-       terraform deploy
+       terraform apply
 
 
 5. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`
