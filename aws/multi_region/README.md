@@ -53,7 +53,7 @@ can be found in `<module-name>/variables.tf`
 
 5. Deploy
 
-       terraform deploy
+       terraform apply
 
 
 6. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`
