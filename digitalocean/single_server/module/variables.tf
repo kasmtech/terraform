@@ -43,3 +43,7 @@ variable swap_size {
   description = "The amount of swap (in MB) to configure inside the compute instances"
   default = 2048
 }
+
+variable vpc_uuid {
+  description = "The UUID of the VPC to deploy the kasm server into"
+}

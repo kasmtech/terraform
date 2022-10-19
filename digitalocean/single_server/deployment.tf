@@ -16,4 +16,5 @@ module "kasm" {
   admin_password              = "changeme"
   allow_ssh_cidrs             = ["0.0.0.0/0"]
   ssh_key_fingerprints        = []
+  vpc_uuid                    = ""
 }

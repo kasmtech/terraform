@@ -13,6 +13,7 @@ resource "digitalocean_droplet" "kasm-server" {
   image              = "${var.digital_ocean_image}"
   region             = "${var.digital_ocean_region}"
   size               = "${var.digital_ocean_droplet_slug}"
+  vpc_uuid           = "${var.vpc_uuid}"
   private_networking = false
   backups            = false
   ipv6               = false
