@@ -39,7 +39,7 @@ variable "manager_token" {
 }
 
 variable "kasm_build" {
-  default = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.9.0.077388.tar.gz"
+  default = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"
 }
 
 variable "ssh_access_cidr" {

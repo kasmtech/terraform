@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -e
+KASM_VERSION="1.12.0"
+KASM_INSTALL_BASE="/opt/kasm/${KASM_VERSION}"
+DATABASE_HOSTNAME='false'
+DATABASE_PASSWORD=''
+DATABASE_PORT='5432'
+DATABASE_SSL='false'
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
+function display_help() {
+   echo "Usage: ${0}"
+   echo "-h Display this help menu"
+   echo "-a Activation key path"
+   echo "-v Verbose output"
+
+}
+
+while getopts 'vihs:t:T:q:Q:a:' flag; do
+  case "${flag}" in
+    h)
+        display_help
+        exit 0
+        ;;
+    v)
+        set -x
+        ;;
+    q)
+        DATABASE_HOSTNAME=$OPTARG
+        ;;
+    Q)
+        DATABASE_PASSWORD=$OPTARG
+        ;;
+    T)
+        DATABASE_PORT=$OPTARG
+        ;;
+    t)
+        DATABASE_SSL=$OPTARG
+        ;;
+    a)
+        ACTIVATION_KEY_FILE=$(readlink -f ${OPTARG})
+        ACTIVATION_KEY_FILE_NAME=$(basename ${ACTIVATION_KEY_FILE})
+        if [ ! -f "$ACTIVATION_KEY_FILE" ]; then
+            echo "FATAL: Activation key file does not exist: ${ACTIVATION_KEY_FILE}"
+            exit 1
+        fi
+        echo "Setting activation key file as ${ACTIVATION_KEY_FILE}"
+        ;;
+    *)
+        echo "Unexpected option ${flag}"
+        display_help
+        ;;
+  esac
+done
+
+if [ -z "${ACTIVATION_KEY_FILE}" ]; then
+    echo "Error -  No activation key file specified ! "
+    echo ""
+    display_help
+    exit 1
+fi
+
+export KASM_UID=$(id kasm -u)
+export KASM_GID=$(id kasm -g)
+
+pushd ${KASM_INSTALL_BASE}/docker > /dev/null
+docker compose stop
+if [ "$DATABASE_HOSTNAME" == 'false' ] ; then
+
+    docker compose up -d db --wait
+
+fi
+docker compose  -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api.yaml run -v ${ACTIVATION_KEY_FILE}:/tmp/${ACTIVATION_KEY_FILE_NAME} --rm --entrypoint "/usr/bin/kasm_server.so --cfg /opt/kasm/current/conf/app/api.app.config.yaml --activation-key-file /tmp/${ACTIVATION_KEY_FILE_NAME}" kasm_api 2>&1 | grep -v UserWarning
+docker compose stop

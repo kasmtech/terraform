@@ -1,0 +1,8 @@
+connection_proxies:
+  kasm-guac:
+    connection_proxy_id: "157481f7-9f84-4527-8ea2-6889c6442045"
+    server_address: "APIHOSTNAME"
+    server_port: 443
+    connection_proxy_type: RDP
+    auth_token: GUACTOKEN
+    zone_name: default

@@ -1,0 +1,299 @@
+KASM WORKSPACES END USER LICENSE AGREEMENT 
+
+BY DOWNLOADING, INSTALLING, OR USING THE SOFTWARE, YOU AGREE TO THE TERMS OF 
+THIS END USER LICENSE AGREEMENT (“EULA”). IF YOU DO NOT AGREE TO THESE TERMS, YOU 
+MUST NOT DOWNLOAD, INSTALL, OR USE THE SOFTWARE, AND YOU MUST DELETE THE 
+SOFTWARE AND REQUEST A REFUND OF THE LICENSE FEE. 
+
+1. DEFINITIONS 
+
+1.1.  “Documentation” means that documentation that is generally provided to You by Kasm 
+Technologies with the Software and which may include end user manuals, operation instructions, 
+installation guides, release notes, and on-line help files regarding the use of the Software. 
+
+1.2.  “Kasm Technologies” means Kasm Technologies Inc, a Virginia corporation, located at 1765 
+Greensboro Station Place STE 900, MCLEAN, VA 22102.  
+
+1.3.  “License” means a license granted under Section 2.1 (General License Grant).  
+
+1.4.  “Open-Source Software” or “OSS” means software components embedded in the Software 
+and provided under separate license terms, which can be found in the open_source_licenses.txt file 
+provided within the Software. 
+
+1.5.  “Order” means a purchase order, enterprise license agreement, or other ordering document 
+issued by You to Kasm Technologies or a Kasm Technologies authorized reseller that references and 
+incorporates this EULA and is accepted by Kasm Technologies. No Orders are binding on Kasm 
+Technologies until accepted by Kasm Technologies. 
+
+1.6.  “Software” means the Kasm Technologies computer programs to which You acquire a license 
+under an Order, together with any software code pursuant to a support and/or subscription service 
+contract and that is not subject to a separate license agreement.  
+
+1.7.  “You” means the individual, company or other legal entity using the software. 
+
+2. LICENSE GRANT 
+
+2.1.  General License Grant. Kasm Technologies grants to You a non-exclusive, non-transferable  
+license to use the Software and Documentation for the duration of the license solely for Your 
+business operations, and subject to the provisions of your Order, Documentation and related support 
+agreements. 
+
+2.2. Community Edition Restrictions. The Community Edition of the Kasm Workspaces license is 
+restricted to the following usage and may not be used for revenue-generating business activities. 
+Notwithstanding any other provision in this EULA, the Community Edition License of the Software is 
+provided “AS-IS” without indemnification, support or warranty of any kind, expressed or implied. 
+
+2.2.1.  Evaluation. Temporary usage of the Software to validate business requirements. 
+
+2.2.2.  Personal/Home. For use by an individual/household for personal, non-business activities.  
+
+2.2.3.  Non-Profit. For use by non-profit organizations or researchers.  
+
+2.3.  Software Support and Subscriptions. Except as expressly specified in your software Order, 
+Kasm Technologies does not provide any support or subscription services for the Software under this 
+EULA. You have no rights to any updates, upgrades or extensions or enhancements to the Software 
+developed by Kasm Technologies other than those defined in a separate software license Order. 
+
+2.4.  Software Updates. The Software may be updated with enhancements or improvements to the 
+features/functionality, which may include patches, bug fixes, updates, upgrades and other 
+modifications. Updates may modify or delete certain features and/or functionalities of the Software. 
+You agree that Kasm Technologies has no obligation to (i) provide any Updates, or (ii) continue to 
+provide Software features and/or functionalities. 
+
+2.5.  Third Party Agents. Under the License You may permit Your third-party agents to access, use 
+and/or operate the Software on Your behalf for the sole purpose of delivering services to You, 
+provided that You will be fully responsible for compliance with terms and conditions of this EULA and 
+any breach of this EULA by a third-party agent shall be deemed to be a breach by You.  
+
+2.6.  Open-Source Software. Notwithstanding anything herein to the contrary, Open-Source 
+Software is licensed to You under such OSS’s own applicable license terms. These OSS license 
+terms are consistent with the license granted in this Section. The OSS license terms shall take 
+precedence over this EULA to the extent that this EULA imposes greater restrictions on You than the 
+applicable OSS license terms. To the extent the license for any Open-Source Software requires 
+Kasm Technologies to make available to You the corresponding source code and/or modifications, 
+You may obtain a copy of the applicable Source Files.  
+
+3. RESTRICTIONS OF OWNERSHIP 
+
+3.1.  License Restrictions. Without Kasm Technologies’ prior written consent, You must not, and 
+must not allow any third-party to: (a) use Software in an application services provider except that You 
+may use the Software to deliver hosted services to Your affiliates; (b) make available Software in any 
+form to anyone other than Your employees, except as specified in Section 2.5 (Third Party Agents); 
+(c) transfer or sublicense Software or Documentation to an affiliate or any third party; (d) use 
+Software in conflict with the terms and restrictions of the Software’s licensing model and other 
+requirements specified in Documentation and/or Order; (e) except to the extent permitted by 
+applicable mandatory law, modify, translate, enhance, or create derivative works from the Software, 
+or reverse engineer, decompile, or otherwise attempt to derive source code from the Software; or (f) 
+violate or circumvent any technological restrictions within the Software or specified in this EULA.  
+
+3.2.  Ownership. The Software and Documentation and all improvements, enhancements, 
+modifications and derivative works thereof, and all Intellectual Property Rights therein, are and shall 
+remain the sole and exclusive property of Kasm Technologies. Intellectual property rights, including 
+without limitation, copyrights, trademarks, service marks, trade secrets, know how, inventions, 
+patents, patent applications, moral rights and all other proprietary rights, whether registered or 
+unregistered. Your rights to use the Software and Documentation shall be limited to those expressly 
+granted in this EULA and any applicable Order. No other rights with respect to the Software or any 
+related Intellectual Property Rights are implied. You are not authorized to use (and shall not permit 
+any third party to use) the Software, Documentation or any portion thereof except as expressly 
+authorized by this EULA or the applicable Order. Kasm Technologies reserves all rights not expressly 
+granted to You. 
+
+3.3. Third Party Software. You acknowledge that You are responsible for obtaining and complying 
+with any licenses necessary to integrate, orchestrate or access all third-party software used within the 
+Software.
+
+3.4. Software Feedback. Feedback, bug reports, enhancements or recommendations provided by
+You to Kasm Technologies for the purpose of improving the Software shall become exclusively 
+owned by Kasm Technologies and may be used/redistributed without compensation to the source of 
+the submission. 
+
+4. CONTENT AND USAGE 
+
+4.1.  Software Usage Responsibility. Kasm Technologies is not responsible for the information, 
+content and activities of the Software users. You understand and agree that You are solely 
+responsible for the content and for all activity that occurs under your Software, whether done so by 
+You or any third person. 
+
+4.2.  Content and Usage Disclaimer. Kasm Technologies does not control or restrict content or 
+activities by users and/or third parties within the Software, you agree to use the Software at your own 
+risk. You agree that under no circumstances will Kasm Technologies be liable in any way for any 
+content within the Software, activities performed using the Software, or any loss or damage incurred 
+as a result of your use of the Software. 
+
+5. WARRANTIES 
+
+5.1.  Software Warranty, Duration and Remedy. Kasm Technologies warrants to You that the 
+Software will, for a period of ninety (90) days following notice of availability for electronic download or 
+delivery (“Warranty Period”), substantially conform to the applicable Documentation, provided that 
+the Software: (a) has been properly installed and used at all times in accordance with the applicable 
+Documentation; and (b) has not been modified or added to by persons other than Kasm Technologies 
+or its authorized representative. Kasm Technologies will provide remedy for any breach of this 
+warranty, either replace that Software or correct any reproducible error in that Software reported to 
+Kasm Technologies by You in writing during the Warranty Period. If Kasm Technologies determines 
+that it is unable to correct the error or replace the Software, Kasm Technologies will refund to You the 
+amount paid by You for that Software, in which case the License for that Software will terminate.  
+
+5.2.  Software Disclaimer of Warranty. Other than the warranty above, and to the maximum extent 
+permitted by applicable law, Kasm Technologies and its suppliers make no other express warranties 
+or guarantees under this EULA, and disclaim all implied warranties of merchantability, fitness for a 
+particular purpose, title and non-infringement, and any warranty arising by statute, operation of law, 
+course of dealing or performance, or usage of trade. Kasm technologies and its licensors do not 
+warrant that the software will operate uninterrupted or that it will be free from defects or that it will 
+meet your requirements. 
+
+6. INTELLECTUAL PROPERTY INDEMNIFICATION 
+
+6.1.  Defense and Indemnification. Kasm Technologies shall defend You against any third party 
+claim that the Software infringes any patent, trademark or copyright of such third party, or 
+misappropriates a trade secret (but only to the extent that the misappropriation is not a result of Your 
+actions) and indemnify You from the resulting costs and damages finally awarded against You to 
+such third party by a court of competent jurisdiction or agreed to in settlement. The foregoing 
+obligations are applicable only if You: (i) promptly notify Kasm Technologies in writing of the 
+Infringement Claim; (ii) allow Kasm Technologies sole control over the defense for the claim, any 
+settlement negotiations and any related action challenging the validity of the allegedly infringed 
+patent, trademark, or copyright; and (iii) reasonably cooperate in response to Kasm Technologies 
+requests for assistance. You may not settle or compromise any Infringement Claim without the prior 
+written consent of Kasm Technologies.  
+
+6.2.  Remedies. If the alleged infringing Software become, or in Kasm Technologies’ opinion be likely 
+to become, the subject of an Infringement Claim, Kasm Technologies will, at Kasm Technologies’ 
+option and expense, do one of the following: (a) procure the rights necessary for You to make 
+continued use of the affected Software; (b) replace or modify the affected Software to make it non-
+infringing; or (c) terminate the License to the affected Software and discontinue the related support 
+services, and, upon Your certified deletion of the affected Software, refund: (i) the fees paid by You 
+for the License to the affected Software, less straight-line depreciation over a three (3) year useful life 
+beginning on the date such Software was delivered; and (ii) any pre-paid service fee attributable to 
+related support services to be delivered after the date such service is stopped.  
+
+6.3.  Exclusions. Notwithstanding the foregoing, Kasm Technologies will have no obligation under 
+this Section 8 (Intellectual Property Indemnification) or otherwise with respect to any claim based on: 
+(a) a combination of Software with non-Kasm Technologies products (other than non-Kasm 
+Technologies products that are listed on the Order and used in an unmodified form); (b) use for a 
+purpose or in a manner for which the Software was not designed; (c) use of any older version of the 
+Software when use of a newer Kasm Technologies version would have avoided the infringement; (d) 
+any modification to the Software made without Kasm Technologies’ express written approval; (e) any 
+claim that relates to open source software or freeware technology or any derivatives or other 
+adaptations thereof that is not embedded by Kasm Technologies into Software; or (f) any Software 
+provided on a no charge or evaluation basis. This Section 8 (intellectual property indemnification) 
+states your sole and exclusive remedy and Kasm Technologies’ entire liability for any infringement 
+claims or actions.  
+
+7. LIMITATION OF LIABILITY 
+
+7.1.  Limitation of Liability. To the maximum extent mandated by law, in no event will Kasm 
+Technologies and its licensors be liable for any lost profits or business opportunities, loss of use, loss 
+of revenue, loss of goodwill, business interruption, loss of data, or any indirect, special, incidental, or 
+consequential damages under any theory of liability, whether based in contract, tort, negligence, 
+product liability, or otherwise. Because some jurisdictions do not allow the exclusion or limitation of 
+liability for consequential or incidental damages, the preceding limitation may not apply to you. Kasm 
+Technologies’ and its licensors’ liability under this EULA will not, in any event, regardless of whether 
+the claim is based in contract, tort, strict liability, or otherwise, exceed the greater of the license fees 
+you paid for the software giving rise to the claim or $100. The foregoing limitations shall apply 
+regardless of whether Kasm Technologies or its licensors have been advised of the possibility of such 
+damages and regardless of whether any remedy fails of its essential purpose. You may not bring a 
+claim under this EULA more than twelve (12) months after the cause of action arises. 
+
+7.2.  Indemnification. You agree to indemnify and hold Kasm Technologies and its parents, 
+subsidiaries, affiliates, officers, employees, agents, partners and licensors (if any) harmless from any 
+claim or demand, including reasonable attorneys' fees, due to or arising out of your: (a) use of the 
+Software; (b) violation of this agreement or any law or regulation; or (c) violation of any right of a third 
+party. 
+
+8. TERMINATION.  
+
+8.1.  EULA Term. The term of this EULA begins on the notice of availability for electronic download 
+or delivery of the Software and continues until this EULA is terminated.  
+
+8.2.  Termination for Breach. Kasm Technologies may terminate this EULA effective immediately 
+upon written notice to You if: (a) You fail to pay any portion of the fees under an applicable Order 
+within ten (10) days after receiving written notice from Kasm Technologies that payment is past due; 
+or (b) You breach any other provision of this EULA and fail to cure within thirty (30) days after receipt 
+of Kasm Technologies’ written notice thereof.  
+
+8.3.  Termination for Insolvency. Kasm Technologies may terminate this EULA effective 
+immediately upon written notice to You if You: (a) terminate or suspend your business; (b) become 
+insolvent; or become subject to control of a trustee or similar authority; or (c) become subject to a 
+bankruptcy or insolvency proceeding.  
+
+8.4.  Effect of Termination. Upon Kasm Technologies’ termination of this EULA: (a) all Licensed 
+rights to all Software granted to You under this EULA will immediately cease; and (b) You must cease 
+all use of all Software, and certify destruction of all Software, confidential information, and license 
+keys. 
+
+9. CONFIDENTIAL INFORMATION 
+
+9.1.  “Confidential Information” means information or materials provided by one party (“Discloser”) 
+to the other party (“Recipient”) which are in tangible form and labelled “confidential” or the like, or, 
+information which a reasonable person knew or should have known to be confidential. The following 
+information shall be considered Confidential Information whether or not marked or identified as such: 
+(a) license keys; (b) information regarding Kasm Technologies’ pricing, product roadmaps or strategic 
+marketing plans; and (c) non-public materials relating to the Software.  
+
+9.2.  Protection. Recipient may use Confidential Information of Discloser; (a) to exercise its rights 
+and perform its obligations under this EULA; or (b) in connection with the parties’ ongoing business 
+relationship. Recipient will not use any Confidential Information of Discloser for any purpose not 
+expressly permitted by this EULA and will disclose the Confidential Information of Discloser only to 
+the employees or contractors of Recipient who have a need to know such Confidential Information for 
+purposes of this EULA and who are under a duty of confidentiality no less restrictive than Recipient’s 
+duty hereunder. Recipient will protect Confidential Information from unauthorized use, access, or 
+disclosure in the same manner as Recipient protects its own confidential or proprietary information of 
+a similar nature but with no less than reasonable care.  
+
+9.3. Data Privacy. You agree that Kasm Technologies may process technical and related information 
+about Your use of the Software which may include internet protocol address, hardware identification, 
+operating system, application software, peripheral hardware, and non-personally identifiable Software 
+usage statistics to facilitate the provisioning of updates, support, invoicing or online services. 
+
+10. GENERAL 
+
+10.1.  Transfers & Assignment. Except to the extent transfer may not legally be restricted, You will 
+not assign this EULA, any Order, or any right or obligation herein or delegate any performance 
+without Kasm Technologies’ prior written consent, which consent will not be unreasonably withheld. 
+Kasm Technologies may use sufficiently qualified subcontractors to provide services to You, provided 
+that Kasm Technologies remains responsible to You for the performance of the services.  
+
+10.2.  Waiver. The failure to exercise a right or to require performance of an obligation under this 
+Agreement shall not effect a party's ability to exercise such right or require such performance at any 
+time thereafter nor shall be the waiver of a breach constitute a waiver of any subsequent breach.  
+
+10.3.  Severability. If any provision of this Agreement is held to be unenforceable or invalid, such 
+provision will be changed and interpreted to accomplish the objectives of such provision to the 
+greatest extent possible under applicable law and the remaining provisions will continue in full force 
+and effect.  
+
+10.4.  Compliance with Laws; Export Control; Government Regulations. Each party shall comply 
+with all laws applicable to the actions contemplated by this EULA. You acknowledge that the Software 
+is of United States origin, is provided subject to the U.S. Export Administration Regulations, may 
+be subject to the export control laws of the applicable territory, and that diversion contrary to applicable 
+export control laws is prohibited. You represent that (1) you are not, and are not acting on behalf of, 
+(a) any person who is a citizen, national, or resident of, or who is controlled by the government of any 
+country to which the United States has prohibited export transactions; or (b) any person or entity 
+listed on the U.S. Treasury Department list of Specially Designated Nationals and Blocked Persons, 
+or the U.S. Commerce Department Denied Persons List or Entity List; and (2) you will not permit the 
+Software to be used for, any purposes prohibited by law, including, any prohibited development, 
+design, manufacture or production of missiles or nuclear, chemical or biological weapons. The 
+Software and accompanying documentation are deemed to be “commercial computer software” and 
+“commercial computer software documentation”, respectively, pursuant to DFARS Section 227.7202 
+and FAR Section 12.212(b), as applicable. Any use, modification, reproduction, release, performing, 
+displaying or disclosing of the Software and documentation by or for the U.S. Government shall be 
+governed solely by the terms and conditions of this EULA.  
+
+10.5.  Governing Law. This EULA is governed by the laws of the State of Virginia, United States of 
+America (excluding its conflict of law rules), and the federal laws of the United States. The state and 
+federal courts located in Virginia will be the exclusive jurisdiction for disputes. 
+
+10.6.  Order of Precedence. In the event of conflict or inconsistency among this EULA and the 
+Order, the terms of this EULA shall supersede and control over any conflicting or additional terms and 
+conditions of any order, acknowledgement or confirmation or other document issued by You.  
+
+10.7. Entire Agreement. This EULA, including accepted Orders and any amendments, contain the 
+entire agreement of the parties with respect to this EULA and supersede all previous or 
+contemporaneous communications, representations, proposals, commitments, understandings and 
+agreements, whether written or oral, between the parties. 
+
+10.8. Contact Information. Please direct legal notices or other correspondence to: 
+contracts@kasmweb.com 
+Kasm Technologies 
+1765 Greensboro Station Place STE 900 
+McLean, Virginia 22102 
+United States of America 

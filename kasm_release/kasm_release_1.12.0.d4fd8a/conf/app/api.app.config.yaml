@@ -1,0 +1,293 @@
+database:
+  name: kasm
+  username: kasmapp
+  password: changeme
+  host: db
+  port: 5432
+  type: postgres
+  ssl: true
+redis:
+  host: kasm_redis
+  port: 6379
+  redis_password: changeme
+logging:
+  agent:
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname) %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/agent.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      file_handler_json:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/agent_json.log
+        formatter: pythonjsonlogger
+        level: DEBUG
+        maxBytes: 10485760
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: INFO
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        - file_handler
+        - file_handler_json
+        level: DEBUG
+        propagate: true
+    version: 1
+  kasm_share:
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname) %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/share.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      file_handler_json:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/share_json.log
+        formatter: pythonjsonlogger
+        level: DEBUG
+        maxBytes: 10485760
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: DEBUG
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        - file_handler
+        - file_handler_json
+        level: DEBUG
+        propagate: true
+      tornado.application:
+        level: DEBUG
+      tornado.access:
+        level: DEBUG
+      tornado.general:
+        level: DEBUG
+    version: 1
+  manager_api_server:
+    filters:
+      internal_log_filter:
+        (): log.handlers.InternalLogFilter
+      web_filter_log_filter:
+        (): log.handlers.ExternalLogFilter
+        application: 'kasm_squid_adapter'
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname) %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/manager_api_server.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+        filters: [ internal_log_filter ]
+      file_handler_json:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/manager_api_server_json.log
+        formatter: pythonjsonlogger
+        level: DEBUG
+        maxBytes: 10485760
+        filters: [ internal_log_filter ]
+      web_filter_file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/web_filter_access_json.log
+        level: DEBUG
+        maxBytes: 10485760
+        filters: [ web_filter_log_filter ]
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: INFO
+        filters: [ internal_log_filter ]
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+        filters: [ internal_log_filter ]
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        - file_handler
+        - file_handler_json
+        - web_filter_file_handler
+        level: DEBUG
+        propagate: true
+      __main__.handler:
+        level: DEBUG
+      googleapiclient.discovery_cache:
+        level: ERROR
+      provider_manager:
+        level: DEBUG
+      provider:
+        level: DEBUG
+      tornado:
+        level: INFO
+      sqlalchemy.pool:
+        level: WARNING
+      sqlalchemy.engine:
+        level: WARNING
+      sqlalchemy.dialects:
+        level: WARNING
+      sqlalchemy.orm:
+        level: WARNING
+      botocore:
+        level: WARNING
+      azure:
+        level: WARNING
+    version: 1
+  api_server:
+    filters:
+      request_context_filter:
+        (): utils.RequestContextFilter
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname) %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/api_server.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      file_handler_json:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/api_server_json.log
+        formatter: pythonjsonlogger
+        level: DEBUG
+        maxBytes: 10485760
+        filters: [request_context_filter]
+      subscription_file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/subscription_api_server.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      admin_file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/admin_api_server.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      client_file_handler:
+        backupCount: 20
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/client_api_server.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: DEBUG
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        - file_handler
+        - file_handler_json
+        level: DEBUG
+        propagate: true
+      client_api_server:
+        handlers:
+          - client_file_handler
+      admin_api_server:
+        handlers:
+          - admin_file_handler
+      subscription_api_server:
+        handlers:
+          - subscription_file_handler
+      cherrypy.error:
+        level: INFO
+      cherrypy.access:
+        level: INFO
+      sqlalchemy.pool:
+        level: WARNING
+      sqlalchemy.engine:
+        level: WARNING
+      sqlalchemy.dialects:
+        level: WARNING
+      sqlalchemy.orm:
+        level: WARNING
+      requests_oauthlib:
+        level: INFO
+    version: 1
+manager:
+  manager_id: null
+  update_timer: 86400
+server:
+  server_id: null
+  server_hostname: null
+  zone_name: default
+  sanitize_errors: true
+share:
+  share_id: null

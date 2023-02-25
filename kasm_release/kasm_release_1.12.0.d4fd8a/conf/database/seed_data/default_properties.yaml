@@ -1,0 +1,571 @@
+global_settings:
+  logging:
+    log_protocol:
+      title: Log Protocol
+      value: internal
+      value_type: string
+      restart: manager,api
+      description: The logging protocol used, allowed values are internal, https, splunk, and elasticsearch
+    log_port:
+      title: Log Port
+      value: 443
+      value_type: int
+      restart: manager,api
+      description: The port to use for logging communication.
+    log_host:
+      title: Log Host
+      value: None
+      value_type: string
+      restart: manager,api
+      description: The hostname or IP address of the remote logging server, not applicable for internal logging.
+    hec_token:
+      title: Splunk HEC Token
+      value: None
+      value_type: password
+      restart: manager,api
+      description: The Splunk HEC token used for authentication of logs to a Splunk server.
+      sanitize: true
+    https_insecure:
+      title: Disable Log Certificate Validation
+      value: true
+      value_type: bool
+      restart: manager,api
+      description: Set to true if the remote logging server does not have a valid signed cert by a public certificate authority.
+    http_method:
+      title: HTTP Method
+      value: post
+      value_type: string
+      restart: manager,api
+      description: HTTP method to use, valid values are post and put. Splunk uses POST while ElasticSearch API uses PUT
+    url_endpoint:
+      title: URL Endpoint
+      value: /services/collector/event
+      value_type: string
+      restart: manager,api
+      description: The Splunk endpoint, most likely /service/collector/event. For ElasticSearch it would be index/_doc/.
+    log_retention:
+      title: Log Retention
+      value: 7
+      value_type: int
+      description: "Number of days to retain local Kasm logs. WARNING - See Kasm documentation before adjusting."
+    debug_retention:
+      title: Debug Log Retention
+      value: 4
+      value_type: int
+      description: "Number of hours to retain local Kasm debug logs. WARNING - See Kasm documentation before adjusting."
+    minimize_local_logging:
+      title: Minimize Local logging
+      value: false
+      value_type: bool
+      restart: manager
+      description: "When using a remote logging solution like Splunk, minimize local database logging for better scalability."
+  auth:
+    anonymous_user_expiration:
+      title: Anonymous User Expiration (hours)
+      value: 0
+      value_type: float
+      description: If configured, anonymous user accounts will be automatically deleted after this amount of time specified in hours.
+    notice_message:
+      value:
+      value_type: multiline_string
+      title: Notice Message
+      description: Login notice banner message.
+    notice_title:
+      value: Notice
+      value_type: string
+      title: Notice Title
+      description: Login notice title.
+    login_assistance:
+      value:
+      title: Login Assistance
+      value_type: String
+      description: Enables a Login Assitance link on the login page to the entered URL. Not shown if value is empty.
+    enable_kasm_auth:
+      title: Enable Kasm Authorization
+      value: true
+      value_type: bool
+      description: Require client requests to the Kasm for content such as downloads and uploads to be authenticated with the user's current session token.
+    kasm_auth_domain:
+      title: Kasm Authorization Domain
+      value: $request_host$
+      value_type: string
+      description: Override the domain used in the Kasm session cookie.
+    max_login_attempts:
+      title: Max Login Attempts
+      name: max_login_attempts
+      value: 5
+      value_type: int
+      description: The number of invalid login attempts before an account is locked out. This setting only applies to local accounts.
+    same_site:
+      title: Same Site Cookie Policy
+      value: Lax
+      value_type: string
+      description: Configures the SameSite attribute for the Set-Cookie HTTP response headers. Valid options are Lax, Strict and None.
+      restart: api
+    session_lifetime:
+      title: Session Lifetime
+      value: 288000
+      value_type: int
+      description: The number of seconds a session token is valid for.
+    api_private_key:
+      title: API Private Key
+      value: <gen_rsa_private_key>
+      value_type: multiline_string
+      description: Private Key used to sign request between Kasm components. 
+      sanitize: true
+    api_public_cert:
+      title: API Public Cert
+      value: <rsa_public_key>
+      value_type: multiline_string
+      description: Public key used by Kasm components to validate internal API calls.
+    registration_token:
+      title: Component Registration Token
+      value: default-registration-token
+      value_type: password
+      description: Token used to self-register new components to the deployment.
+  cast:
+    google_recaptcha_api_url:
+      title: Google reCAPTCHA API URL
+      value: https://www.google.com/recaptcha/api/siteverify
+      value_type: string
+      description: Google reCAPTCHA API URL.
+    google_recaptcha_priv_key:
+      title: Google reCAPTCHA Private Key
+      value: changeme
+      value_type: password
+      description: Google reCAPTCHA Private Key.
+      sanitize: true
+    google_recaptcha_site_key:
+      title: Google reCAPTCHA Site Key
+      value: changeme
+      value_type: string
+      description: Google reCAPTCHA Site Key.
+  manager:
+    update_check:
+      title: Update Check
+      value: true
+      value_type: bool
+      description: This Setting will stop the manager from checking for Kasm system updates.
+    agent_version:
+      title: Agent Version
+      value: 1
+      value_type: string
+      description: This setting is used to restrict which versions of the Kasm Agent are allowed to communicate with the Manager.
+    primary_manager_timeout:
+      title: Primary Manager Timeout
+      restart: manager
+      value: 600
+      value_type: int
+      description: The number of seconds until the primary manager is considered unavailable. If other managers are alive one will take over the primary role.
+    same_zone_reply:
+      title: Same Zone Reply
+      restart: manager
+      value: true
+      value_type: bool
+      description: If set to true, a manager will only reply to agent heartbeats with a list of managers in the same zone as itself. Otherwise a list of all managers is given. This allows Agents to failover to managers in other zones.
+    token:
+      title: Token
+      restart: manager
+      value: default-manager-token
+      value_type: password
+      description: An authentication token used the communication between Kasm Agents and the Manager API server.
+    manager_expiration:
+      title: Manager Expiration
+      restart: manager
+      value: 0
+      value_type: int
+      description: The number of seconds until the manager is considered permantly unavaiable, at which time the manager record will be removed from the database. A value of 0 disables the expiration check.
+  scale:
+    guardian_interval:
+      title: Guardian Interval
+      value: 15
+      value_type: int
+      description: The number of seconds between the Manager API inspection of existing Agent, and Kasm availability.
+    guardian_provision_threads:
+      title: Guardian Provision Threads
+      value: 10
+      value_type: int
+      description: The number of threads the Manager API server uses for teardown and provision tasks.
+    host_dead_expiration:
+      title: Host Dead Expiration
+      value: 240
+      value_type: int
+      description: The number of seconds since an Agent's last check-in before marking it as dead. Dead servers are automatically destroyed if they were dynamically provisioned.
+    host_missing_expiration:
+      title: Host Missing Expiration
+      value: 120
+      value_type: int
+      description: The number of seconds since an Agent's last check-in before marking it as dead.
+    keepalive_expiration:
+      title: Keep Alive Expiration
+      value: 3600
+      value_type: int
+      description: Clients regularly send keepalive requests when logged into a Kasm. This value is the number of seconds a Kasm will remain active after the last keepalive is received.
+    provision_timeout:
+      title: Provision Timeout
+      value: 300
+      value_type: int
+      description: The maximum amount of time to wait for auto-scaled VMs to check-in and become available. After this time is exceeded, the VM is automatically destroyed.
+    auto_agent:
+      title: Automatically Enable Agents
+      value: false
+      value_type: bool
+      description: Automatically enable an agent when it calls in.
+    forward_inter_zone_agent_requests:
+      title: Forward Inter-Zone Agent Requests
+      value: false
+      value_type: bool
+      description: When contacting Agents in a different zone, forward requests through the alternate Zone's proxy address.
+  images:
+    add_images_to_default_group:
+      title: Add Images to Default Group
+      value: true
+      value_type: bool
+      description: Automatically add images to default group when new images are added.
+    default_cpu_allocation_method:
+      title: Default CPU Allocation Method
+      value: Shares
+      value_type: string
+      description: Sets the default cpu allocation strategy for container images. Valid options are Quotas or Shares.
+  theme:
+    launcher_background_url:
+      title: Launcher Background URL
+      value: img/backgrounds/background1.jpg
+      value_type: string
+      description: Url used to specify the background image for the launcher.
+  web_filter:
+    web_filter_update_url:
+      title: Web Filter Update URL
+      value: https://filter.kasmweb.com
+      value_type: string
+      description: Url used to updated the Web Filter Categorization database
+      restart: api
+  licensing:
+      license_server_url:
+        title: License Server URL
+        value: https://license.kasmweb.com
+        value_type: string
+        description: The URL to the Kasm Licensing Server.
+  connections:
+    default_vm_connection_settings:
+      title: Default VM Connection Settings
+      value: |
+        {
+          "guac": {
+            "type": "rdp",
+            "settings": {
+              "security": "any",
+              "ignore-cert": true,
+              "enable-font-smoothing": true,
+              "enable-wallpaper": true,
+              "enable-theming": true,
+              "enable-full-window-drag": false,
+              "enable-menu-animations": false,
+              "resize-method": "display-update",
+              "server-layout": "en-us-qwerty"
+            }
+          },
+          "kasm_svc": {
+            "port": 4902
+          }
+        }
+      value_type: json
+      description: Default connection settings for VM sessions.
+      restart: api
+
+group_settings:
+  administrator:
+    description: Allows users to see and edit all attributes of the Kasm application.
+    value: 'False'
+    value_type: bool
+  allow_kasm_audio:
+    description: Allow audio streaming for a Kasm.
+    value: 'False'
+    value_type: bool
+  allow_kasm_microphone:
+    description: Allow microphone passthrough to a Kasm.
+    value: 'False'
+    value_type: bool
+  allow_kasm_gamepad:
+    description: Allow gamepad passthrough to a Kasm.
+    value: 'False'
+    value_type: bool
+  allow_kasm_clipboard_down:
+    description: Allows users to paste text from the Kasm to their local computer.
+    value: 'False'
+    value_type: bool
+  allow_kasm_clipboard_seamless:
+    description: Allows users to copy and paste text without using Kasm control panel.
+    value: 'False'
+    value_type: bool
+  allow_kasm_clipboard_up:
+    description: Allow users to paste from their local computer to the Kasm.
+    value: 'False'
+    value_type: bool
+  allow_kasm_downloads:
+    description: Allow users to download files from a Kasm.
+    value: 'False'
+    value_type: bool
+  allow_kasm_uploads:
+    description: Allow users to upload files to a Kasm.
+    value: 'False'
+    value_type: bool
+  allow_persistent_profile:
+    description: Allow the use of persistent profiles if configured on the Kasm Image.
+    value: 'True'
+    value_type: bool
+  allow_kasm_sharing:
+    description: Allow the user to share access to Kasms with other users.
+    value: 'False'
+    value_type: bool
+  allow_zone_selection:
+    description: Allow the user to specify the deployment Zone for applicable Images.
+    value: 'False'
+    value_type: bool
+  display_ui_errors:
+    description: Display detailed errors to the user if the UI experiences an unexpected error.
+    value: 'False'
+    value_type: bool
+  enable_ui_server_logging:
+    description: When enabled, the UI will send log messages to the server.
+    value: 'True'
+    value_type: bool
+  expose_user_environment_vars:
+    description: Expose KASM_USER and KASM_USER_ID environment variables inside the Kasm.
+    value: 'False'
+    value_type: bool
+  dashboard_redirect:
+    description: If configured, the user will be redirected to this URL instead of the main dashboard.
+    value: ''
+    value_type: string
+  idle_disconnect:
+    description: Disconnect the Kasm connection if idle for this long. Time specified in minutes.
+    value: '20'
+    value_type: float
+  inject_ssh_keys:
+    description: Automatically inject SSH public and private keys into Kasm sessions.
+    value: "False"
+    value_type: bool
+  kasm_audio_default_on:
+    description: Default to audio enabled on Kasm start
+    value: 'False'
+    value_type: bool
+  keepalive_expiration:
+    description: The number of seconds a Kasm will stay alive unless a keeplive request is sent from the client.
+    value: '3600'
+    value_type: int
+  max_kasms_per_user:
+    description: The maximum number of simultaneous Kasms a users is allowed to provision.
+    value: '5'
+    value_type: int
+  enable_webp:
+    description: Enable webp image compression for compatible browsers. This will increase server side processing requirements but cut bandwidth by 30 percent.
+    value: 'False'
+    value_type: bool
+  run_config:
+    description: Specify arbitrary docker run params.
+    value: '{}'
+    value_type: json
+  default_image:
+    description: Sets the Default image for the /go route. Will automatically provision this kasm image.
+    value: ''
+    value_type: image
+  enable_totp_two_factor:
+    description: "Enables two factor authentication for group. Users will be prompted to set Key on next log on."
+    value: 'False'
+    value_type: bool
+  session_time_limit:
+     description: "If enabled, sessions are limited to the defined value in seconds."
+     value: 0
+     value_type: int
+  shared_session_full_control:
+    description: When enabled, all users that join a shared session will have the ability to control the session.
+    value: 'False'
+    value_type: bool
+  show_disabled_images:
+    description: When enabled, Images that have been disabled by the administator will be visible to the user.
+    value: 'False'
+    value_type: bool
+  require_subscription:
+    description: When enabled, a user must be subscribed to a plan to utilize the system.
+    value: 'False'
+    value_type: bool
+  disabled_image_message:
+    description: This message is displayed to the user when an images is currently disabled.
+    value: ''
+    value_type: string
+  kasm_ime_mode_default_on:
+    description: Enable IME mode by default.
+    value: 'False'
+    value_type: bool
+  volume_mapping:
+    description: "\n        \tMap a local server directory to kasm. The format is\
+      \ in json. \n        \tExample: {\"/data/departments/sales\": {\"bind\": \"\
+      /headless/documents/sales\", \"mode\": \"rw\"} \n        \tThis example mounts\
+      \ a directory on the local server, /data/department/sales to the container \n\
+      \        \tat the location /shares/sales with read and write permissions. \n\
+      \        \tIn order for the user in the Kasm to have write permissions on the\
+      \ mount the permissions \n        \ton the server must allow read, write, execute\
+      \ for ALL users. This is because the \n        \tuser running inside the Kasm\
+      \ is not a valid user on the server.\n        \t"
+    value: "{\"/mnt/kasm_shared/data\":{\"bind\":\"/share\",\"mode\":\"rw\",\"uid\":1000,\"gid\":1000,\"required\":true,\"skip_check\":false},\"/mnt/kasm_shared/profiles\":{\"bind\":\"/profiles\",\"mode\":\"rw\",\"uid\":1000,\"gid\":1000,\"required\":true,\"skip_check\":false}}"
+    value_type: json
+  auto_login_to_kasm:
+    description: Sends users directly to kasm using default image after login
+    value: 'False'
+    value_type: bool
+  chat_history_messages:
+    description: The number of chat history messages to show when a new user connects to a shared Kasm. Set this value to 0 to disable showing chat history.
+    value: 0
+    value_type: int
+  lock_sharing_video_mode:
+    description: Locks video quality to static resolution of 720p when sharing is enabled. Recomended for best performance.
+    value: 'True'
+    value_type: bool
+  keepalive_interval:
+    description: When connected to a session, the client will send a keepalive request to the server at this interval (defined in seconds) to extend the expiration of the session.
+    value: 300
+    value_type: int
+  usage_limit:
+    description: "Enable usage limits for the group. \
+      \n Specify a Type, Interval and number of Hours to set limit.\
+      \n Type is either per_user or per_group. \
+      \n Interval is one of Daily, Weekly, Monthly, or Total.\
+      \n Hours is a positive number of hours for the limit cap."
+    value: '{}'
+    value_type: usage_limit
+  web_filter_policy:
+    description: Sets the Web Filter Policy to be applied.
+    value: ''
+    value_type: filter_policy
+  metadata:
+    description: Arbitrary metadata for the group.
+    value: '{}'
+    value_type: json
+  password_expires:
+    description: The number of days a password is valid for, after which the user will be required to change their password. A value of 0 disables password expiration.
+    value: 0
+    value_type: int
+  control_panel.show_delete_session:
+    value: 'True'
+    value_type: bool
+    description: Display delete Kasm session option on the Kasm session control panel
+  control_panel.show_return_to_workspaces:
+    value: 'True'
+    value_type: bool
+    description: Display return to workspaces option on the Kasm session  control panel
+  control_panel.show_logout:
+    value: 'True'
+    value_type: bool
+    description: Display logout option on Kasm session control panel
+  control_panel.show_streaming_quality:
+    value: 'True'
+    value_type: bool
+    description: Display logout option on Kasm session control panel
+  control_panel.advanced_settings.show_prefer_local_cursor:
+    value: 'True'
+    value_type: bool
+    description: Display prefer local cursor option on Kasm session control panel
+  control_panel.advanced_settings.show_keyboard_controls:
+    value: 'True'
+    value_type: bool
+    description: Display show keyboard controls on Kasm session control panel
+  control_panel.advanced_settings.show_ime_input_mode:
+    value: 'True'
+    value_type: bool
+    description: Display IME input mode on Kasm session control panel
+  control_panel.advanced_settings.show_game_mode:
+    value: 'True'
+    value_type: bool
+    description: Display game mode on Kasm session control panel
+  control_panel.advanced_settings.show_pointer_lock:
+    value: 'True'
+    value_type: bool
+    description: Display pointer lock on Kasm session control panel
+groups:
+  All Users:
+    description: "Default Users Group: All users are members of this group"
+    is_system: true
+    priority: 1000
+    group_id: 68d557ac-4cac-42cc-a9f3-1c7c853de0f3
+    settings:
+      allow_kasm_audio:
+        value: 'True'
+      allow_kasm_microphone:
+        value: 'True'
+      allow_kasm_gamepad:
+        value: 'False'
+      allow_kasm_clipboard_down:
+        value: 'True'
+      allow_kasm_clipboard_seamless:
+        value: 'True'
+      allow_kasm_clipboard_up:
+        value: 'True'
+      allow_kasm_downloads:
+        value: 'True'
+      allow_kasm_uploads:
+        value: 'True'
+      allow_persistent_profile:
+        value: 'True'
+      allow_kasm_sharing:
+        value: 'True'
+      idle_disconnect:
+        value: '20'
+      kasm_audio_default_on:
+        value: 'True'
+      keepalive_expiration:
+        value: '3600'
+      max_kasms_per_user:
+        value: '5'
+      control_panel.show_delete_session:
+        value: 'True'
+      control_panel.show_return_to_workspaces:
+        value: 'True'
+      control_panel.show_logout:
+        value: 'True'
+      control_panel.show_streaming_quality:
+        value: 'True'
+      control_panel.advanced_settings.show_prefer_local_cursor:
+        value: 'True'
+      control_panel.advanced_settings.show_keyboard_controls:
+        value: 'True'
+      control_panel.advanced_settings.show_ime_input_mode:
+        value: 'True'
+      control_panel.advanced_settings.show_game_mode:
+        value: 'True'
+      control_panel.advanced_settings.show_pointer_lock:
+        value: 'True'
+  Administrators:
+    description: Default Administrators Group
+    is_system: true
+    priority: 1
+    settings:
+      administrator:
+        value: 'True'
+      show_disabled_images:
+        value: 'True'
+      disabled_image_message:
+        value: 'This image is currently disabled.'
+users:
+  admin@kasm.local:
+    groups:
+      Administrators: {}
+    password: admin
+    disabled: false
+  user@kasm.local:
+    password: user
+    disabled: false
+zones:
+  default:
+    load_strategy: least_load
+    prioritize_static_agents: true
+    search_alternate_zones: true
+    allow_origin_domain: '$request_host$'
+    upstream_auth_address: '$request_host$'
+    proxy_connections: True
+    proxy_hostname: '$request_host$'
+    proxy_path: desktop
+    proxy_port: 0
+
+
+

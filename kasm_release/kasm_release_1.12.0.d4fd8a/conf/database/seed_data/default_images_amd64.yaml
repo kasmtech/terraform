@@ -1,0 +1,560 @@
+images:
+  Ubuntu Focal:
+    cores: 2.0
+    description: 'Ubuntu is a Linux distribution based on Debian.'
+    docker_registry: https://index.docker.io/v1/
+    docker_registry_username: null
+    docker_registry_password: null
+    enabled: true
+    image_src: img/thumbnails/ubuntu.png
+    add_to_all_users_group: true
+    memory: 2768000000
+    name: kasmweb/ubuntu-focal-desktop:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    x_res: 800
+    y_res: 600
+    categories: '["Desktop", "Productivity", "Development"]'
+    require_gpu: false
+    gpu_count: 0
+    persistent_profile_path: '/mnt/kasm_shared/profiles/ubuntu-focal/{username}'
+    session_time_limit: null
+    volume_mappings: '{ 
+     "/mnt/kasm_shared/data": {
+      "bind":"/share",
+      "mode":"rw",
+      "uid": 1000,
+      "gid": 1000,
+      "required": true,
+      "skip_check": false
+      }
+     }'
+    hash: null
+    hidden: false
+    cpu_allocation_method: Inherit
+  Ubuntu Jammy:
+    description: 'Ubuntu is a Linux distribution based on Debian.'
+    docker_registry: https://index.docker.io/v1/
+    enabled: false
+    image_src: img/thumbnails/ubuntu.png
+    name: kasmweb/ubuntu-jammy-desktop:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/ubuntu-jammy/{username}/'
+    hidden: false
+    notes: |
+      The Kasm Ubuntu Jammy Workspace requires libseccomp => 2.5.3 to run.
+
+      This can be checked by running runc --version
+
+      If you still want to run Ubuntu Jammy but do not have the minimum required libseccomp version, it can be run in an unsecure manner by adding: {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+  CentOS 7:
+    description: 'CentOS is a Linux distribution that provides a free and open-source community-supported computing platform, functionally compatible with its upstream source, Red Hat Enterprise Linux.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/centos-7-desktop:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    image_src: img/thumbnails/centos.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Productivity"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/centos/{username}/'
+    hidden: false
+  Firefox:
+    description: 'Firefox was created by Mozilla as a faster, more private alternative to browsers like Internet Explorer, and now Chrome.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/firefox.png
+    add_to_all_users_group: true
+    name: kasmweb/firefox:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/firefox/{username}/'
+  Chrome:
+    description: 'Google Chrome is a cross-platform web browser developed by Google.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/chrome.png
+    add_to_all_users_group: true
+    name: kasmweb/chrome:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/chrome/{username}/'
+  Chromium:
+    description: 'Chromium is a free and open-source browser, primarily developed and maintained by Google.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/chromium.png
+    add_to_all_users_group: true
+    name: kasmweb/chromium:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/chromium/{username}/'
+  Tor-Browser:
+    description: 'Tor is free and open-source software for enabling anonymous communication by directing Internet traffic through a free, worldwide, volunteer overlay network.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/tor-browser.png
+    add_to_all_users_group: true
+    name: kasmweb/tor-browser:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser", "Privacy"]'
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/tor/{username}/'
+  Terminal:
+    description: 'Xfce Terminal is a lightweight and easy to use terminal emulator application with many advanced features including drop down, tabs, unlimited scrolling, full colors, fonts, transparent backgrounds, and more.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/terminal:1.12.0
+    run_config: '{"hostname": "kasm", "environment":{"TERMINAL_ARGS":"--fullscreen --hide-borders --hide-menubar --zoom=-1 --hide-scrollbar"}}'
+    image_src: img/thumbnails/terminal.png
+    add_to_all_users_group: true
+    persistent_profile_path: '/mnt/kasm_shared/profiles/terminal/{username}/'
+    hidden: false
+  Brave:
+    description: 'The Brave browser is a fast, private and secure web browser.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/brave.png
+    add_to_all_users_group: true
+    name: kasmweb/brave:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/brave/{username}/'
+    hidden: false
+  Edge:
+    description: 'Microsoft Edge is a cross-platform web browser developed by Microsoft.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/edge.png
+    add_to_all_users_group: true
+    name: kasmweb/edge:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/edge/{username}/'
+    hidden: false
+    notes: |
+      The Kasm Edge Workspace requires "seccomp=unconfined" to function properly.
+
+      This can be run in an unsecure manner by adding: {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+  Insomnia:
+    description: 'Insomnia API Design Platform'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/insomnia:1.12.0
+    image_src: img/thumbnails/insomnia.png
+    add_to_all_users_group: true
+    categories: '["Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/insomnia/{username}/'
+    hidden: false
+  Libre Office:
+    description: 'LibreOffice is a free and powerful office suite, and a successor to OpenOffice.org'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/libre-office:1.12.0
+    image_src: img/thumbnails/libre-office.png
+    add_to_all_users_group: true
+    categories: '["Productivity", "Office"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/libre-office/{username}/'
+    hidden: false
+  Postman:
+    description: 'The Collaboration Platform for API Development.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/postman:1.12.0
+    image_src: img/thumbnails/postman.png
+    add_to_all_users_group: true
+    categories: '["Development"]'
+    enabled: false
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/postman/{username}/'
+  Signal:
+    description: 'Chat app supporting end-to-end encryption.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/signal:1.12.0
+    image_src: img/thumbnails/signal.png
+    add_to_all_users_group: true
+    categories: '["Communication", "Chat", "Privacy"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/signal/{username}/'
+    hidden: false
+  Zoom:
+    description: 'Videotelephony and online chat services.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/zoom:1.12.0
+    image_src: img/thumbnails/zoom.png
+    add_to_all_users_group: true
+    categories: '["Communication"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/zoom/{username}/'
+    hidden: false
+  Only Office:
+    description: 'ONLYOFFICE offers a secure online office suite highly compatible with MS Office formats.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/only-office:1.12.0
+    image_src: img/thumbnails/only-office.png
+    add_to_all_users_group: true
+    categories: '["Productivity", "Office"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/only-office/{username}/'
+    hidden: false
+  Teams:
+    description: 'Chat, Meet, Call, and Collaborate.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/teams:1.12.0
+    image_src: img/thumbnails/teams.png
+    add_to_all_users_group: true
+    categories: '["Communication"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/teams/{username}/'
+    hidden: false
+  Visual Studio Code:
+    description: 'Visual Studio Code is a code editor redefined and optimized for building and debugging modern web and cloud applications.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/vs-code:1.12.0
+    image_src: img/thumbnails/vs-code.png
+    add_to_all_users_group: true
+    categories: '["Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/vscode/{username}/'
+    hidden: false
+  Gimp:
+    description: 'GIMP is a cross-platform image editor.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/gimp:1.12.0
+    image_src: img/thumbnails/gimp.png
+    add_to_all_users_group: true
+    categories: '["Multimedia"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/gimp/{username}/'
+    hidden: false
+  Sublime Text:
+    description: 'Sublime Text is a sophisticated text editor for code, markup and prose.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/sublime-text:1.12.0
+    image_src: img/thumbnails/sublime-text.png
+    add_to_all_users_group: true
+    categories: '["Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/sublime/{username}/'
+    hidden: false
+  Discord:
+    description: 'Discord is the easiest way to talk over voice, video, and text. Talk, chat, hang out, and stay close with your friends and communities.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/discord:1.12.0
+    image_src: img/thumbnails/discord.png
+    add_to_all_users_group: true
+    categories: '["Communication", "Games"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/discord/{username}/'
+    hidden: false
+  Remmina:
+    description: 'Remmina is a remote desktop client for POSIX-based computer operating systems. It supports the Remote Desktop Protocol, VNC, NX, XDMCP, SPICE and SSH.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/remmina:1.12.0
+    image_src: img/thumbnails/remmina.png
+    add_to_all_users_group: true
+    categories: '["Productivity", "Remote Access"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/remnina/{username}/'
+    hidden: false
+  VLC:
+    description: 'VLC media player is a free and open-source, portable, cross-platform media player software, and streaming media server.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/vlc:1.12.0
+    image_src: img/thumbnails/vlc.png
+    add_to_all_users_group: true
+    categories: '["Multimedia"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/vlc/{username}/'
+    hidden: false
+  Kali Linux:
+    description: 'Kali Linux is a Debian-derived Linux distribution designed for digital forensics and penetration testing.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/core-kali-rolling:1.12.0
+    image_src: img/thumbnails/kali.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Security", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/kali/{username}/'
+    enabled: false
+    hidden: false
+    notes: |
+      The Kasm Kali Linux Workspace requires libseccomp => 2.5.3 to run.
+
+      This can be checked by running runc --version
+
+      If you still want to run Kali Linux but do not have the minimum required libseccomp version, it can be run in an unsecure manner by adding: {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+  REMnux:
+    description: 'REMnux is a Linux toolkit for reverse-engineering and analyzing malicious software.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/core-remnux-focal:1.12.0
+    image_src: img/thumbnails/remnux.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Security", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/remnux/{username}/'
+    enabled: false
+    hidden: false
+  CUDA Development Toolkit:
+    description: 'The CUDA Toolkit includes GPU-accelerated libraries, a compiler, development tools and the CUDA runtime.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/core-cuda-focal:1.12.0
+    image_src: img/thumbnails/nvidia.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/cuda/{username}/'
+    enabled: false
+    hidden: false
+  Steam:
+    description: 'Steam is the ultimate destination for playing, discussing, and creating games.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/steam:1.12.0
+    image_src: img/thumbnails/steam.png
+    add_to_all_users_group: true
+    persistent_profile_path: '/mnt/kasm_shared/profiles/steam/{username}/'
+    categories: '["Games"]'
+    enabled: false
+    hidden: false
+    notes: |
+      The Kasm Steam Workspace is highly experimental. If the application fails to launch or the steam store fails to render try adding {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+
+      NOTE: 3D acceleration is provided by VirtualGL, if a game fails to run look into specific launch options that might be needed to leverage VirtualGL.
+  Doom:
+    description: 'Doom is a 1993 first-person shooter developed by id Software.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/doom:1.12.0
+    image_src: img/thumbnails/doom.png
+    add_to_all_users_group: true
+    categories: '["Games"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/doom/{username}/'
+    enabled: false
+    hidden: false
+  Telegram:
+    description: 'Telegram is a messaging app with a focus on speed and security.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/telegram:1.12.0
+    image_src: img/thumbnails/telegram.png
+    add_to_all_users_group: true
+    categories: '["Communication"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/telegram/{username}/'
+    hidden: false
+  OpenSUSE Leap 15:
+    description: 'OpenSUSE Leap is a new type of hybrid Linux distribution based on SUSE Linux Enterprise.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/opensuse-15-desktop:1.12.0
+    image_src: img/thumbnails/opensuse.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/open-suse/{username}/'
+    enabled: false
+    hidden: false
+  Oracle Linux 7:
+    description: 'Oracle Linux is a highly performant and secure operating system that provides a 100% application binary compatible alternative to RHEL and CentOS.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/oracle-7-desktop:1.12.0
+    image_src: img/thumbnails/oracle-linux.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Productivity", "Development"]'
+    enabled: false
+    hidden: false
+  Oracle Linux 8:
+    description: 'Oracle Linux is a highly performant and secure operating system that provides a 100% application binary compatible alternative to RHEL and CentOS.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/oracle-8-desktop:1.12.0
+    image_src: img/thumbnails/oracle-linux.png
+    add_to_all_users_group: true
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/ol8/{username}/'
+    enabled: false
+    hidden: false
+  Thunderbird:
+    description: 'A free and open-source cross-platform email client, personal information manager, news client, RSS and chat client.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/thunderbird:1.12.0
+    image_src: img/thumbnails/thunderbird.png
+    add_to_all_users_group: true
+    categories: '["Productivity", "Communication"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/thunderbird/{username}/'
+    enabled: true
+    hidden: false
+  FileZilla:
+    description: 'A free and open-source, cross-platform FTP/FTPS application.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/filezilla:1.12.0
+    image_src: img/thumbnails/filezilla.png
+    add_to_all_users_group: true
+    categories: '["Productivity"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/filezilla/{username}/'
+    enabled: true
+    hidden: false
+  Atom:
+    description: 'A hackable text editor for the 21st Century.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/atom:1.12.0
+    image_src: img/thumbnails/atom.png
+    add_to_all_users_group: true
+    categories: '["Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/hackabletext/{username}/'
+    enabled: false
+    hidden: false
+  Audacity:
+    description: 'An easy-to-use, multi-track audio editor and recorder.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/audacity:1.12.0
+    image_src: img/thumbnails/audacity.png
+    add_to_all_users_group: true
+    categories: '["Multimedia"]'
+    enabled: false
+    hidden: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/audacity/{username}/'
+  Deluge:
+    description: 'A lightweight, Free Software, cross-platform BitTorrent client.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/deluge:1.12.0
+    image_src: img/thumbnails/deluge.png
+    add_to_all_users_group: true
+    categories: '["Productivity"]'
+    enabled: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/deluge/{username}/'
+    hidden: false
+  Inkscape:
+    description: 'A free and open-source vector graphics editor used to create vector images, primarily in Scalable Vector Graphics (SVG) format.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/inkscape:1.12.0
+    image_src: img/thumbnails/inkscape.png
+    add_to_all_users_group: true
+    categories: '["Multimedia"]'
+    enabled: false
+    persistent_profile_path: '/mnt/kasm_shared/profiles/InkScape/{username}/'
+    hidden: false
+  Pinta:
+    description: 'An open-source, cross-platform bitmap image drawing and editing program inspired by Paint.NET.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/pinta:1.12.0
+    image_src: img/thumbnails/pinta.png
+    add_to_all_users_group: true
+    categories: '["Multimedia"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/pinta/{username}/'
+    enabled: false
+    hidden: false
+  qBittorrent:
+    description: 'qBittorrent aims to provide an open-source software alternative to µTorrent.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/qbittorrent:1.12.0
+    image_src: img/thumbnails/qbittorrent.png
+    add_to_all_users_group: true
+    categories: '["Productivity"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/qbittorrent/{username}/'
+    enabled: false
+    hidden: false
+  Blender:
+    description: 'Blender is the Free and Open Source 3D creation suite. It supports the entirety of the 3D pipeline modeling, sculpting, rigging, 3D and 2D animation, simulation, rendering, compositing, motion tracking and video editing.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/blender:1.12.0
+    image_src: img/thumbnails/blender.png
+    add_to_all_users_group: true
+    categories: '["Multimedia", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/blender/{username}/'
+    enabled: false
+    hidden: false
+  Unity Hub:
+    description: 'Unity Hub manages multiple installations of Unity Editor, the world’s most popular development platform for creating 2D and 3D multiplatform games and interactive experiences.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/unityhub:1.12.0
+    image_src: img/thumbnails/unityhub.png
+    add_to_all_users_group: true
+    categories: '["Multimedia", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/unity-hub/{username}/'
+    enabled: false
+    hidden: false
+  Vivaldi:
+    description: 'Vivaldi is a freeware, cross-platform web browser developed by Vivaldi Technologies.'
+    docker_registry: https://index.docker.io/v1/
+    image_src: img/thumbnails/vivaldi.svg
+    add_to_all_users_group: true
+    name: kasmweb/vivaldi:1.12.0
+    run_config: '{"hostname": "kasm"}'
+    exec_config: '{"go":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --go --url \"$KASM_URL\"''"},"assign":{"cmd":"bash -c ''/dockerstartup/custom_startup.sh --assign --url \"$KASM_URL\"''"}}'
+    categories: '["Browser"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/vivaldi/{username}/'
+    enabled: true
+    hidden: false
+  Docker Ubuntu Jammy:
+    description: 'Docker in Docker Desktop image Ubuntu Jammy based.'
+    docker_registry: https://index.docker.io/v1/
+    enabled: false
+    image_src: img/thumbnails/ubuntu.png
+    name: kasmweb/ubuntu-jammy-dind:1.12.0
+    run_config: '{"hostname": "kasm","privileged": true}'
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/docker-ubuntu-jammy/{username}/'
+    hidden: false
+    notes: |
+      The Kasm Docker Ubuntu Jammy Workspace requires libseccomp => 2.5.3 to run.
+
+      This can be checked by running runc --version
+
+      If you still want to run Docker Ubuntu Jammy but do not have the minimum required libseccomp version, it can be run in an unsecure manner by adding: {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+  Docker Rootless Ubuntu Jammy:
+    description: 'Rootless Docker in Docker Desktop image Ubuntu Jammy based.'
+    docker_registry: https://index.docker.io/v1/
+    enabled: false
+    image_src: img/thumbnails/ubuntu.png
+    name: kasmweb/ubuntu-jammy-dind-rootless:1.12.0
+    run_config: '{"hostname": "kasm","privileged": true}'
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/docker-rootless-ubuntu-jammy/{username}/'
+    hidden: false
+    notes: |
+      The Kasm Docker Rootless Ubuntu Jammy Workspace requires libseccomp => 2.5.3 to run.
+
+      This can be checked by running runc --version
+
+      If you still want to run Docker Rootless Ubuntu Jammy but do not have the minimum required libseccomp version, it can be run in an unsecure manner by adding: {"security_opt":["seccomp=unconfined"]} to the Docker Run Config Override (JSON) setting above.
+
+      NOTE: This will run the Workspace without the docker seccomp sandbox and will significantly reduce the amount of protection that Kasm Workspaces can provide.
+  Docker Ubuntu Focal:
+    description: 'Docker in Docker Desktop image Ubuntu Focal based.'
+    docker_registry: https://index.docker.io/v1/
+    enabled: false
+    image_src: img/thumbnails/ubuntu.png
+    name: kasmweb/ubuntu-focal-dind:1.12.0
+    run_config: '{"hostname": "kasm","privileged": true}'
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/docker-ubuntu-focal/{username}/'
+    hidden: false
+  Docker Rootless Ubuntu Focal:
+    description: 'Rootless Docker in Docker Desktop image Ubuntu Focal based.'
+    docker_registry: https://index.docker.io/v1/
+    enabled: false
+    image_src: img/thumbnails/ubuntu.png
+    name: kasmweb/ubuntu-focal-dind-rootless:1.12.0
+    run_config: '{"hostname": "kasm","privileged": true}'
+    categories: '["Desktop", "Productivity", "Development"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/docker-rootless-ubuntu-focal/{username}/'
+    hidden: false
+  RetroArch:
+    description: 'RetroArch is a frontend for emulators, game engines and media players.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/retroarch:1.12.0
+    image_src: img/thumbnails/retroarch.svg
+    add_to_all_users_group: true
+    categories: '["Games"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/RetroArch/{username}/'
+    enabled: false
+    hidden: false
+  Minetest:
+    description: 'An open source voxel game engine.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/minetest:1.12.0
+    image_src: img/thumbnails/minetest.svg
+    add_to_all_users_group: true
+    categories: '["Games"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/MineTest/{username}/'
+    enabled: false
+    hidden: false
+  SuperTuxKart:
+    description: 'SuperTuxKart is a 3D open-source arcade racer with a variety characters, tracks, and modes to play.'
+    docker_registry: https://index.docker.io/v1/
+    name: kasmweb/super-tux-kart:1.12.0
+    image_src: img/thumbnails/super-tux-kart.png
+    add_to_all_users_group: true
+    categories: '["Games"]'
+    persistent_profile_path: '/mnt/kasm_shared/profiles/SuperTuxKart/{username}/'
+    enabled: false
+    hidden: false

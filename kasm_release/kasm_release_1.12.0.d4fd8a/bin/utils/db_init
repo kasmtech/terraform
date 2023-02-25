@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -e
+KASM_VERSION="1.12.0"
+KASM_INSTALL_BASE="/opt/kasm/${KASM_VERSION}"
+DATABASE_HOSTNAME='false'
+DATABASE_PASSWORD=''
+DATABASE_PORT='5432'
+DATABASE_SSL='false'
+ARGS=("$@")
+
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
+function display_help() {
+   CMD='\033[0;31m'
+   NC='\033[0m'
+   echo "Usage IE:"
+   echo "${0} --initialize --seed-file my_seed_file"
+   echo ""
+   echo "Flag                                    Description"
+   echo "-----------------------------------------------------------------------------------------------"
+   echo -e "| ${CMD}-h|--help${NC}              |Display this help menu                                |"
+   echo -e "| ${CMD}-i|--initialize${NC}        |Initialize the database (delete and recreated schema) |"
+   echo -e "| ${CMD}-s|--seed-file${NC}         |Absolute path to the seed file (yaml)                 |"
+   echo -e "| ${CMD}-v|--verbose${NC}           |Verbose output                                        |"
+   echo -e "| ${CMD}-q|--database-hostname${NC} |Database hostname                                     |"
+   echo "-----------------------------------------------------------------------------------------------"
+}
+
+for index in "${!ARGS[@]}"; do
+  case "${ARGS[index]}" in
+    -h|--help)
+        display_help
+        exit 0
+        ;;
+    -s|--seed-file)
+        SEED_FILE="${ARGS[index+1]}"
+        SEED_FILE_NAME=$(basename ${SEED_FILE})
+        echo "Setting Seed file as ${SEED_FILE}"
+        ;;
+    -i|--initialize)
+        INITIALIZE_DATABASE="--initialize-database"
+        ;;
+    -v|--verbose)
+        set -x
+        ;;
+    -q|--database-hostname)
+        DATABASE_HOSTNAME="${ARGS[index+1]}"
+        ;;
+    -Q|--database-password)
+        DATABASE_PASSWORD="${ARGS[index+1]}"
+        ;;
+    -T|--database-port)
+        DATABASE_PORT="${ARGS[index+1]}"
+        ;;
+    -t|--database-ssl)
+        DATABASE_SSL="${ARGS[index+1]}"
+        ;;
+    -*|--*)
+        echo "Unknown option ${ARGS[index]}"
+        display_help
+        exit 1
+        ;;
+  esac
+done
+
+if [ -z "${SEED_FILE}" ]; then
+    echo "Error -  No seed file specified ! "
+    echo ""
+    display_help
+    exit 1
+fi
+
+export KASM_UID=$(id kasm -u)
+export KASM_GID=$(id kasm -g)
+
+pushd ${KASM_INSTALL_BASE}/docker > /dev/null
+
+# local database
+if [ "$DATABASE_HOSTNAME" == 'false' ] ; then
+
+    # TODO Check of the db already exists or not
+    set +e
+    docker compose stop
+    docker kill kasm_db &> /dev/null
+    docker container rm kasm_db &> /dev/null
+    set -e
+
+    if [ ! -z "${INITIALIZE_DATABASE}" ]; then
+        set +e
+        docker volume rm kasm_db_${KASM_VERSION} &> /dev/null
+        set -e
+        docker volume create kasm_db_${KASM_VERSION}
+    fi
+
+    docker compose up -d db --wait
+fi
+
+${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": false}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api.yaml
+docker compose  -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api.yaml run -v ${SEED_FILE}:/tmp/${SEED_FILE_NAME} --rm --entrypoint "/usr/bin/kasm_server.so ${INITIALIZE_DATABASE} --cfg /opt/kasm/current/conf/app/api.app.config.yaml --populate-production --seed-file /tmp/${SEED_FILE_NAME}" kasm_api 2>&1 | grep -v UserWarning
+${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": true}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api.yaml
+docker compose stop
+echo "Database Initialization Complete"
+popd > /dev/null

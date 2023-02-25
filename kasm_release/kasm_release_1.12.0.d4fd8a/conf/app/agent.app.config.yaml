@@ -1,0 +1,78 @@
+agent:
+  default_host_key: 1234
+  heartbeat_interval: 30000
+  images_interval: 3600
+  nginx_container_dir: /etc/nginx/conf.d/containers.d/
+  port: 4444
+  provider: hardware
+  public_hostname: proxy
+  public_port: 443
+  server_id: A0EEBC99-9C0B-4EF8-BB6D-6BB9BD380A11
+  starting_nginx_port: 5971
+  docker_port_listen_addr: 'localhost'
+  type: host
+  validate_images: true
+  auto_generate_kasm_docker_networks: false
+  remove_failed_containers: true
+  log_heartbeat_data: false
+  docker_script_timeout: 180
+  persist_config_updates: true
+  persist_config_interval: 100000
+  log_container_stats: false
+  forward_logs_to_manager: true
+  max_concurrent_docker_pulls: 2
+manager:
+  client_cert: /srv/provision_agent/client_cert.pem
+  heartbeat_path: /manager_api/api/v1/heartbeat
+  images_path: /manager_api/api/v1/images
+  hostnames: ['proxy']
+  public_port: 443
+  scheme: https
+  server_cert: /srv/provision_agent/server_cert.pem
+  token: default-manager-token
+logging:
+  agent:
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname) %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      file_handler:
+        backupCount: 5
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/agent.log
+        formatter: standard
+        level: DEBUG
+        maxBytes: 10485760
+      file_handler_json:
+        backupCount: 5
+        class: logging.handlers.RotatingFileHandler
+        encoding: utf8
+        filename: /opt/kasm/current/log/agent_json.log
+        formatter: pythonjsonlogger
+        level: DEBUG
+        maxBytes: 10485760
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: DEBUG
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        - file_handler
+        - file_handler_json
+        level: DEBUG
+        propagate: true
+      tornado:
+        level: INFO
+    version: 1

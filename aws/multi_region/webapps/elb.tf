@@ -1,7 +1,7 @@
 resource "aws_security_group" "kasm-default-elb-sg" {
   name        = "${var.project_name}-${var.zone_name}-kasm-allow-elb-access"
   description = "Security Group for ELB"
-  vpc_id      = "${var.primary_vpc_id}"
+  vpc_id      = var.primary_vpc_id
 
   ingress {
     from_port   = 443
@@ -30,8 +30,8 @@ resource "aws_security_group" "kasm-default-elb-sg" {
 }
 
 resource "aws_s3_bucket" "kasm-s3-logs" {
-  bucket_prefix = "${var.project_name}-${var.zone_name}-"
-  acl    = "private"
+  bucket_prefix = lower("${var.project_name}-${var.zone_name}-")
+  acl           = "private"
   force_destroy = true
 
 }
@@ -73,7 +73,7 @@ resource "aws_lb" "kasm-alb" {
   subnets            = ["${var.webapp_subnet_id_1}", "${var.webapp_subnet_id_2}"]
 
   access_logs {
-    bucket  = "${aws_s3_bucket.kasm-s3-logs.bucket}"
+    bucket  = aws_s3_bucket.kasm-s3-logs.bucket
     enabled = true
   }
 }
@@ -82,17 +82,17 @@ resource "aws_lb_target_group" "kasm-target-group" {
   name     = "${var.project_name}-${var.zone_name}-tg"
   port     = 443
   protocol = "HTTPS"
-  vpc_id   = "${var.primary_vpc_id}"
+  vpc_id   = var.primary_vpc_id
 
   health_check {
-    path                = "/api/__healthcheck"
-    matcher             = 200
-    protocol            = "HTTPS"
+    path     = "/api/__healthcheck"
+    matcher  = 200
+    protocol = "HTTPS"
   }
 }
 
 data "aws_route53_zone" "kasm-route53-zone" {
-  name         =  "${var.aws_domain_name}"
+  name         = var.aws_domain_name
   private_zone = false
 }
 
@@ -100,7 +100,7 @@ resource "aws_lb_listener" "kasm-alb-listener" {
   load_balancer_arn = aws_lb.kasm-alb.arn
   port              = "443"
   protocol          = "HTTPS"
-  certificate_arn   =  "${var.certificate_arn}"
+  certificate_arn   = var.certificate_arn
 
   default_action {
     type             = "forward"
@@ -109,7 +109,7 @@ resource "aws_lb_listener" "kasm-alb-listener" {
 }
 
 resource "aws_lb_target_group_attachment" "kasm-target-group-attachment" {
-  count            = "${var.num_webapps}"
+  count            = var.num_webapps
   target_group_arn = aws_lb_target_group.kasm-target-group.arn
   target_id        = aws_instance.kasm-web-app[count.index].id
   port             = 443
@@ -131,9 +131,9 @@ resource "aws_route53_record" "kasm-route53-elb-record" {
 }
 
 resource "aws_route53_record" "kasm-app-url" {
-  zone_id = data.aws_route53_zone.kasm-route53-zone.zone_id
-  name    = "${var.aws_domain_name}"
-  type    = "A"
+  zone_id        = data.aws_route53_zone.kasm-route53-zone.zone_id
+  name           = var.aws_domain_name
+  type           = "A"
   set_identifier = "${var.project_name}-${var.zone_name}-set-id"
 
 
@@ -144,7 +144,7 @@ resource "aws_route53_record" "kasm-app-url" {
   }
 
   latency_routing_policy {
-    region = "${var.faux_aws_region}"
+    region = var.faux_aws_region
   }
 }
 

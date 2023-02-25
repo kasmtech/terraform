@@ -1,0 +1,195 @@
+#!/usr/bin/env bash
+
+DATABASE_HOSTNAME='false'
+DATABASE_MASTER_USER='postgres'
+ARCH=$(uname -m | sed 's/aarch64/arm64/g' | sed 's/x86_64/amd64/g')
+ARGS=("$@")
+
+set -e
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
+function verify() {
+    printf "\n\n"
+    echo "WARNING!!!"
+    echo "__________________________"
+    printf "\n\n"
+    echo "Contents of the existing database will be removed. This is irreversible!"
+    printf "\n"
+    read -p "Continue? (y/n) " choice
+    case "$choice" in
+      y|Y )
+        return
+        ;;
+      n|N )
+        echo "Exiting"
+        exit 1
+        ;;
+      * )
+        echo "Invalid Response"
+        echo "Exiting"
+        exit 1
+        ;;
+    esac
+
+}
+
+# Check for yq
+if [ "${ARCH}" == "amd64" ] ; then
+  BIN_ARCH="x64_64"
+else
+  BIN_ARCH="aarch64"
+fi
+if [ ! -f "/opt/kasm/bin/utils/yq_${BIN_ARCH}" ]; then
+    # Check for internet connectivity
+    if ! curl -s --connect-timeout 5 https://www.google.com > /dev/null; then
+       echo "Without internet connectivity I cannot download YQ please install it at /opt/kasm/bin/utils/yq_${BIN_ARCH}"
+       exit 1
+    fi
+    YQ_RELEASE=$(curl -sX GET "https://api.github.com/repos/mikefarah/yq/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]');
+    mkdir -p /opt/kasm/bin/utils/
+    curl -L -o \
+        /opt/kasm/bin/utils/yq_${BIN_ARCH} \
+        https://github.com/mikefarah/yq/releases/download/${YQ_RELEASE}/yq_linux_${ARCH}
+    chmod +x /opt/kasm/bin/utils/yq_${BIN_ARCH}
+fi
+
+function display_help() {
+  CMD='\033[0;31m'
+   NC='\033[0m'
+   echo "Usage IE:"
+   echo "${0} --path /opt/kasm/current --backup-file /home/ubuntu/kasm_backup.tar"
+   echo ""
+   echo "Flag                                           Description"
+   echo "---------------------------------------------------------------------------------------------------------------------"
+   echo -e "| ${CMD}-h|--help${NC}                     |Display this help menu                                               |"
+   echo -e "| ${CMD}-f|--backup-file${NC}              |Path to kasm db backup file (tar)                                    |"
+   echo -e "| ${CMD}-p|--path${NC}                     |Path to kasm installation desired for restore e.g /opt/kasm/1.0.0    |"
+   echo -e "| ${CMD}-q|--database-hostname${NC}        |Database hostname                                                    |"
+   echo -e "| ${CMD}-g|--database-master-user${NC}     |Database master username                                             |"
+   echo -e "| ${CMD}-G|--database-master-password${NC} |Database master password                                             |"
+   echo -e "| ${CMD}-v|--verbose${NC}                  |Verbose output                                                       |"
+   echo -e "| ${CMD}-a|--accept-warning${NC}           |Accept warning regarding db_restore overwriting the current database |"
+   echo "---------------------------------------------------------------------------------------------------------------------"
+}
+
+for index in "${!ARGS[@]}"; do
+  case "${ARGS[index]}" in
+    -h|--help)
+        display_help
+        exit 0
+        ;;
+    -a|--accept-warning)
+        ACCEPT_WARNING=true
+        ;;
+    -f|--backup-file)
+        DB_FILE="${ARGS[index+1]}"
+        ;;
+    -p|--path)
+        KASM_INSTALL_BASE="${ARGS[index+1]}"
+        ;;
+    -q|--database-hostname)
+        DATABASE_HOSTNAME="${ARGS[index+1]}"
+        ;;
+    -g|--database-master-user)
+        DATABASE_MASTER_USER="${ARGS[index+1]}"
+        echo "Using Database Master User ${DATABASE_MASTER_USER}"
+        ;;
+    -G|--database-master-password)
+        DATABASE_MASTER_PASSWORD="${ARGS[index+1]}"
+        echo "Using Database Master Password from stdin -G"
+        ;;
+    -v|--verbose)
+        set -x
+        ;;
+    -*|--*)
+        echo "Unknown option ${ARGS[index]}"
+        display_help
+        exit 1
+        ;;
+  esac
+done
+
+if [ -z "$DB_FILE" ]; then
+    echo "Error -  No database file specified ! "
+    echo ""
+    display_help
+    exit 1
+fi
+
+if [ -z "$KASM_INSTALL_BASE" ]; then
+    echo "Error -  No kasm installation path specified ! "
+    echo ""
+    display_help
+    exit 1
+fi
+
+if [ -z "$DATABASE_MASTER_PASSWORD" ] && [ "${DATABASE_HOSTNAME}" != "false" ]; then
+  echo "Error - When restoring a remote database please provide master password for the remote database"
+  echo ""
+  display_help
+  exit 1
+fi
+
+
+if [ ! "${ACCEPT_WARNING}" = true ]
+then
+    verify
+fi
+
+
+TEMP_DB_BACKUP_PATH=${KASM_INSTALL_BASE}/conf/database/
+DB_BACKUP_DIR=$(dirname "${DB_FILE}")
+DB_BACKUP_FILE_NAME=$(basename "${DB_FILE}")
+
+
+cp ${DB_FILE} ${TEMP_DB_BACKUP_PATH}/${DB_BACKUP_FILE_NAME}
+
+pushd ${KASM_INSTALL_BASE}/docker > /dev/null
+
+
+export KASM_UID=$(id kasm -u)
+export KASM_GID=$(id kasm -g)
+
+if [ "${DATABASE_HOSTNAME}" == "false" ] ; then
+  echo "Stopping Services"
+  sudo ${KASM_INSTALL_BASE}/bin/stop
+
+  echo "Starting DB Service"
+  docker compose up -d db
+  sleep 10
+
+  echo "Executing restore"
+  docker compose exec db psql -e -U kasmapp -c "drop database if exists kasm;" postgres
+  docker compose exec db psql -e -U kasmapp -c "create database kasm;" postgres
+  # Only drop schemas if we are not already on postgres 12
+  POSTGRES_MAJOR=$(tar -xOf ${DB_FILE} restore.sql | awk -F'(Dumped from database version |\\.)' '/Dumped from database version / {print $2}')
+  if [ ! "${POSTGRES_MAJOR}" -ge 12 ]; then
+    docker compose exec db psql -e -U kasmapp -c "drop schema if exists public cascade;" kasm
+  fi
+  docker compose exec db pg_restore -e -U kasmapp -Ft -d kasm /tmp/${DB_BACKUP_FILE_NAME}
+
+  rm  ${TEMP_DB_BACKUP_PATH}/${DB_BACKUP_FILE_NAME}
+  echo "Stopping Services"
+  sudo ${KASM_INSTALL_BASE}/bin/stop
+
+  popd > /dev/null
+else
+  DB_IMAGE_NAME=$(/opt/kasm/bin/utils/yq_${BIN_ARCH} '.services.db.image'  "${KASM_INSTALL_BASE}/docker/.conf/docker-compose-db.yaml")
+  DATABASE_PASSWORD=$(/opt/kasm/bin/utils/yq_${BIN_ARCH} '.database.password' "${KASM_INSTALL_BASE}/conf/app/api.app.config.yaml")
+  docker run -e PGPASSWORD="${DATABASE_MASTER_PASSWORD}" --rm "${DB_IMAGE_NAME}" psql -h "${DATABASE_HOSTNAME}" -p "${DATABASE_PORT}" -e -U ${DATABASE_MASTER_USER} -c "drop database if exists kasm;" postgres
+  docker run -e PGPASSWORD="${DATABASE_MASTER_PASSWORD}" --rm "${DB_IMAGE_NAME}" psql -h "${DATABASE_HOSTNAME}" -p "${DATABASE_PORT}" -e -U ${DATABASE_MASTER_USER} -c "create database kasm;" postgres
+  POSTGRES_MAJOR=$(tar -xOf "${DB_FILE}" restore.sql | awk -F'(Dumped from database version |\\.)' '/Dumped from database version / {print $2}')
+  if [ ! "${POSTGRES_MAJOR}" -ge 12 ]; then
+    docker run -v -e PGPASSWORD="${DATABASE_MASTER_PASSWORD}" --rm "${DB_IMAGE_NAME}" psql -h "${DATABASE_HOSTNAME}" -p "${DATABASE_PORT}" -e -U ${DATABASE_MASTER_USER} -c "drop schema if exists public cascade;" kasm
+  fi
+  docker run -v "${TEMP_DB_BACKUP_PATH}/${DB_BACKUP_FILE_NAME}:/restore/${DB_BACKUP_FILE_NAME}" -e PGPASSWORD="${DATABASE_MASTER_PASSWORD}" --rm "${DB_IMAGE_NAME}" pg_restore -h "${DATABASE_HOSTNAME}" -p "${DATABASE_PORT}" -e -U ${DATABASE_MASTER_USER} -Ft -d kasm  "/restore/${DB_BACKUP_FILE_NAME}"
+fi
+
+echo "Restore Complete"
+
+
+

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -e
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
+KASM_VERSION="1.12.0"
+KASM_INSTALL_BASE="/opt/kasm/${KASM_VERSION}"
+
+pushd ${KASM_INSTALL_BASE}/docker > /dev/null
+
+# TODO: Start in daemon mode, run connectivity tests, tell the user how to access website
+echo "Starting Kasm Services"
+export KASM_UID=$(id kasm -u)
+export KASM_GID=$(id kasm -g)
+docker compose up -d
+popd > /dev/null

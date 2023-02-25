@@ -1,0 +1,46 @@
+name: Publish Release - Kasm
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+    - main
+    - release/*
+    paths:
+      - "**/kasm_release_*/**"
+      - "**/build-release.yml"
+
+env:
+  current_release: "kasm_release_1.12.0.d4fd8a"
+  tag: "kasm_release_1.12.0.d4fd8a_Build-${{github.run_number}}"
+  fileName: "kasm_release_1.12.0.d4fd8a_Build-${{github.run_number}}.tar.gz"
+
+jobs:
+  Release:
+    name: prepare release package
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        ref: main
+    
+    - name: Tar action
+      uses: a7ul/tar-action@v1.1.2
+      with:
+        cwd: "/home/runner/work/kasm-terraform/kasm-terraform/kasm_release/"
+        # c = compress
+        command: c 
+        # List of files or folders to archive
+        files: "${{env.current_release}}"
+        # Path of the output archive (ex: abc.tar.gz)
+        outPath: "${{env.fileName}}"
+    
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{env.tag}}"
+          prerelease: false
+          title: "Release Build - ${{env.tag}}"
+          files: |
+            **/*.tar.gz

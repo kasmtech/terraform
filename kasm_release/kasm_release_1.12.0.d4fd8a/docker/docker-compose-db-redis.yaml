@@ -1,0 +1,59 @@
+version: '3'
+services:
+  db:
+    container_name: kasm_db
+    image: postgres:12-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    networks:
+      - kasm_default_network
+    environment:
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_USER: kasmapp
+      POSTGRES_DB: kasm
+    volumes:
+      - /opt/kasm/1.12.0/conf/database/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - /opt/kasm/1.12.0/conf/database/pg_hba.conf:/var/lib/postgresql/conf/pg_hba.conf
+      - /opt/kasm/1.12.0/conf/database/postgresql.conf:/var/lib/postgresql/conf/postgresql.conf
+      - /opt/kasm/1.12.0/conf/database/:/tmp/
+      - /opt/kasm/1.12.0/certs/db_server.crt:/etc/ssl/certs/db_server.crt
+      - /opt/kasm/1.12.0/certs/db_server.key:/etc/ssl/certs/db_server.key
+      - /opt/kasm/1.12.0/log/postgres/:/var/log/postgres/
+      - kasm_db_1.12.0:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: "pg_isready --username=kasmapp && cat /proc/1/cmdline | grep -q '^postgres'"
+      timeout: 5s
+      retries: 20
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+    command: postgres -c ssl=on -c ssl_cert_file=/etc/ssl/certs/db_server.crt -c ssl_key_file=/etc/ssl/certs/db_server.key -c config_file=/var/lib/postgresql/conf/postgresql.conf -c hba_file=/var/lib/postgresql/conf/pg_hba.conf
+  kasm_redis:
+    container_name: kasm_redis
+    command: ["sh", "-c", "redis-server --requirepass $${REDIS_PASSWORD}"]
+    user: "${KASM_UID?}:${KASM_GID?}"
+    image: redis:5-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - kasm_default_network
+    environment:
+      REDIS_PASSWORD: changeme
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+volumes:
+  kasm_db_1.12.0:
+    external: true
+networks:
+  kasm_default_network:
+    external: true
+

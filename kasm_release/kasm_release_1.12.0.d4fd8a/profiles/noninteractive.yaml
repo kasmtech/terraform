@@ -1,0 +1,4 @@
+accept-eula: true
+no-images: true
+no-check-ports: true
+no-check-disk: true

@@ -1,0 +1,11 @@
+servers:
+  00000000-0000-0000-0000-000000000000:
+    server_type: host
+    agent_version: 1
+    cores_override: 0
+    container_limit: 0
+    operational_status: starting
+    hostname: proxy
+    memory_override: 0
+    provider: hardware
+    enabled: true

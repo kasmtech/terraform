@@ -1,0 +1,26 @@
+version: '3'
+services:
+  proxy:
+    container_name: kasm_proxy
+    image: "kasmweb/nginx:latest"
+    ports:
+      - "443:443"
+    networks:
+      - kasm_default_network
+    volumes:
+      - /opt/kasm/1.12.0/conf/nginx:/etc/nginx/conf.d:ro
+      - /opt/kasm/1.12.0/certs/kasm_nginx.key:/etc/ssl/private/kasm_nginx.key
+      - /opt/kasm/1.12.0/certs/kasm_nginx.crt:/etc/ssl/certs/kasm_nginx.crt
+      - /opt/kasm/1.12.0/www:/srv/www:ro
+      - /opt/kasm/1.12.0/log/nginx:/var/log/external/nginx/
+      - /opt/kasm/1.12.0/log/logrotate:/var/log/external/logrotate/
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+networks:
+  kasm_default_network:
+    external: true
+

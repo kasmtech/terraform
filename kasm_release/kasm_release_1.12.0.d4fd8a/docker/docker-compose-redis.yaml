@@ -1,0 +1,24 @@
+version: '3'
+services:
+  kasm_redis:
+    container_name: kasm_redis
+    command: ["sh", "-c", "redis-server --requirepass $${REDIS_PASSWORD}"]
+    user: "${KASM_UID?}:${KASM_GID?}"
+    image: redis:5-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - kasm_default_network
+    environment:
+      REDIS_PASSWORD: changeme
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "20"
+networks:
+  kasm_default_network:
+    external: true
+

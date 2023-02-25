@@ -1,0 +1,15 @@
+kasmguac:
+  id: 157481f79f8445278ea26889c6442045
+  port: 3000
+  kasm_delete_session_watch_interval: 60
+  logging:
+    errorEventName: error
+    logDirectory: /opt/kasm/current/log/
+    fileNamePattern: kasmguac-<DATE>.log
+    dateFormat: YYYY.MM.DD
+    timestampFormat: YYYY-MM-DD HH:mm:ss.SSS
+api:
+  hostnames: ['APIHOSTNAME']
+  port: 443
+  token: GUACTOKEN
+  allow_self_signed_cert: true

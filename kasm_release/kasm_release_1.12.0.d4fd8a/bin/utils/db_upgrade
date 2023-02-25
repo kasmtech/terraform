@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+
+DATABASE_HOSTNAME='false'
+ARCH=$(uname -m | sed 's/aarch64/arm64/g' | sed 's/x86_64/amd64/g')
+ARGS=("$@")
+
+set -e
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root"
+   exit 1
+fi
+
+export KASM_UID=$(id kasm -u)
+export KASM_GID=$(id kasm -g)
+
+# Check for yq
+if [ "${ARCH}" == "amd64" ] ; then
+  BIN_ARCH="x64_64"
+else
+  BIN_ARCH="aarch64"
+fi
+if [ ! -f "/opt/kasm/bin/utils/yq_${BIN_ARCH}" ]; then
+    # Check for internet connectivity
+    if ! curl -s --connect-timeout 5 https://www.google.com > /dev/null; then
+       echo "Without internet connectivity I cannot download YQ please install it at /opt/kasm/bin/utils/yq_${BIN_ARCH}"
+       exit 1
+    fi
+    YQ_RELEASE=$(curl -sX GET "https://api.github.com/repos/mikefarah/yq/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]');
+    mkdir -p /opt/kasm/bin/utils/
+    curl -L -o \
+        /opt/kasm/bin/utils/yq_${BIN_ARCH} \
+        https://github.com/mikefarah/yq/releases/download/${YQ_RELEASE}/yq_linux_${ARCH}
+    chmod +x /opt/kasm/bin/utils/yq_${BIN_ARCH}
+fi
+
+function display_help() {
+  CMD='\033[0;31m'
+   NC='\033[0m'
+   echo "Usage IE:"
+   echo "${0} --path /opt/kasm/current"
+   echo ""
+   echo "Flag                                    Description"
+   echo "--------------------------------------------------------------------------------------------------------------"
+   echo -e "| ${CMD}-h|--help${NC}              |Display this help menu                                               |"
+   echo -e "| ${CMD}-p|--path${NC}              |Path to kasm installation desired for upgrade e.g /opt/kasm/1.0.0    |"
+   echo -e "| ${CMD}-q|--database-hostname${NC} |Database hostname                                                    |"
+   echo -e "| ${CMD}-v|--verbose${NC}           |Verbose output                                                       |"
+   echo "--------------------------------------------------------------------------------------------------------------"
+}
+
+for index in "${!ARGS[@]}"; do
+  case "${ARGS[index]}" in
+    -h|--help)
+        display_help
+        exit 0
+        ;;
+    -p|--path)
+        KASM_INSTALL_BASE="${ARGS[index+1]}"
+        ;;
+    -q|--database-hostname)
+        DATABASE_HOSTNAME="${ARGS[index+1]}"
+        ;;
+    -v|--verbose)
+        set -x
+        ;;
+    -*|--*)
+        echo "Unknown option ${ARGS[index]}"
+        display_help
+        exit 1
+        ;;
+  esac
+done
+
+if [ -z "$KASM_INSTALL_BASE" ]; then
+    echo "Error -  No kasm installation path specified ! "
+    echo ""
+    display_help
+    exit 1
+fi
+
+pushd ${KASM_INSTALL_BASE}/docker > /dev/null
+
+# local database
+if [ "$DATABASE_HOSTNAME" == 'false' ] ; then
+    echo "Removing Existing Database container"
+
+    echo "Stopping Services"
+    ${KASM_INSTALL_BASE}/bin/stop
+
+
+    docker compose rm -f db
+
+    sed "s/kasm_api:/kasm_api:\n    healthcheck:\n      disable: true/g" ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all.yaml > ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml
+
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml rm -f db
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml up -d db
+    sleep 10
+
+    set +e
+    ${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": false}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml  run  --rm  --entrypoint "/usr/bin/kasm_server.so --upgrade-database --cfg /opt/kasm/current/conf/app/api.app.config.yaml" kasm_api 2>&1 | grep -v UserWarning
+    ${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": true}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml
+
+    set -e
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml stop
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml rm -f kasm_api
+
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml rm -f db
+    rm ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-all-upgrade.yaml
+else
+    sed "s/kasm_api:/kasm_api:\n    healthcheck:\n      disable: true/g" ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api.yaml > ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml
+
+    set +e
+    ${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": false}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml  run  --rm  --entrypoint "/usr/bin/kasm_server.so --upgrade-database --cfg /opt/kasm/current/conf/app/api.app.config.yaml" kasm_api 2>&1 | grep -v UserWarning
+    ${KASM_INSTALL_BASE}/bin/utils/yq_$(uname -m) -i '.services.kasm_api += {"read_only": true}' ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml
+
+    set -e
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml stop
+    docker compose -f ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml rm -f kasm_api
+    rm ${KASM_INSTALL_BASE}/docker/.conf/docker-compose-api-upgrade.yaml
+fi
+
+echo "Database Upgrade Complete"
+popd > /dev/null
