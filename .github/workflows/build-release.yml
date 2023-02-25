@@ -5,6 +5,7 @@ on:
   push:
     branches:
     - main
+    - fsxn
     - release/*
     paths:
       - "**/kasm_release_*/**"
