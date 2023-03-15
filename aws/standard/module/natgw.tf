@@ -1,22 +1,14 @@
-resource "aws_nat_gateway" "gw" {
-  allocation_id = "${aws_eip.nat_gateway_eip.id}"
-  subnet_id     = "${aws_subnet.kasm-agent-subnet.id}"
-}
-
 resource "aws_eip" "nat_gateway_eip" {
   vpc = true
 }
 
-resource "aws_route_table" "r" {
-  vpc_id = "${aws_vpc.kasm-default-vpc.id}"
+resource "aws_nat_gateway" "agent_and_guac_natgw" {
+  allocation_id = aws_eip.nat_gateway_eip.id
+  subnet_id     = data.aws_subnet.data-kasm_webapp_subnets[0].id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.gw.id
-  }
+  depends_on = [data.aws_internet_gateway.data-kasm-default-ig]
 }
 
-resource "aws_route_table_association" "a" {
-  subnet_id      = aws_subnet.kasm-use-natgw-subnet.id
-  route_table_id = aws_route_table.r.id
+data "aws_nat_gateway" "data-agent_and_guac_natgw" {
+  id = aws_nat_gateway.agent_and_guac_natgw.id
 }

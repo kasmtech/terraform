@@ -9,7 +9,7 @@ chmod 600 /var/swap.1
 
 cd /tmp
 
-PRIVATE_IP=(`hostname -I | cut -d  ' ' -f1 |  tr -d '\\n'`)
+PRIVATE_IP=(`hostname -I | cut -d' ' -f1 | tr -d '\\n'`)
 
 wget  ${kasm_build_url} -O kasm_workspaces.tar.gz
 tar -xf kasm_workspaces.tar.gz

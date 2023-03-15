@@ -1,101 +1,143 @@
 resource "oci_core_security_list" "allow_web" {
-    compartment_id = var.compartment_ocid
-    vcn_id = oci_core_vcn.kasm_vcn.id
-    display_name = "allow_web"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.kasm_vcn.id
+  display_name   = "allow_web"
 
-    egress_security_rules {
-        destination = "0.0.0.0/0"
-        protocol = "all"
-        stateless = "false"
-    }
+  dynamic "egress_security_rules" {
+    for_each = var.anywhere
 
-    ingress_security_rules {
-        protocol = "6"
-        source = var.allow_web_cidr
-        tcp_options {
-            max = "443"
-            min = "443"
-        }
+    content {
+      destination = egress_security_rules.value
+      protocol    = "all"
+      stateless   = "false"
     }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = var.allow_web_cidrs
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
+      tcp_options {
+        max = "443"
+        min = "443"
+      }
+    }
+  }
+}
+
+data "oci_core_security_lists" "data-allow_web" {
+  compartment_id = var.compartment_ocid
+  display_name   = oci_core_security_list.allow_web.display_name
 }
 
 resource "oci_core_security_list" "allow_ssh" {
-    compartment_id = var.compartment_ocid
-    vcn_id = oci_core_vcn.kasm_vcn.id
-    display_name = "allow_ssh"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.kasm_vcn.id
+  display_name   = "allow_ssh"
 
-    egress_security_rules {
-        destination = "0.0.0.0/0"
-        protocol = "all"
-        stateless = "false"
-    }
+  dynamic "egress_security_rules" {
+    for_each = var.anywhere
 
-    ingress_security_rules {
-        protocol = "6"
-        source = var.allow_ssh_cidr
-        tcp_options {
-            max = "22"
-            min = "22"
-        }
+    content {
+      destination = egress_security_rules.value
+      protocol    = "all"
+      stateless   = "false"
     }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = var.allow_ssh_cidrs
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
+      tcp_options {
+        max = "22"
+        min = "22"
+      }
+    }
+  }
 }
 
+data "oci_core_security_lists" "data-allow_ssh" {
+  compartment_id = var.compartment_ocid
+  display_name   = oci_core_security_list.allow_ssh.display_name
+}
 
 resource "oci_core_security_list" "allow_db_redis" {
-    compartment_id = var.compartment_ocid
-    vcn_id = oci_core_vcn.kasm_vcn.id
-    display_name = "allow_db_redis"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.kasm_vcn.id
+  display_name   = "allow_db_redis"
 
-    egress_security_rules {
-        destination = "0.0.0.0/0"
-        protocol = "all"
-        stateless = "false"
-    }
+  dynamic "egress_security_rules" {
+    for_each = var.anywhere
 
-    ingress_security_rules {
-        protocol = "6"
-        source = oci_core_subnet.kasm-webapp-subnet.cidr_block
-        tcp_options {
-            max = "5432"
-            min = "5432"
-        }
+    content {
+      destination = egress_security_rules.value
+      protocol    = "all"
+      stateless   = "false"
     }
-   ingress_security_rules {
-        protocol = "6"
-        source = oci_core_subnet.kasm-webapp-subnet.cidr_block
-        tcp_options {
-            max = "6379"
-            min = "6379"
-        }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = [for cidr_block in data.oci_core_subnets.data-kasm_webapp_subnets : cidr_block.subnets[0].cidr_block]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
+      tcp_options {
+        max = "5432"
+        min = "5432"
+      }
     }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = [for cidr_block in data.oci_core_subnets.data-kasm_webapp_subnets : cidr_block.subnets[0].cidr_block]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
+      tcp_options {
+        max = "6379"
+        min = "6379"
+      }
+    }
+  }
 }
 
+data "oci_core_security_lists" "data-allow_db_redis" {
+  compartment_id = var.compartment_ocid
+  display_name   = oci_core_security_list.allow_db_redis.display_name
+}
 
 resource "oci_core_security_list" "allow_web_from_webapp" {
-    compartment_id = var.compartment_ocid
-    vcn_id = oci_core_vcn.kasm_vcn.id
-    display_name = "allow_web_from_webapp"
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.kasm_vcn.id
+  display_name   = "allow_web_from_webapp"
 
-    egress_security_rules {
-        destination = "0.0.0.0/0"
-        protocol = "all"
-        stateless = "false"
-    }
+  dynamic "egress_security_rules" {
+    for_each = var.anywhere
 
-    ingress_security_rules {
-        protocol = "6"
-        source = var.webapp_cidr_1
-        tcp_options {
-            max = "443"
-            min = "443"
-        }
+    content {
+      destination = egress_security_rules.value
+      protocol    = "all"
+      stateless   = "false"
     }
-    ingress_security_rules {
-        protocol = "6"
-        source = var.webapp_cidr_2
-        tcp_options {
-            max = "443"
-            min = "443"
-        }
+  }
+
+  dynamic "ingress_security_rules" {
+    for_each = [for cidr_block in data.oci_core_subnets.data-kasm_webapp_subnets : cidr_block.subnets[0].cidr_block]
+    content {
+      protocol = "6"
+      source   = ingress_security_rules.value
+      tcp_options {
+        max = "443"
+        min = "443"
+      }
     }
+  }
+}
+
+data "oci_core_security_lists" "data-allow_web_from_webapp" {
+  compartment_id = var.compartment_ocid
+  display_name   = oci_core_security_list.allow_web_from_webapp.display_name
 }

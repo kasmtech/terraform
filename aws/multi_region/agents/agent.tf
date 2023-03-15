@@ -1,28 +1,24 @@
 resource "aws_instance" "kasm-agent" {
-  count                       = "${var.num_agents}"
-  ami                         = "${var.ec2_ami}"
-  instance_type               = "${var.agent_instance_type}"
-  vpc_security_group_ids      = ["${aws_security_group.kasm-agent-sg.id}"]
-  subnet_id                   = "${aws_subnet.kasm-agent-subnet.id}"
-  key_name                    = "${var.aws_key_pair}"
+  count                  = var.num_agents
+  ami                    = var.ec2_ami
+  instance_type          = var.agent_instance_type
+  vpc_security_group_ids = [data.aws_security_group.data-kasm_agent_sg.id]
+  subnet_id              = data.aws_subnet.data-kasm_agent_subnet.id
+  key_name               = var.aws_key_pair
 
   root_block_device {
-    volume_size = "50"
+    volume_size = var.agent_hdd_size_gb
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              fallocate -l 4g /mnt/kasm.swap
-              chmod 600 /mnt/kasm.swap
-              mkswap /mnt/kasm.swap
-              swapon /mnt/kasm.swap
-              echo '/mnt/kasm.swap swap swap defaults 0 0' | tee -a /etc/fstab
-              cd /tmp
-              wget ${var.kasm_build}
-              tar xvf kasm_*.tar.gz
-              PUBLIC_DNS=(`curl -s http://169.254.169.254/latest/meta-data/public-ipv4`)
-              bash kasm_release/install.sh -S agent -e  -p $PUBLIC_DNS -m ${var.zone_name}-lb.${var.aws_domain_name} -M ${var.manager_token}
-              EOF
+  user_data = templatefile("${path.module}/../userdata/agent_bootstrap.sh",
+    {
+      kasm_build_url  = var.kasm_build
+      swap_size       = var.swap_size
+      manager_address = var.aws_domain_name
+      manager_token   = var.manager_token
+    }
+  )
+
   tags = {
     Name = "${var.project_name}-${var.zone_name}-kasm-agent"
   }

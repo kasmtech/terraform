@@ -1,12 +1,12 @@
 data "aws_route53_zone" "kasm-route53-zone" {
-  name         =  "${var.aws_domain_name}"
+  name         = var.aws_domain_name
   private_zone = false
 }
 
 resource "aws_acm_certificate" "kasm-alb-cert" {
-  domain_name       = "${var.aws_domain_name}"
+  domain_name               = var.aws_domain_name
   subject_alternative_names = ["*.${var.aws_domain_name}"]
-  validation_method = "DNS"
+  validation_method         = "DNS"
 
 
   lifecycle {
@@ -15,8 +15,8 @@ resource "aws_acm_certificate" "kasm-alb-cert" {
 }
 
 resource "aws_route53_record" "kasm-route53-cert-validation-record" {
-   for_each = {
-    for dvo in aws_acm_certificate.kasm-alb-cert.domain_validation_options: dvo.domain_name => {
+  for_each = {
+    for dvo in aws_acm_certificate.kasm-alb-cert.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
@@ -27,16 +27,12 @@ resource "aws_route53_record" "kasm-route53-cert-validation-record" {
   records = [each.value.record]
   zone_id = data.aws_route53_zone.kasm-route53-zone.id
 
-  ttl     = 30
+  ttl             = 30
   allow_overwrite = true
 }
 
 
 resource "aws_acm_certificate_validation" "kasm-elb-certificate-validation" {
   certificate_arn         = aws_acm_certificate.kasm-alb-cert.arn
-  validation_record_fqdns = [for record in aws_route53_record.kasm-route53-cert-validation-record: record.fqdn]
-}
-
-output "certificate_arn" {
-  value = "${aws_acm_certificate_validation.kasm-elb-certificate-validation.certificate_arn}"
+  validation_record_fqdns = [for record in aws_route53_record.kasm-route53-cert-validation-record : record.fqdn]
 }
