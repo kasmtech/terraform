@@ -1,26 +1,12 @@
-data "template_file" "db_user_data" {
-  template = "${file("${path.module}/userdata/db_bootstrap.sh")}"
-  vars = {
-    kasm_build_url      = var.kasm_build_url
-    user_password       = var.user_password
-    admin_password      = var.admin_password
-    redis_password      = var.redis_password
-    database_password   = var.database_password
-    manager_token       = var.manager_token
-    swap_size           = var.swap_size
-
-  }
-}
-
 resource "oci_core_instance" "kasm_db_instance" {
-  availability_domain = data.oci_identity_availability_domain.ad.name
+  availability_domain = data.oci_identity_availability_domains.kasm_ads.availability_domains[0].name
   compartment_id      = var.compartment_ocid
   display_name        = "${var.project_name}-Kasm-DB"
   shape               = var.instance_shape
 
   shape_config {
-    ocpus         = var.db_ocpus
-    memory_in_gbs = var.db_memory_in_gb
+    ocpus         = var.kasm_database_vm_settings.cpus
+    memory_in_gbs = var.kasm_database_vm_settings.memory
   }
 
   create_vnic_details {
@@ -34,15 +20,26 @@ resource "oci_core_instance" "kasm_db_instance" {
   source_details {
     source_type             = "image"
     source_id               = var.instance_image_ocid
-    boot_volume_size_in_gbs = var.db_boot_size_gb
+    boot_volume_size_in_gbs = var.kasm_database_vm_settings.hdd_size_gb
   }
-
 
   metadata = {
-    ssh_authorized_keys = file("${var.ssh_authorized_keys}")
-    user_data           = base64encode("${data.template_file.db_user_data.rendered}")
+    ssh_authorized_keys = var.ssh_authorized_keys
+    user_data = base64encode(templatefile("${path.module}/userdata/db_bootstrap.sh",
+      {
+        kasm_build_url             = var.kasm_build_url
+        user_password              = var.user_password
+        admin_password             = var.admin_password
+        redis_password             = var.redis_password
+        database_password          = var.database_password
+        service_registration_token = var.service_registration_token
+        manager_token              = var.manager_token
+        swap_size                  = var.swap_size
+      }
+    ))
   }
-
 }
 
-
+data "oci_core_instance" "data-kasm_db_instance" {
+  instance_id = oci_core_instance.kasm_db_instance.id
+}

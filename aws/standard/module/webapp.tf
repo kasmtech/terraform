@@ -1,38 +1,33 @@
 resource "aws_instance" "kasm-web-app" {
-  count                       = "${var.num_webapps}"
-  ami                         = "${var.ec2_ami}"
-  instance_type               = "${var.webapp_instance_type}"
-  vpc_security_group_ids      = ["${aws_security_group.kasm-webapp-sg.id}"]
-  subnet_id                   = "${aws_subnet.kasm-webapp-subnet.id}"
-  key_name                    = "${var.aws_key_pair}"
+  count                       = var.num_webapps
+  ami                         = var.ec2_ami
+  instance_type               = var.webapp_instance_type
+  vpc_security_group_ids      = [data.aws_security_group.data-kasm_webapp_sg.id]
+  subnet_id                   = data.aws_subnet.data-kasm_webapp_subnets[count.index].id
+  key_name                    = var.aws_key_pair
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size = "40"
+    volume_size = 40
   }
 
-  user_data = <<-EOF
-              #!/bin/bash
-              set -x
-              fallocate -l 4g /mnt/kasm.swap
-              chmod 600 /mnt/kasm.swap
-              mkswap /mnt/kasm.swap
-              swapon /mnt/kasm.swap
-              echo '/mnt/kasm.swap swap swap defaults 0 0' | tee -a /etc/fstab
-              cd /tmp
-              wget ${var.kasm_build}
-              tar xvf kasm_*.tar.gz
+  user_data = templatefile("${path.module}/userdata/webapp_bootstrap.sh",
+    {
+      kasm_build_url    = var.kasm_build
+      db_ip             = data.aws_instance.data-kasm_db.private_ip
+      database_password = var.database_password
+      redis_password    = var.redis_password
+      swap_size         = var.swap_size
+      zone_name         = "default"
+    }
+  )
 
-              echo "Checking for Kasm DB..."
-              while ! nc -w 1  -z ${aws_instance.kasm-db.private_ip} 5432; do
-                echo "Not Ready..."
-                sleep 5
-              done
-              echo "DB is alive"
-
-              bash kasm_release/install.sh -S app -e -z ${var.zone_name} -q "${aws_instance.kasm-db.private_ip}" -Q ${var.database_password} -R ${var.redis_password}
-              EOF
   tags = {
-    Name = "${var.project_name}-${var.zone_name}-kasm-webapp"
+    Name = "${var.project_name}-${var.kasm_zone_name}-kasm-webapp"
   }
+}
+
+data "aws_instance" "data-kasm_web_app" {
+  count       = var.num_webapps
+  instance_id = aws_instance.kasm-web-app[count.index].id
 }

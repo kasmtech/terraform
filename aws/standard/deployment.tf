@@ -1,30 +1,30 @@
 module "standard" {
-  source                = "./module"
-  aws_access_key        = ""
-  aws_secret_key        = ""
-  aws_key_pair          = ""
-  aws_region            = "us-east-1"
-  aws_domain_name       = "kasm.contoso.com"
-  project_name          = "contoso"
-  num_agents            = "2"
-  num_webapps           = "2"
+  source          = "./module"
+  aws_key_pair    = var.aws_key_pair
+  aws_region      = var.aws_region
+  aws_domain_name = var.aws_domain_name
+  project_name    = var.project_name
+  num_agents      = var.num_agents
+  num_webapps     = var.num_webapps
+  num_guac_nodes  = var.num_guac_nodes
+  vpc_subnet_cidr = var.vpc_subnet_cidr
 
+  ## Kasm Server settings
+  agent_instance_type  = var.agent_instance_type
+  guac_instance_type   = var.guac_instance_type
+  webapp_instance_type = var.webapp_instance_type
+  db_instance_type     = var.db_instance_type
+  ec2_ami              = var.ec2_ami
+  swap_size            = var.swap_size
 
-
-  agent_instance_type   = "t3.medium"
-  webapp_instance_type  = "t3.small"
-  db_instance_type      = "t3.small"
-  ec2_ami               = "ami-0747bdcabd34c712a"
-
-
-  ssh_access_cidr        = "0.0.0.0/0"
-  database_password     = "changeme"
-  redis_password        = "changeme"
-  user_password         = "changeme"
-  admin_password        = "changeme"
-  manager_token         = "changeme"
-  zone_name             = "default"
-  kasm_build            = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.9.0.077388.tar.gz"
+  ssh_access_cidrs           = var.ssh_access_cidrs
+  web_access_cidrs           = var.web_access_cidrs
+  database_password          = var.database_password
+  redis_password             = var.redis_password
+  user_password              = var.user_password
+  admin_password             = var.admin_password
+  manager_token              = var.manager_token
+  service_registration_token = var.service_registration_token
+  kasm_zone_name             = var.kasm_zone_name
+  kasm_build                 = var.kasm_build
 }
-
-
