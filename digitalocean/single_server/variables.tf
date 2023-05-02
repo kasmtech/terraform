@@ -36,7 +36,7 @@ variable "ssh_key_fingerprints" {
   type        = list(string)
 
   validation {
-    condition     = can([for fingerprint in var.ssh_key_fingerprints : regex("^([a-f0-9]{2}:?){16}$", fingerprint)])
+    condition     = alltrue([for fingerprint in var.ssh_key_fingerprints : can(regex("^([a-f0-9]{2}:?){16}$", fingerprint))])
     error_message = "One of the SSH Key fingerprints is incorrectly formatted. It should be 16 colon-delimited hex bytes (e.g. 12:34:56:78:90:ab:cd:ef:12:34:56:78:90:ab:cd:ef)."
   }
 }
@@ -108,7 +108,7 @@ variable "allow_ssh_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.allow_ssh_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.allow_ssh_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the allow_ssh_cidrs list is invalid."
   }
 }
@@ -119,7 +119,7 @@ variable "allow_kasm_web_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.allow_kasm_web_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.allow_kasm_web_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the allow_ssh_cidrs list is invalid."
   }
 }

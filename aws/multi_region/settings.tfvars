@@ -10,7 +10,7 @@ user_password              = "changeme"
 admin_password             = "changeme"
 manager_token              = "changeme"
 
-kasm_build       = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"
+kasm_build       = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"
 ssh_access_cidrs = ["0.0.0.0/0"]
 web_access_cidrs = ["0.0.0.0/0"]
 

@@ -162,23 +162,23 @@ variable "secondary_regions_settings" {
   type        = map(any)
 
   validation {
-    condition     = can([for region in var.secondary_regions_settings : regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.agent_region)])
+    condition     = alltrue([for region in var.secondary_regions_settings : can(regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.agent_region))])
     error_message = "Verify the regions in the secondary_regions_settings variable and ensure they are valid AWS regions in a valid format (e.g. us-east-1)."
   }
   validation {
-    condition     = can([for ami_id in var.secondary_regions_settings : regex("^(ami-[a-f0-9]{17})", ami_id.agent_ec2_ami_id)])
+    condition     = alltrue([for ami_id in var.secondary_regions_settings : can(regex("^(ami-[a-f0-9]{17})", ami_id.agent_ec2_ami_id))])
     error_message = "Please verify that all of your Region's AMI IDs are in the correct format for AWS (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)."
   }
   validation {
-    condition     = can([for instance_type in var.secondary_regions_settings : regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", instance_type.agent_instance_type)])
+    condition     = alltrue([for instance_type in var.secondary_regions_settings : can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", instance_type.agent_instance_type))])
     error_message = "Check the Instance types used in your secondary_regions_settings and ensure they are valid AWS Instance types (https://aws.amazon.com/ec2/instance-types/)."
   }
   validation {
-    condition     = can([for number_of_agents in var.secondary_regions_settings : number_of_agents.num_agents >= 0 && number_of_agents.num_agents <= 100 && floor(number_of_agents.num_agents) == number_of_agents.num_agents])
+    condition     = alltrue([for number_of_agents in var.secondary_regions_settings : number_of_agents.num_agents >= 0 && number_of_agents.num_agents <= 100 && floor(number_of_agents.num_agents) == number_of_agents.num_agents])
     error_message = "Check the number of agents in the secondary_regions_settings variable. Acceptable number of Kasm Agents range between 0-100."
   }
   validation {
-    condition     = can([for subnet in var.secondary_regions_settings : cidrhost(subnet.agent_vpc_cidr, 0)])
+    condition     = alltrue([for subnet in var.secondary_regions_settings : can(cidrhost(subnet.agent_vpc_cidr, 0))])
     error_message = "Verify the VPC subnet in your secondary_regions_settings. They must all be valid IPv4 CIDRs."
   }
 }
@@ -265,7 +265,7 @@ variable "ssh_access_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.ssh_access_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.ssh_access_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the ssh_access_cidr variable is invalid."
   }
 }
@@ -276,7 +276,7 @@ variable "web_access_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.web_access_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.web_access_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the web_access_cidrs variable is invalid."
   }
 }
