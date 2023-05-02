@@ -176,7 +176,7 @@ variable "ssh_access_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.ssh_access_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.ssh_access_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the ssh_access_cidr variable is invalid."
   }
 }
@@ -187,7 +187,7 @@ variable "web_access_cidrs" {
   default     = ["0.0.0.0/0"]
 
   validation {
-    condition     = can([for subnet in var.web_access_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.web_access_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the load_balancer_public_access variable is invalid."
   }
 }

@@ -77,7 +77,7 @@ Create an SSL certificate that matches the desired domain for the deployment. e.
 | `user_password` | A Kasm standard (non-administrator) user password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `manager_token` | The manager token value used by Kasm agents to authenticate to the Kasm WebApps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `service_registration_token` | The service registration token value used by Guac RDP servers to authenticate to the Kasm Webapps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `kasm_build_url` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"` |
+| `kasm_build_url` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"` |
 | `swap_size` | The amount of swap (in MB) to configure inside the Kasm servers. | Number | `2048` |
 | `instance_shape` | The OCI instance shape to use for Kasm deployment. Kasm recommends using a Flex instance type. | String | `"VM.Standard.E4.Flex"` |
 | `kasm_webapp_vm_settings` | The number of CPUs, memory in GB, and HDD size to use for Kasm WebApps. | Map(Any) | <pre align=left>{<br/>&nbsp;&nbsp;cpus = 2<br/>&nbsp;&nbsp;memory = 2<br/>&nbsp;&nbsp;hdd_size_gb = 50<br/>}</pre> |

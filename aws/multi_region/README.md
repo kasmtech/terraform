@@ -86,7 +86,7 @@ Create a user via the IAM console that will be used for the terraform deployment
 | `admin_password` | The Kasm Administrative user login password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `user_password` | A Kasm standard (non-administrator) user password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `manager_token` | The manager token value used by Kasm agents to authenticate to the Kasm WebApps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `kasm_build` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"` |
+| `kasm_build` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"` |
 | `aws_default_tags` | A Map of all tags you wish to apply to all TF created resources in this deployment. | Map(Any) | <pre>{<br/>&nbsp;&nbsp;Service_name = "Kasm Workspaces"<br/>&nbsp;&nbsp;Kasm_version = "1.12"<br/>}</pre> |
 
 

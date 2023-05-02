@@ -53,7 +53,7 @@ This project will launch a droplet and allow connections using the ssh keys defi
 | `vpc_subnet_cidr` | The VPC Subnet CIDR where you wish to deploy Kasm | String | `"10.0.0.0/24"` |
 | `digital_ocean_droplet_slug` | The Default Digital Ocean Droplet Slug: https://slugs.do-api.dev/ | String | `"s-2vcpu-4gb-intel"` |
 | `digital_ocean_image` | Default Image for Ubuntu 20.04 LTS with Docker | String | `"docker-20-04"` |
-| `kasm_build_url` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"` |
+| `kasm_build_url` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"` |
 | `admin_password` | The Kasm Administrative user login password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `user_password` | A Kasm standard (non-administrator) user password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
 | `allow_ssh_cidrs` | A list of subnets in CIDR notation allowed to SSH into your kasm servers | List(String) | `["10.0.0.0/16","172.217.22.14/32"]` |

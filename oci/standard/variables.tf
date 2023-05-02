@@ -54,7 +54,7 @@ variable "private_key_path" {
   sensitive   = true
 
   validation {
-    condition     = can(fileexists(var.private_key_path))
+    condition     = fileexists(var.private_key_path)
     error_message = "The variable private_key_path must point to a valid OCI API Key file."
   }
 
@@ -118,7 +118,7 @@ variable "allow_ssh_cidrs" {
   type        = list(string)
 
   validation {
-    condition     = can([for subnet in var.allow_ssh_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.allow_ssh_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the allow_ssh_cidrs list is invalid."
   }
 }
@@ -128,7 +128,7 @@ variable "allow_web_cidrs" {
   type        = list(string)
 
   validation {
-    condition     = can([for subnet in var.allow_web_cidrs : cidrhost(subnet, 0)])
+    condition     = alltrue([for subnet in var.allow_web_cidrs : can(cidrhost(subnet, 0))])
     error_message = "One of the subnets provided in the allow_web_cidrs list is invalid."
   }
 }
@@ -139,7 +139,7 @@ variable "letsencrypt_cert_support_email" {
   default     = ""
 
   validation {
-    condition     = can(var.letsencrypt_cert_support_email == "" ? true : can(regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", var.letsencrypt_cert_support_email)))
+    condition     = var.letsencrypt_cert_support_email == "" ? true : can(regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", var.letsencrypt_cert_support_email))
     error_message = "The ssl_cert_support_email must be a valid email address format."
   }
 }
@@ -150,7 +150,7 @@ variable "letsencrypt_server_type" {
   default     = ""
 
   validation {
-    condition     = can(contains(["staging", "prod", ""], var.letsencrypt_server_type))
+    condition     = contains(["staging", "prod", ""], var.letsencrypt_server_type)
     error_message = "Allowed values for the letsencrypt_server_type variable are: staging, prod. For reference: Staging generates certificates that a browser will not trust, but are formatted correctly to apply to resources; while Prod generates valid, useable, trusted certificates. NOTE: Prod certificate generation is limited to 5 times per week, so if you are testing Kasm or intend to possibly re-deploy multiple times, it is recommended to use Staging (which has a much higher generation limit since it is intended for testing) until you are ready to deploy your 'final' version."
   }
 }
@@ -161,12 +161,12 @@ variable "kasm_ssl_crt_path" {
   default     = ""
 
   validation {
-    condition     = can(var.kasm_ssl_crt_path == "" ? true : can(fileexists(var.kasm_ssl_crt_path)))
+    condition     = var.kasm_ssl_crt_path == "" ? true : can(fileexists(var.kasm_ssl_crt_path))
     error_message = "The variable kasm_ssl_crt_path must point to a valid OCI API Key file."
   }
 
   validation {
-    condition     = can(var.kasm_ssl_crt_path == "" ? true : !can(regex("replaceme", file(var.kasm_ssl_crt_path))))
+    condition     = var.kasm_ssl_crt_path == "" ? true : !can(regex("replaceme", file(var.kasm_ssl_crt_path)))
     error_message = "You must enter a valid SSL Cert in the file located at the kasm_ssl_crt_path."
   }
 }
@@ -178,12 +178,12 @@ variable "kasm_ssl_key_path" {
   default     = ""
 
   validation {
-    condition     = can(var.kasm_ssl_key_path == "" ? true : can(fileexists(var.kasm_ssl_key_path)))
+    condition     = var.kasm_ssl_key_path == "" ? true : can(fileexists(var.kasm_ssl_key_path))
     error_message = "The variable kasm_ssl_key_path must point to a valid OCI API Key file."
   }
 
   validation {
-    condition     = can(var.kasm_ssl_key_path == "" ? true : !can(regex("replaceme", file(var.kasm_ssl_key_path))))
+    condition     = var.kasm_ssl_key_path == "" ? true : !can(regex("replaceme", file(var.kasm_ssl_key_path)))
     error_message = "You must enter a valid SSL Cert in the file located at the kasm_ssl_key_path."
   }
 }
@@ -303,15 +303,15 @@ variable "kasm_webapp_vm_settings" {
   })
 
   validation {
-    condition     = can(var.kasm_webapp_vm_settings.cpus >= 2)
-    error_message = "Kasm Webapps should have at least 2 CPUs to ensure enough resources for Kasm services."
+    condition     = var.kasm_webapp_vm_settings.cpus >= 1
+    error_message = "Kasm Webapps should have at least 1 CPUs to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_webapp_vm_settings.memory >= 2)
+    condition     = var.kasm_webapp_vm_settings.memory >= 2
     error_message = "Kasm Webapps should have at least 2 GB Memory to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_webapp_vm_settings.hdd_size_gb >= 50)
+    condition     = var.kasm_webapp_vm_settings.hdd_size_gb >= 50
     error_message = "Kasm Webapps should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
   }
 }
@@ -325,15 +325,15 @@ variable "kasm_database_vm_settings" {
   })
 
   validation {
-    condition     = can(var.kasm_database_vm_settings.cpus >= 2)
-    error_message = "Kasm Webapps should have at least 2 CPUs to ensure enough resources for Kasm services."
+    condition     = var.kasm_database_vm_settings.cpus >= 1
+    error_message = "Kasm Webapps should have at least 1 CPUs to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_database_vm_settings.memory >= 2)
+    condition     = var.kasm_database_vm_settings.memory >= 2
     error_message = "Kasm Webapps should have at least 2 GB Memory to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_database_vm_settings.hdd_size_gb >= 50)
+    condition     = car.kasm_database_vm_settings.hdd_size_gb >= 50
     error_message = "Kasm Webapps should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
   }
 }
@@ -347,15 +347,15 @@ variable "kasm_agent_vm_settings" {
   })
 
   validation {
-    condition     = can(var.kasm_agent_vm_settings.cpus >= 2)
+    condition     = var.kasm_agent_vm_settings.cpus >= 2
     error_message = "Kasm Agents should have at least 2 CPUs to ensure enough resources for Kasm services. More CPU is definitely better for the Kasm Agent as it is the VM that runs your Kasm workspaces."
   }
   validation {
-    condition     = can(var.kasm_agent_vm_settings.memory >= 2)
+    condition     = var.kasm_agent_vm_settings.memory >= 2
     error_message = "Kasm Agents should have at least 4 GB Memory to ensure enough resources for Kasm services. More Memory is definitely better for the Kasm Agent as it is the VM that runs your Kasm workspaces."
   }
   validation {
-    condition     = can(var.kasm_agent_vm_settings.hdd_size_gb >= 120)
+    condition     = var.kasm_agent_vm_settings.hdd_size_gb >= 120
     error_message = "Kasm Agents should have at least a 120 GB HDD to meet OCI minimum requirements, and ensure enough space to pull the default Kasm workspace images."
   }
 }
@@ -369,15 +369,15 @@ variable "kasm_guac_vm_settings" {
   })
 
   validation {
-    condition     = can(var.kasm_guac_vm_settings.cpus >= 4)
-    error_message = "Kasm Guac RDP servers should have at least 4 CPUs to ensure enough resources for Kasm services."
+    condition     = var.kasm_guac_vm_settings.cpus >= 2
+    error_message = "Kasm Guac RDP servers should have at least 2 CPUs to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_guac_vm_settings.memory >= 4)
-    error_message = "Kasm Guac RDP servers should have at least 4 GB Memory to ensure enough resources for Kasm services."
+    condition     = var.kasm_guac_vm_settings.memory >= 2
+    error_message = "Kasm Guac RDP servers should have at least 2 GB Memory to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = can(var.kasm_guac_vm_settings.hdd_size_gb >= 50)
+    condition     = var.kasm_guac_vm_settings.hdd_size_gb >= 50
     error_message = "Kasm Guac RDP servers should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
   }
 }

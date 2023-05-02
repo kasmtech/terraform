@@ -40,4 +40,4 @@ kasm_server_memory   = 2
 kasm_server_hdd_size = 120
 
 ## Kasm download URL
-kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"
+kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"
