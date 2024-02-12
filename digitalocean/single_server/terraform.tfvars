@@ -13,12 +13,12 @@ digital_ocean_droplet_slug = "s-2vcpu-4gb-intel"
 swap_size                  = 2048
 
 ## Kasm passwords
-user_password        = "changeme"
-admin_password       = "changeme"
+user_password  = "changeme"
+admin_password = "changeme"
 
 ## VM Access subnets
 allow_ssh_cidrs      = ["0.0.0.0/0"]
 allow_kasm_web_cidrs = ["0.0.0.0/0"]
 
 ## Kasm download URL
-kasm_build_url       = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"
+kasm_build_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"

@@ -30,6 +30,28 @@ variable "aws_key_pair" {
   }
 }
 
+variable "create_aws_ssm_iam_role" {
+  description = "Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs."
+  type        = bool
+  default     = false
+
+  validation {
+    condition     = can(tobool(var.create_aws_ssm_iam_role))
+    error_message = "The create_aws_ssm_iam_role is a boolean value and can only be either true or false."
+  }
+}
+
+variable "aws_ssm_iam_role_name" {
+  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("[a-zA-Z0-9+=,.@-]{1,64}", var.aws_ssm_iam_role_name))
+    error_message = "The aws_ssm_iam_role_name must be unique across the account and can only consisit of between 1 and 64 characters consisting of letters, numbers, underscores (_), plus (+), equals (=), comman (,), period (.), at symbol (@), or dash (-)."
+  }
+}
+
 variable "project_name" {
   description = "The name of the deployment (e.g dev, staging). A short single word"
   type        = string
@@ -83,10 +105,20 @@ variable "num_webapps" {
   }
 }
 
+variable "num_cpx_nodes" {
+  description = "The number of Agent Role Servers to create in the deployment"
+  type        = number
+
+  validation {
+    condition     = var.num_cpx_nodes == 0 ? true : var.num_cpx_nodes >= 0 && var.num_cpx_nodes <= 100 && floor(var.num_cpx_nodes) == var.num_cpx_nodes
+    error_message = "If num_cpx_nodes is set to 0, this Terraform will not deploy the Connection Proxy node. Acceptable number of Kasm Agents range between 0-100."
+  }
+}
+
 variable "webapp_instance_type" {
   description = "The instance type for the webapps"
   type        = string
-  default     = "t3.small"
+  default     = ""
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.webapp_instance_type))
@@ -97,7 +129,6 @@ variable "webapp_instance_type" {
 variable "db_instance_type" {
   description = "The instance type for the Database"
   type        = string
-  default     = "t3.small"
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.db_instance_type))
@@ -108,11 +139,31 @@ variable "db_instance_type" {
 variable "agent_instance_type" {
   description = "The instance type for the Agents"
   type        = string
-  default     = "t3.medium"
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.agent_instance_type))
     error_message = "Check the agent_instance_type variable and ensure it is a valid AWS Instance type (https://aws.amazon.com/ec2/instance-types/)."
+  }
+}
+
+variable "cpx_instance_type" {
+  description = "The instance type for the Guac RDP nodes"
+  type        = string
+
+  validation {
+    condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.cpx_instance_type))
+    error_message = "Check the cpx_instance_type variable and ensure it is a valid AWS Instance type (https://aws.amazon.com/ec2/instance-types/)."
+  }
+}
+
+variable "proxy_instance_type" {
+  description = "The instance type for the dedicated proxy node"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.proxy_instance_type))
+    error_message = "Check the proxy_instance_type variable and ensure it is a valid AWS Instance type (https://aws.amazon.com/ec2/instance-types/)."
   }
 }
 
@@ -146,10 +197,29 @@ variable "agent_hdd_size_gb" {
   }
 }
 
+variable "cpx_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm Guac RDP instances"
+  type        = number
+
+  validation {
+    condition     = can(var.cpx_hdd_size_gb >= 40)
+    error_message = "Kasm Guac RDP nodes should have at least a 40 GB HDD to ensure enough space for Kasm services."
+  }
+}
+
+variable "proxy_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm dedicated proxy instances"
+  type        = number
+
+  validation {
+    condition     = can(var.proxy_hdd_size_gb >= 40)
+    error_message = "Kasm dedicated proxy nodes should have at least a 40 GB HDD to ensure enough space for Kasm services."
+  }
+}
+
 variable "primary_region_ec2_ami_id" {
   description = "AMI Id of Kasm EC2 image in the primary region. Recommended AMI OS Version is Ubuntu 20.04 LTS."
   type        = string
-  default     = "ami-09cd747c78a9add63"
 
   validation {
     condition     = can(regex("^(ami-[a-f0-9]{17})", var.primary_region_ec2_ami_id))
@@ -159,26 +229,23 @@ variable "primary_region_ec2_ami_id" {
 
 variable "secondary_regions_settings" {
   description = "Map of Kasm settings for secondary regions"
-  type        = map(any)
+  type = map(object({
+    agent_region   = string
+    agent_vpc_cidr = string
+    ec2_ami_id     = string
+    })
+  )
 
   validation {
-    condition     = alltrue([for region in var.secondary_regions_settings : can(regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.agent_region))])
+    condition     = alltrue([for region in var.secondary_regions_settings : can(regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.region))])
     error_message = "Verify the regions in the secondary_regions_settings variable and ensure they are valid AWS regions in a valid format (e.g. us-east-1)."
   }
   validation {
-    condition     = alltrue([for ami_id in var.secondary_regions_settings : can(regex("^(ami-[a-f0-9]{17})", ami_id.agent_ec2_ami_id))])
+    condition     = alltrue([for ami_id in var.secondary_regions_settings : can(regex("^(ami-[a-f0-9]{17})", ami_id.ec2_ami_id))])
     error_message = "Please verify that all of your Region's AMI IDs are in the correct format for AWS (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)."
   }
   validation {
-    condition     = alltrue([for instance_type in var.secondary_regions_settings : can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", instance_type.agent_instance_type))])
-    error_message = "Check the Instance types used in your secondary_regions_settings and ensure they are valid AWS Instance types (https://aws.amazon.com/ec2/instance-types/)."
-  }
-  validation {
-    condition     = alltrue([for number_of_agents in var.secondary_regions_settings : number_of_agents.num_agents >= 0 && number_of_agents.num_agents <= 100 && floor(number_of_agents.num_agents) == number_of_agents.num_agents])
-    error_message = "Check the number of agents in the secondary_regions_settings variable. Acceptable number of Kasm Agents range between 0-100."
-  }
-  validation {
-    condition     = alltrue([for subnet in var.secondary_regions_settings : can(cidrhost(subnet.agent_vpc_cidr, 0))])
+    condition     = alltrue([for subnet in var.secondary_regions_settings : can(cidrhost(subnet.vpc_cidr, 0))])
     error_message = "Verify the VPC subnet in your secondary_regions_settings. They must all be valid IPv4 CIDRs."
   }
 }
@@ -259,6 +326,17 @@ variable "manager_token" {
   }
 }
 
+variable "service_registration_token" {
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
+  type        = string
+  sensitive   = true
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9]{12,30}$", var.service_registration_token))
+    error_message = "The Service Registration Token should be a string between 12 and 30 letters or numbers with no special characters."
+  }
+}
+
 variable "ssh_access_cidrs" {
   description = "CIDR notation of the bastion host allowed to SSH in to the machines"
   type        = list(string)
@@ -292,6 +370,6 @@ variable "aws_default_tags" {
   type        = map(any)
   default = {
     Service_name = "Kasm Workspaces"
-    Kasm_version = "1.12"
+    Kasm_version = "1.14"
   }
 }

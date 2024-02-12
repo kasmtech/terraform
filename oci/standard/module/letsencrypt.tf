@@ -1,28 +1,33 @@
-resource "tls_private_key" "registration_private_key" {
+resource "tls_private_key" "registration" {
   algorithm = "RSA"
 }
 
-resource "tls_private_key" "certificate_private_key" {
+resource "tls_private_key" "certificate" {
   algorithm = "RSA"
 }
 
-resource "acme_registration" "registration" {
-  account_key_pem = tls_private_key.registration_private_key.private_key_pem
+resource "acme_registration" "this" {
+  account_key_pem = tls_private_key.registration.private_key_pem
   email_address   = var.letsencrypt_cert_support_email
 }
 
-resource "tls_cert_request" "kasm_certificate_request" {
-  private_key_pem = tls_private_key.certificate_private_key.private_key_pem
-  dns_names       = [data.oci_dns_zones.kasm_dns_zone.zones[0].name, "*.${data.oci_dns_zones.kasm_dns_zone.zones[0].name}"]
+resource "tls_cert_request" "this" {
+  private_key_pem = tls_private_key.certificate.private_key_pem
+
+  dns_names = [
+    var.oci_domain_name,
+    "*.${var.oci_domain_name}"
+  ]
 
   subject {
-    common_name = data.oci_dns_zones.kasm_dns_zone.zones[0].name
+    common_name = var.oci_domain_name
   }
 }
 
-resource "acme_certificate" "certificate" {
-  account_key_pem         = acme_registration.registration.account_key_pem
-  certificate_request_pem = tls_cert_request.kasm_certificate_request.cert_request_pem
+resource "acme_certificate" "this" {
+  account_key_pem         = acme_registration.this.account_key_pem
+  certificate_request_pem = tls_cert_request.this.cert_request_pem
+
   recursive_nameservers = [
     "8.8.8.8:53",
     "4.4.2.2:53"
@@ -44,5 +49,5 @@ resource "acme_certificate" "certificate" {
     }
   }
 
-  depends_on = [acme_registration.registration]
+  depends_on = [acme_registration.this]
 }

@@ -104,8 +104,8 @@ variable "ssh_authorized_keys" {
 }
 
 variable "instance_image_ocid" {
-  description = "The OCID for the instance image , such as ubuntu 20.04, to use."
-  default     = "ocid1.image.oc1.iad.aaaaaaaafg6lg7dejwjebjqontwzyvutgf6qs5awyze6fgoiqepyj5qkvcuq"
+  description = "The OCID for the instance image, such as ubuntu 22.04, to use."
+  type        = string
 
   validation {
     condition     = can(regex("^(ocid\\d)\\.(image)\\.(oc\\d)\\.[a-z]{3,}\\.[a-z0-9]{60}", var.instance_image_ocid))
@@ -244,7 +244,7 @@ variable "manager_token" {
 }
 
 variable "service_registration_token" {
-  description = "The service registration token value for Guac RDP servers to authenticate to webapps. No special characters"
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
   type        = string
   sensitive   = true
 
@@ -264,13 +264,13 @@ variable "num_agents" {
   }
 }
 
-variable "num_guac_rdp_nodes" {
-  description = "The number of Guac RDP Role Servers to create in the deployment"
+variable "num_cpx_nodes" {
+  description = "The number of cpx RDP Role Servers to create in the deployment"
   type        = number
 
   validation {
-    condition     = var.num_guac_rdp_nodes >= 0 && var.num_guac_rdp_nodes <= 100 && floor(var.num_guac_rdp_nodes) == var.num_guac_rdp_nodes
-    error_message = "Acceptable number of Kasm Guac RDP nodes range between 0-100."
+    condition     = var.num_cpx_nodes >= 0 && var.num_cpx_nodes <= 100 && floor(var.num_cpx_nodes) == var.num_cpx_nodes
+    error_message = "Acceptable number of Kasm cpx RDP nodes range between 0-100."
   }
 }
 
@@ -333,7 +333,7 @@ variable "kasm_database_vm_settings" {
     error_message = "Kasm Webapps should have at least 2 GB Memory to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = car.kasm_database_vm_settings.hdd_size_gb >= 50
+    condition     = var.kasm_database_vm_settings.hdd_size_gb >= 50
     error_message = "Kasm Webapps should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
   }
 }
@@ -360,8 +360,8 @@ variable "kasm_agent_vm_settings" {
   }
 }
 
-variable "kasm_guac_vm_settings" {
-  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Guac RDP instances"
+variable "kasm_cpx_vm_settings" {
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm cpx RDP instances"
   type = object({
     cpus        = number
     memory      = number
@@ -369,16 +369,38 @@ variable "kasm_guac_vm_settings" {
   })
 
   validation {
-    condition     = var.kasm_guac_vm_settings.cpus >= 2
-    error_message = "Kasm Guac RDP servers should have at least 2 CPUs to ensure enough resources for Kasm services."
+    condition     = var.kasm_cpx_vm_settings.cpus >= 2
+    error_message = "Kasm cpx RDP servers should have at least 2 CPUs to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = var.kasm_guac_vm_settings.memory >= 2
-    error_message = "Kasm Guac RDP servers should have at least 2 GB Memory to ensure enough resources for Kasm services."
+    condition     = var.kasm_cpx_vm_settings.memory >= 2
+    error_message = "Kasm cpx RDP servers should have at least 2 GB Memory to ensure enough resources for Kasm services."
   }
   validation {
-    condition     = var.kasm_guac_vm_settings.hdd_size_gb >= 50
-    error_message = "Kasm Guac RDP servers should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
+    condition     = var.kasm_cpx_vm_settings.hdd_size_gb >= 50
+    error_message = "Kasm cpx RDP servers should have at least a 50 GB HDD to meet OCI minimum requirements, and ensure enough space Kasm services."
+  }
+}
+
+variable "bastion_vm_settings" {
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm SSH Bastion instance"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
+
+  validation {
+    condition     = var.bastion_vm_settings.cpus >= 1
+    error_message = "Kasm SSH Bastion should have at least 2 CPUs to ensure enough resources for Kasm services."
+  }
+  validation {
+    condition     = var.bastion_vm_settings.memory >= 1
+    error_message = "Kasm SSH Bastion should have at least 2 GB Memory to ensure enough resources for Kasm services."
+  }
+  validation {
+    condition     = var.bastion_vm_settings.hdd_size_gb >= 50
+    error_message = "Kasm SSH Bastion should have at least a 50 GB HDD to meet OCI minimum requirements."
   }
 }
 

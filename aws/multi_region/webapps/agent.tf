@@ -1,10 +1,13 @@
-resource "aws_instance" "kasm-agent" {
-  count                  = var.num_agents
-  ami                    = var.ec2_ami
-  instance_type          = var.agent_instance_type
-  vpc_security_group_ids = [var.agent_security_group_id]
-  subnet_id              = var.agent_subnet_id
-  key_name               = var.aws_key_pair
+resource "aws_instance" "agent" {
+  count = var.num_agents
+
+  ami                         = var.ec2_ami
+  instance_type               = var.agent_instance_type
+  vpc_security_group_ids      = [var.agent_security_group_id]
+  subnet_id                   = var.agent_subnet_id
+  key_name                    = var.aws_key_pair
+  associate_public_ip_address = true
+  iam_instance_profile        = var.aws_ssm_iam_role_name
 
   root_block_device {
     volume_size = var.agent_hdd_size_gb

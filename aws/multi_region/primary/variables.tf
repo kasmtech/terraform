@@ -26,7 +26,6 @@ variable "db_hdd_size_gb" {
 variable "db_instance_type" {
   description = "The instance type for the Database"
   type        = string
-  default     = "t3.small"
 }
 
 variable "swap_size" {
@@ -70,7 +69,7 @@ variable "manager_token" {
 }
 
 variable "service_registration_token" {
-  description = "The guac token value for Guac RDP servers to authenticate to webapps. No special characters"
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
   type        = string
   sensitive   = true
 }
@@ -87,13 +86,8 @@ variable "aws_key_pair" {
 }
 
 variable "ec2_ami" {
-  description = "The AMI used for the EC2 nodes. Recommended Ubuntu 20.04 LTS."
+  description = "The AMI used for the EC2 nodes. Recommended Ubuntu 22.04 LTS."
   type        = string
-}
-
-variable "ssh_access_cidrs" {
-  description = "CIDR notation of the bastion host allowed to SSH in to the machines"
-  type        = list(string)
 }
 
 variable "web_access_cidrs" {
@@ -106,8 +100,156 @@ variable "num_webapps" {
   type        = number
 }
 
+variable "num_cpx_nodes" {
+  description = "The number of cpx RDP role servers to create in the deployment"
+  type        = number
+}
+
+variable "aws_ssm_iam_role_name" {
+  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+}
+
 variable "anywhere" {
   description = "Anywhere subnet for routing and load ingress from all IPs"
   type        = string
   default     = "0.0.0.0/0"
+}
+
+variable "public_lb_security_rules" {
+  description = "A map of objects of security rules to apply to the Public ALB"
+  type = map(object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  }))
+
+  default = {
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
+    http = {
+      from_port = 80
+      to_port   = 80
+      protocol  = "tcp"
+    }
+  }
+}
+
+variable "webapp_security_rules" {
+  description = "A map of objects of security rules to apply to the Kasm WebApp server"
+  type = object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  })
+
+  default = {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+  }
+}
+
+variable "db_security_rules" {
+  description = "A map of objects of security rules to apply to the Kasm DB"
+  type = map(object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  }))
+
+  default = {
+    postgres = {
+      from_port = 5432
+      to_port   = 5432
+      protocol  = "tcp"
+    }
+    redis = {
+      from_port = 6379
+      to_port   = 6379
+      protocol  = "tcp"
+    }
+  }
+}
+
+variable "cpx_security_rules" {
+  description = "A map of objects of security rules to apply to the Kasm Connection Proxy server"
+  type = map(object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  }))
+
+  default = {
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
+  }
+}
+
+variable "agent_security_rules" {
+  description = "A map of objects of security rules to apply to the Kasm WebApp server"
+  type = map(object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  }))
+
+  default = {
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
+  }
+}
+
+variable "windows_security_rules" {
+  description = "A map of objects of security rules to apply to the Kasm Windows VMs"
+  type = map(object({
+    from_port = number
+    to_port   = number
+    protocol  = string
+  }))
+
+  default = {
+    cpx_rdp = {
+      from_port = 3389
+      to_port   = 3389
+      protocol  = "tcp"
+    }
+    cpx_screenshot = {
+      from_port = 4902
+      to_port   = 4902
+      protocol  = "tcp"
+    }
+    webapp_screenshot = {
+      from_port = 4902
+      to_port   = 4902
+      protocol  = "tcp"
+    }
+  }
+}
+
+variable "default_egress" {
+  description = "Default egress security rule for all security groups"
+  type = object({
+    from_port    = number
+    to_port      = number
+    protocol     = string
+    cidr_subnets = list(string)
+  })
+
+  default = {
+    from_port    = 0
+    to_port      = 0
+    protocol     = "-1"
+    cidr_subnets = ["0.0.0.0/0"]
+  }
 }

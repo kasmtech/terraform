@@ -1,23 +1,36 @@
-resource "aws_vpc" "kasm-default-vpc" {
+resource "aws_vpc" "this" {
   cidr_block           = var.vpc_subnet_cidr
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
-    Name = "${var.project_name}-kasm-db-vpc"
+    Name = "${var.project_name}-kasm-vpc"
   }
 }
 
-data "aws_vpc" "data-kasm-default-vpc" {
-  id = aws_vpc.kasm-default-vpc.id
-}
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
 
-resource "aws_internet_gateway" "kasm-default-ig" {
-  vpc_id = data.aws_vpc.data-kasm-default-vpc.id
   tags = {
     Name = "${var.project_name}-kasm-ig"
   }
 }
 
-data "aws_internet_gateway" "data-kasm-default-ig" {
-  internet_gateway_id = aws_internet_gateway.kasm-default-ig.id
+resource "aws_eip" "this" {
+  domain = "vpc"
+
+  tags = {
+    Name = "${var.project_name}-kasm-nat-gateway-eip"
+  }
+
+}
+
+resource "aws_nat_gateway" "this" {
+  allocation_id = aws_eip.this.id
+  subnet_id     = aws_subnet.alb[0].id
+
+  tags = {
+    Name = "${var.project_name}-kasm-nat-gateway"
+  }
+
+  depends_on = [aws_internet_gateway.this]
 }

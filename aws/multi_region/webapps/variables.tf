@@ -19,6 +19,12 @@ variable "agent_hdd_size_gb" {
   default     = 0
 }
 
+variable "cpx_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm CPX instances"
+  type        = number
+  default     = 0
+}
+
 variable "database_password" {
   description = "The password for the database. No special characters"
   type        = string
@@ -29,6 +35,13 @@ variable "redis_password" {
   description = "The password for the database. No special characters"
   type        = string
   sensitive   = true
+}
+
+variable "service_registration_token" {
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 variable "manager_token" {
@@ -45,13 +58,11 @@ variable "swap_size" {
 variable "num_webapps" {
   description = "The number of WebApp role servers to create in the deployment"
   type        = number
-  default     = 2
 }
 
 variable "webapp_instance_type" {
   description = "The instance type for the webapps"
   type        = string
-  default     = "t3.small"
 }
 
 variable "webapp_security_group_id" {
@@ -59,9 +70,26 @@ variable "webapp_security_group_id" {
   type        = string
 }
 
+variable "load_balancer_subnet_ids" {
+  description = "ALB subnet IDs created to host webapps in the primary region"
+  type        = list(string)
+}
+
 variable "webapp_subnet_ids" {
   description = "WebApp subnet IDs created to host webapps in the primary region"
   type        = list(string)
+}
+
+variable "cpx_instance_type" {
+  description = "the instance type for the CPX nodes"
+  type        = string
+  default     = ""
+}
+
+variable "cpx_subnet_id" {
+  description = "Subnet ID created for Kasm CPX nodes"
+  type        = string
+  default     = ""
 }
 
 variable "num_agents" {
@@ -73,7 +101,7 @@ variable "num_agents" {
 variable "agent_instance_type" {
   description = "the instance type for the agents"
   type        = string
-  default     = "t3.medium"
+  default     = ""
 }
 
 variable "agent_subnet_id" {
@@ -96,6 +124,12 @@ variable "primary_aws_region" {
 variable "faux_aws_region" {
   description = "The AWS region this WebApp is supposed to represent even though it will be created in the primary region of the deployment. (e.g us-east-1)"
   type        = string
+}
+
+variable "num_cpx_nodes" {
+  description = "The number of cpx  Role Servers to create in the deployment"
+  type        = number
+  default     = 0
 }
 
 variable "kasm_build" {
@@ -128,11 +162,6 @@ variable "certificate_arn" {
   type        = string
 }
 
-variable "ssh_access_cidrs" {
-  description = "List of Networks in CIDR notation for IPs allowed to SSH in to the machines"
-  type        = list(string)
-}
-
 variable "load_balancer_log_bucket" {
   description = "S3 bucket name for load balancers to forward access logs to"
   type        = string
@@ -143,7 +172,53 @@ variable "primary_vpc_id" {
   type        = string
 }
 
+variable "aws_ssm_iam_role_name" {
+  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+}
+
 variable "load_balancer_security_group_id" {
   description = "Security Group ID for the Primary region's load balancer"
   type        = string
+}
+
+variable "cpx_security_group_id" {
+  description = "CPX security group ID"
+  type        = string
+  default     = ""
+}
+
+variable "aws_to_kasm_zone_map" {
+  description = "AWS regions mapped to Kasm Deployment Zone names"
+  type        = map(any)
+  default = {
+    us-east-1      = "USA-(Virginia)"
+    us-east-2      = "USA-(Ohio)"
+    us-west-1      = "USA-(California)"
+    us-west-2      = "USA-(Oregon)"
+    ap-south-1     = "India-(Mumbai)"
+    ap-northeast-3 = "Japan-(Osaka)"
+    ap-northeast-2 = "S-Korea-(Seoul)"
+    ap-southeast-1 = "Singapore"
+    ap-southeast-2 = "Austrailia-(Sydney)"
+    ap-northeast-1 = "Japan-(Tokyo)"
+    ca-central-1   = "Canada-(Montreal)"
+    eu-central-1   = "Germany-(Frankfurt)"
+    eu-west-1      = "Ireland-(Dublin)"
+    eu-west-2      = "UK-(London)"
+    eu-west-3      = "France-(Paris)"
+    eu-north-1     = "Sweden-(Stockholm)"
+    eu-south-1     = "Italy-(Milan)"
+    eu-south-2     = "Spain-(Aragon)"
+    eu-central-1   = "Switzerland-(Zurich)"
+    sa-east-1      = "Brazil-(Sao-Paulo)"
+    af-south-1     = "Africa-(Cape-Town)"
+    ap-east-1      = "China-(Hong-Kong)"
+    ap-south-2     = "India-(Hyderbad)"
+    ap-southeast-3 = "Indonesia-(Jakarta)"
+    ap-southeast-4 = "Austrailia-(Melbourne)"
+    me-south-1     = "Manama-(Bahrain)"
+    me-central-1   = "United-Arab-Emirates"
+  }
 }

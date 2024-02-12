@@ -32,7 +32,7 @@ user_password  = "changeme"
 ssh_authorized_keys = "changeme"
 
 ## OCI VM Settings
-instance_image_ocid  = "ocid1.image.oc1.iad.aaaaaaaahiz6xym3a76xhwkmwmhrz6luyiehho7dpxpkphxhsq5q6z4m3nlq"
+instance_image_ocid  = ""
 instance_shape       = "VM.Standard.E4.Flex"
 swap_size            = 2048
 kasm_server_cpus     = 2
@@ -40,4 +40,4 @@ kasm_server_memory   = 2
 kasm_server_hdd_size = 120
 
 ## Kasm download URL
-kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"
+kasm_build_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"

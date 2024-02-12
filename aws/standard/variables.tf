@@ -96,7 +96,6 @@ variable "swap_size" {
 variable "webapp_instance_type" {
   description = "The instance type for the webapps"
   type        = string
-  default     = "t3.small"
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.webapp_instance_type))
@@ -107,7 +106,6 @@ variable "webapp_instance_type" {
 variable "db_instance_type" {
   description = "The instance type for the Database"
   type        = string
-  default     = "t3.small"
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.db_instance_type))
@@ -118,7 +116,6 @@ variable "db_instance_type" {
 variable "agent_instance_type" {
   description = "The instance type for the Agents"
   type        = string
-  default     = "t3.medium"
 
   validation {
     condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.agent_instance_type))
@@ -126,32 +123,29 @@ variable "agent_instance_type" {
   }
 }
 
-variable "guac_instance_type" {
-  description = "The instance type for the Guacamole RDP nodes"
+variable "cpx_instance_type" {
+  description = "The instance type for the cpxamole RDP nodes"
   type        = string
-  default     = "t3.medium"
 
   validation {
-    condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.guac_instance_type))
-    error_message = "Check the guac_instance_type variable and ensure it is a valid AWS Instance type (https://aws.amazon.com/ec2/instance-types/)."
+    condition     = can(regex("^(([a-z-]{1,3})(\\d{1,2})?(\\w{1,4})?)\\.(nano|micro|small|medium|metal|large|(2|3|4|6|8|9|10|12|16|18|24|32|48|56|112)?xlarge)", var.cpx_instance_type))
+    error_message = "Check the cpx_instance_type variable and ensure it is a valid AWS Instance type (https://aws.amazon.com/ec2/instance-types/)."
   }
 }
 
 variable "num_webapps" {
   description = "The number of WebApp role servers to create in the deployment"
   type        = number
-  default     = 2
 
   validation {
-    condition     = var.num_webapps >= 1 && var.num_webapps <= 3 && floor(var.num_webapps) == var.num_webapps
-    error_message = "Acceptable number of webapps range between 1-3."
+    condition     = var.num_webapps >= 1 && var.num_webapps <= 6 && floor(var.num_webapps) == var.num_webapps
+    error_message = "Acceptable number of webapps range between 1-6."
   }
 }
 
 variable "num_agents" {
   description = "The number of Agent Role Servers to create in the deployment"
   type        = number
-  default     = 2
 
   validation {
     condition     = var.num_agents >= 0 && var.num_agents <= 100 && floor(var.num_agents) == var.num_agents
@@ -159,32 +153,59 @@ variable "num_agents" {
   }
 }
 
-variable "num_guac_nodes" {
+variable "num_cpx_nodes" {
   description = "The number of Agent Role Servers to create in the deployment"
   type        = number
-  default     = 1
 
   validation {
-    condition     = var.num_guac_nodes >= 0 && var.num_guac_nodes <= 100 && floor(var.num_guac_nodes) == var.num_guac_nodes
-    error_message = "Acceptable number of Kasm Agents range between 0-100."
+    condition     = var.num_cpx_nodes == 0 ? true : var.num_cpx_nodes >= 0 && var.num_cpx_nodes <= 100 && floor(var.num_cpx_nodes) == var.num_cpx_nodes
+    error_message = "If num_cpx_nodes is set to 0, this Terraform will not deploy the Connection Proxy node. Acceptable number of Kasm Agents range between 0-100."
   }
 }
 
-variable "ssh_access_cidrs" {
-  description = "CIDR notation of the bastion host allowed to SSH in to the machines"
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+variable "webapp_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm WebApp instances"
+  type        = number
 
   validation {
-    condition     = alltrue([for subnet in var.ssh_access_cidrs : can(cidrhost(subnet, 0))])
-    error_message = "One of the subnets provided in the ssh_access_cidr variable is invalid."
+    condition     = can(var.webapp_hdd_size_gb >= 40)
+    error_message = "Kasm Webapps should have at least a 40 GB HDD to ensure enough space for Kasm services."
+  }
+}
+
+variable "db_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm Database instances"
+  type        = number
+
+  validation {
+    condition     = can(var.db_hdd_size_gb >= 40)
+    error_message = "Kasm Database should have at least a 40 GB HDD to ensure enough space for Kasm services."
+  }
+}
+
+variable "agent_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm Agent instances"
+  type        = number
+
+  validation {
+    condition     = can(var.agent_hdd_size_gb >= 120)
+    error_message = "Kasm Agents should have at least a 120 GB HDD to ensure enough space for Kasm services."
+  }
+}
+
+variable "cpx_hdd_size_gb" {
+  description = "The HDD size in GB to configure for the Kasm cpx RDP instances"
+  type        = number
+
+  validation {
+    condition     = can(var.cpx_hdd_size_gb >= 40)
+    error_message = "Kasm cpx RDP nodes should have at least a 40 GB HDD to ensure enough space for Kasm services. If num_cpx_nodes is set to 0 this setting is ignored."
   }
 }
 
 variable "web_access_cidrs" {
   description = "CIDR notation of the bastion host allowed to SSH in to the machines"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
 
   validation {
     condition     = alltrue([for subnet in var.web_access_cidrs : can(cidrhost(subnet, 0))])
@@ -192,12 +213,12 @@ variable "web_access_cidrs" {
   }
 }
 
-variable "ec2_ami" {
-  description = "The AMI used for the EC2 nodes. Recommended Ubuntu 20.04 LTS."
+variable "ec2_ami_id" {
+  description = "The AMI used for the EC2 nodes. Recommended Ubuntu 22.04 LTS."
   type        = string
 
   validation {
-    condition     = can(regex("^(ami-[a-f0-9]{17})", var.ec2_ami))
+    condition     = can(regex("^(ami-[a-f0-9]{17})", var.ec2_ami_id))
     error_message = "Please verify that your AMI is in the correct format for AWS (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)."
   }
 }
@@ -258,13 +279,35 @@ variable "manager_token" {
 }
 
 variable "service_registration_token" {
-  description = "The service registration token value for Guac RDP servers to authenticate to webapps. No special characters"
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
   type        = string
   sensitive   = true
 
   validation {
     condition     = can(regex("^[a-zA-Z0-9]{12,30}$", var.service_registration_token))
     error_message = "The Service Registration Token should be a string between 12 and 30 letters or numbers with no special characters."
+  }
+}
+
+variable "create_aws_ssm_iam_role" {
+  description = "Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs."
+  type        = bool
+  default     = false
+
+  validation {
+    condition     = can(tobool(var.create_aws_ssm_iam_role))
+    error_message = "The create_aws_ssm_iam_role is a boolean value and can only be either true or false."
+  }
+}
+
+variable "aws_ssm_iam_role_name" {
+  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("[a-zA-Z0-9+=,.@-]{1,64}", var.aws_ssm_iam_role_name))
+    error_message = "The aws_ssm_iam_role_name must be unique across the account and can only consisit of between 1 and 64 characters consisting of letters, numbers, underscores (_), plus (+), equals (=), comman (,), period (.), at symbol (@), or dash (-)."
   }
 }
 
@@ -277,8 +320,5 @@ variable "kasm_build" {
 variable "aws_default_tags" {
   description = "Default tags to apply to all AWS resources for this deployment"
   type        = map(any)
-  default = {
-    Service_name = "Kasm Workspaces"
-    Kasm_version = "1.12"
-  }
+  default     = {}
 }

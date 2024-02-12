@@ -1,5 +1,5 @@
-resource "oci_core_instance" "kasm_db_instance" {
-  availability_domain = data.oci_identity_availability_domains.kasm_ads.availability_domains[0].name
+resource "oci_core_instance" "db" {
+  availability_domain = local.availability_domains[0].name
   compartment_id      = var.compartment_ocid
   display_name        = "${var.project_name}-Kasm-DB"
   shape               = var.instance_shape
@@ -10,8 +10,8 @@ resource "oci_core_instance" "kasm_db_instance" {
   }
 
   create_vnic_details {
-    subnet_id                 = oci_core_subnet.kasm-db-subnet.id
-    display_name              = "${var.project_name}-Primaryvnic"
+    subnet_id                 = oci_core_subnet.db.id
+    display_name              = "${var.project_name}-DB-Primaryvnic"
     assign_public_ip          = true
     assign_private_dns_record = true
     hostname_label            = "${var.project_name}-Kasm-DB"
@@ -38,8 +38,4 @@ resource "oci_core_instance" "kasm_db_instance" {
       }
     ))
   }
-}
-
-data "oci_core_instance" "data-kasm_db_instance" {
-  instance_id = oci_core_instance.kasm_db_instance.id
 }

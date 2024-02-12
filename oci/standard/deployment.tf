@@ -18,6 +18,7 @@ module "kasm" {
   # Let TF generate Let's Encrypt SSL Certificates automatically
   letsencrypt_cert_support_email = var.letsencrypt_cert_support_email
   letsencrypt_server_type        = var.letsencrypt_server_type
+
   # Bring your own SSL Certificates
   kasm_ssl_crt_path = var.kasm_ssl_crt_path
   kasm_ssl_key_path = var.kasm_ssl_key_path
@@ -26,14 +27,15 @@ module "kasm" {
   instance_shape            = var.instance_shape
   num_agents                = var.num_agents
   num_webapps               = var.num_webapps
-  num_guac_rdp_nodes        = var.num_guac_rdp_nodes
+  num_cpx_nodes             = var.num_cpx_nodes
   kasm_agent_vm_settings    = var.kasm_agent_vm_settings
   kasm_database_vm_settings = var.kasm_database_vm_settings
   kasm_webapp_vm_settings   = var.kasm_webapp_vm_settings
-  kasm_guac_vm_settings     = var.kasm_guac_vm_settings
+  kasm_cpx_vm_settings      = var.kasm_cpx_vm_settings
   allow_ssh_cidrs           = var.allow_ssh_cidrs
   allow_web_cidrs           = var.allow_web_cidrs
   swap_size                 = var.swap_size
+  bastion_vm_settings       = var.bastion_vm_settings
 
   manager_token              = var.manager_token
   admin_password             = var.admin_password

@@ -1,0 +1,52 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.81.0
+    hooks:
+      - id: tfupdate
+        name: Autoupdate Terraform versions
+        args:
+          - --args=terraform
+          - --args=--version "~> 1.0"
+      - id: tfupdate
+        name: Autoupdate AWS version
+        args:
+          - --args=provider aws
+          - --args=--version "~> 5.0"
+      - id: tfupdate
+        name: Autoupdate OCI version
+        args:
+          - --args=provider oci
+          - --args=--version "~> 5.0"
+      - id: tfupdate
+        name: Autoupdate DigitalOcean version
+        args:
+          - --args=provider digitalocean
+          - --args=--version "~> 2.0"
+      - id: tfupdate
+        name: Autoupdate Acme version
+        args:
+          - --args=provider acme
+          - --args=--version "~> 2.0"
+      - id: tfupdate
+        name: Autoupdate TLS version
+        args:
+          - --args=provider tls
+          - --args=--version "~> 4.0"
+      - id: terraform_fmt
+      - id: terraform_tflint
+        args:
+          - --args=--fix
+      - id: terraform_validate
+        args:
+          - --tf-init-args=-upgrade
+          - --hook-config=--retry-once-with-cleanup=true
+      - id: terraform_docs
+        args:
+          - --hook-config=--path-to-file=README.md
+          - --hook-config=--add-to-existing-file=true
+          - --hook-config=--create-file-if-not-exist=true

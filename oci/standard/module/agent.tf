@@ -1,6 +1,7 @@
-resource "oci_core_instance" "kasm_agent_instance" {
-  count               = var.num_agents
-  availability_domain = data.oci_identity_availability_domains.kasm_ads.availability_domains[0].name
+resource "oci_core_instance" "agent" {
+  count = var.num_agents
+
+  availability_domain = local.availability_domains[0].name
   compartment_id      = var.compartment_ocid
   display_name        = "${var.project_name}-Kasm-Agent-${count.index}"
   shape               = var.instance_shape
@@ -11,8 +12,8 @@ resource "oci_core_instance" "kasm_agent_instance" {
   }
 
   create_vnic_details {
-    subnet_id                 = data.oci_core_subnet.data-kasm_agent_subnet.id
-    display_name              = "${var.project_name}-Primaryvnic-${count.index}"
+    subnet_id                 = oci_core_subnet.agent.id
+    display_name              = "${var.project_name}-Agent-Primaryvnic-${count.index}"
     assign_public_ip          = true
     assign_private_dns_record = true
     hostname_label            = "${var.project_name}-Kasm-Agent-${count.index}"

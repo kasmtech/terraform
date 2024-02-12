@@ -94,7 +94,7 @@ variable "num_webapps" {
   type        = number
 }
 
-variable "num_guac_rdp_nodes" {
+variable "num_cpx_nodes" {
   description = "The number of WebApp role servers to create in the deployment"
   type        = number
 }
@@ -130,7 +130,7 @@ variable "manager_token" {
 }
 
 variable "service_registration_token" {
-  description = "The service registration token value for Guac RDP servers to authenticate to webapps. No special characters"
+  description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
   type        = string
   sensitive   = true
 }
@@ -151,23 +151,54 @@ variable "instance_shape" {
 }
 
 variable "kasm_webapp_vm_settings" {
-  description = "The amount of memory, in GB, to configure for the Kasm WebApp instance"
-  type        = map(any)
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm WebApp instances"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
 }
 
 variable "kasm_database_vm_settings" {
-  description = "The amount of memory, in GB, to configure for the Kasm DB instance"
-  type        = map(any)
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Database instance"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
 }
 
 variable "kasm_agent_vm_settings" {
-  description = "The amount of memory, in GB, to configure for the Kasm Agent instance"
-  type        = map(any)
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Agent instances"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
 }
 
-variable "kasm_guac_vm_settings" {
-  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Guac RDP instance"
-  type        = map(any)
+variable "kasm_cpx_vm_settings" {
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm cpx RDP instances"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
+}
+
+variable "bastion_vm_settings" {
+  description = "The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm SSH Bastion instance"
+  type = object({
+    cpus        = number
+    memory      = number
+    hdd_size_gb = number
+  })
+}
+
+variable "bastion_vm_utilization" {
+  description = "The VM compute utilization. Defaults to 12.5% to reduce costs on long-running instances."
+  type        = string
+  default     = "BASELINE_1_8"
 }
 
 ## Pre-set values

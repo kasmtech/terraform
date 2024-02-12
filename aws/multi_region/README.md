@@ -45,50 +45,85 @@ Create a user via the IAM console that will be used for the terraform deployment
 
 3. Verify the configuration
 
-       terraform plan -var-file settings.tfvars -var-file secrets.tfvars
+       terraform plan -var-file secrets.tfvars
 
 4. Deploy
 
-       terraform apply -var-file settings.tfvars -var-file secrets.tfvars
+       terraform apply -var-file secrets.tfvars
 
 5. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`
 
 6. Navigate to the Agents tab, and enable each Agent after it checks in. (May take a few minutes)
 
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
-# AWS Terraform Variable definitions
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
 
-| Variable | Description | Variable type | Example |
-|:--------:|-------------|---------------|---------|
-| `aws_access_key` | The AWS access key used for deployment. | String | `"AKIAJSIE27KKMHXI3BJQ"` |
-| `aws_secret_key` | The AWS secret key used for deployment. | String | `"wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"` |
-| `aws_primary_region` | The AWS Region to deploy all Kasm Management resources. | String | `"us-east-1"` |
-| `project_name` | The name of the deployment (e.g dev, staging). A short single word of up to 15 characters. | String | `"kasm"` |
-| `aws_domain_name` | The Route53 Zone used for the dns entries. This must already exist in the AWS account. (e.g dev.kasm.contoso.com). The deployment will be accessed via this zone name via https. | String | `"kasm.contoso.com"` |
-| `kasm_zone_name` | A name given to the kasm deployment Zone. | String | `"default"` |
-| `primary_vpc_subnet_cidr` | The subnet CIDR to use for the Primary region's VPC. | String | `"10.0.0.0/16"` |
-| `aws_key_pair` | The name of an aws keypair to use. | String | `"kasm_ssh_key"` |
-| `primary_region_ec2_ami_id` | The AMI used for the EC2 nodes in the Primary (Management) region. Recommended Ubuntu 20.04 LTS. | String | `"ami-09cd747c78a9add63"` |
-| `swap_size` | The amount of swap (in MB) to configure inside the Kasm servers. | Number | `2048` |
-| `webapp_instance_type` | The instance type for the Kasm WebApps. | String | `"t3.small"` |
-| `webapp_hdd_size_gb` | The HDD size for the WebApp EC2s in GB. | Number | `40` |
-| `db_instance_type` | The instance type for the Kasm Database. | String | `"t3.medium"` |
-| `db_hdd_size_gb` | The HDD size for the DB EC2 in GB. | Number | `40` |
-| `agent_instance_type` | The instance type for the Kasm Agents in the Primary region. | String | `"t3.medium"` |
-| `agent_hdd_size_gb` | The HDD size for the Agent EC2s in GB. | Number | `120` |
-| `num_webapps` | The number of WebApp role servers to create in this deployment. Acceptable ranges from 1-3. | Number | `2` |
-| `num_agents` | The number of static Kasm Agents to create in the primary region. Acceptable ranges from 0-100. | Number | `2` |
-| `allow_ssh_cidrs` | A list of subnets in CIDR notation allowed to SSH into your kasm servers (use `["0.0.0.0/0]"` to allow SSH from any IP). | List(String) | `["1.1.1.1/32","172.217.22.14/32"]` |
-| `web_access_cidrs` | A list of subnets in CIDR notation allowed Web access to your kasm servers (use `["0.0.0.0/0]"` to allow HTTP/HTTPS from any IP). | List(String) | `["0.0.0.0/0"]` |
-| `secondary_regions_settings` | A map of AWS environment settings for secondary regions. The Primary region is considered "region1", thus all secondary regions should be labeled "region2", "region3", etc. Refer to the commented settings in the `secondary_regions_settings` variable in the `settings.tf` for an example. | Map(any) | <pre>{<br/>&nbsp;&nbsp;region2 = {<br/>&nbsp;&nbsp;&nbsp;&nbsp;agent_region = "eu-central-1"<br/>&nbsp;&nbsp;&nbsp;&nbsp;agent_ec2_ami_id = "ami-0e067cc8a2b58de59"<br/>&nbsp;&nbsp;&nbsp;&nbsp;agent_instance_type = "t3.medium"<br/>&nbsp;&nbsp;&nbsp;&nbsp;num_agents = 2<br/>&nbsp;&nbsp;&nbsp;&nbsp;agent_vpc_cidr = "10.1.0.0/16"<br/>&nbsp;&nbsp;}<br/>}</pre>
-| `database_password` | The Kasm PostgreSQL database password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `redis_password` | The Kasm Redis password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `admin_password` | The Kasm Administrative user login password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `user_password` | A Kasm standard (non-administrator) user password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `manager_token` | The manager token value used by Kasm agents to authenticate to the Kasm WebApps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `kasm_build` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"` |
-| `aws_default_tags` | A Map of all tags you wish to apply to all TF created resources in this deployment. | Map(Any) | <pre>{<br/>&nbsp;&nbsp;Service_name = "Kasm Workspaces"<br/>&nbsp;&nbsp;Kasm_version = "1.12"<br/>}</pre> |
+## Providers
 
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_primary_region"></a> [primary\_region](#module\_primary\_region) | ./primary | n/a |
+| <a name="module_primary_region_webapps_and_agents"></a> [primary\_region\_webapps\_and\_agents](#module\_primary\_region\_webapps\_and\_agents) | ./webapps | n/a |
+| <a name="module_region2_agents"></a> [region2\_agents](#module\_region2\_agents) | ./agents | n/a |
+| <a name="module_region2_webapps"></a> [region2\_webapps](#module\_region2\_webapps) | ./webapps | n/a |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_admin_password"></a> [admin\_password](#input\_admin\_password) | The administrative user password. No special characters | `string` | n/a | yes |
+| <a name="input_agent_hdd_size_gb"></a> [agent\_hdd\_size\_gb](#input\_agent\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm Agent instances | `number` | n/a | yes |
+| <a name="input_agent_instance_type"></a> [agent\_instance\_type](#input\_agent\_instance\_type) | The instance type for the Agents | `string` | n/a | yes |
+| <a name="input_aws_access_key"></a> [aws\_access\_key](#input\_aws\_access\_key) | The AWS access key used for deployment | `string` | n/a | yes |
+| <a name="input_aws_default_tags"></a> [aws\_default\_tags](#input\_aws\_default\_tags) | Default tags to apply to all AWS resources for this deployment | `map(any)` | <pre>{<br>  "Kasm_version": "1.14",<br>  "Service_name": "Kasm Workspaces"<br>}</pre> | no |
+| <a name="input_aws_domain_name"></a> [aws\_domain\_name](#input\_aws\_domain\_name) | The Route53 Zone used for the dns entries. This must already exist in the AWS account. (e.g dev.kasm.contoso.com). The deployment will be accessed via this zone name via https | `string` | n/a | yes |
+| <a name="input_aws_key_pair"></a> [aws\_key\_pair](#input\_aws\_key\_pair) | The name of an aws keypair to use. | `string` | n/a | yes |
+| <a name="input_aws_primary_region"></a> [aws\_primary\_region](#input\_aws\_primary\_region) | The AWS Region used for deployment | `string` | `"us-east-1"` | no |
+| <a name="input_aws_secret_key"></a> [aws\_secret\_key](#input\_aws\_secret\_key) | The AWS secret key used for deployment | `string` | n/a | yes |
+| <a name="input_aws_ssm_iam_role_name"></a> [aws\_ssm\_iam\_role\_name](#input\_aws\_ssm\_iam\_role\_name) | The name of the SSM EC2 role to associate with Kasm VMs for SSH access | `string` | `""` | no |
+| <a name="input_cpx_hdd_size_gb"></a> [cpx\_hdd\_size\_gb](#input\_cpx\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm Guac RDP instances | `number` | n/a | yes |
+| <a name="input_cpx_instance_type"></a> [cpx\_instance\_type](#input\_cpx\_instance\_type) | The instance type for the Guac RDP nodes | `string` | n/a | yes |
+| <a name="input_create_aws_ssm_iam_role"></a> [create\_aws\_ssm\_iam\_role](#input\_create\_aws\_ssm\_iam\_role) | Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs. | `bool` | `false` | no |
+| <a name="input_database_password"></a> [database\_password](#input\_database\_password) | The password for the database. No special characters | `string` | n/a | yes |
+| <a name="input_db_hdd_size_gb"></a> [db\_hdd\_size\_gb](#input\_db\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm Database instances | `number` | n/a | yes |
+| <a name="input_db_instance_type"></a> [db\_instance\_type](#input\_db\_instance\_type) | The instance type for the Database | `string` | n/a | yes |
+| <a name="input_kasm_build"></a> [kasm\_build](#input\_kasm\_build) | Download URL for Kasm Workspaces | `string` | n/a | yes |
+| <a name="input_manager_token"></a> [manager\_token](#input\_manager\_token) | The manager token value for Agents to authenticate to webapps. No special characters | `string` | n/a | yes |
+| <a name="input_num_agents"></a> [num\_agents](#input\_num\_agents) | The number of Agent Role Servers to create in the deployment | `number` | `2` | no |
+| <a name="input_num_cpx_nodes"></a> [num\_cpx\_nodes](#input\_num\_cpx\_nodes) | The number of Agent Role Servers to create in the deployment | `number` | n/a | yes |
+| <a name="input_num_webapps"></a> [num\_webapps](#input\_num\_webapps) | The number of WebApp role servers to create in the deployment | `number` | `2` | no |
+| <a name="input_primary_region_ec2_ami_id"></a> [primary\_region\_ec2\_ami\_id](#input\_primary\_region\_ec2\_ami\_id) | AMI Id of Kasm EC2 image in the primary region. Recommended AMI OS Version is Ubuntu 20.04 LTS. | `string` | n/a | yes |
+| <a name="input_primary_vpc_subnet_cidr"></a> [primary\_vpc\_subnet\_cidr](#input\_primary\_vpc\_subnet\_cidr) | The subnet CIDR to use for the VPC | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
+| <a name="input_proxy_hdd_size_gb"></a> [proxy\_hdd\_size\_gb](#input\_proxy\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm dedicated proxy instances | `number` | n/a | yes |
+| <a name="input_proxy_instance_type"></a> [proxy\_instance\_type](#input\_proxy\_instance\_type) | The instance type for the dedicated proxy node | `string` | `""` | no |
+| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the Redis server. No special characters | `string` | n/a | yes |
+| <a name="input_secondary_regions_settings"></a> [secondary\_regions\_settings](#input\_secondary\_regions\_settings) | Map of Kasm settings for secondary regions | <pre>map(object({<br>    agent_region   = string<br>    agent_vpc_cidr = string<br>    ec2_ami_id     = string<br>    })<br>  )</pre> | n/a | yes |
+| <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | n/a | yes |
+| <a name="input_ssh_access_cidrs"></a> [ssh\_access\_cidrs](#input\_ssh\_access\_cidrs) | CIDR notation of the bastion host allowed to SSH in to the machines | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in MB) to configure inside the compute instances | `number` | n/a | yes |
+| <a name="input_user_password"></a> [user\_password](#input\_user\_password) | The standard (non administrator) user password. No special characters | `string` | n/a | yes |
+| <a name="input_web_access_cidrs"></a> [web\_access\_cidrs](#input\_web\_access\_cidrs) | CIDR notation of the bastion host allowed to SSH in to the machines | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| <a name="input_webapp_hdd_size_gb"></a> [webapp\_hdd\_size\_gb](#input\_webapp\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm WebApp instances | `number` | n/a | yes |
+| <a name="input_webapp_instance_type"></a> [webapp\_instance\_type](#input\_webapp\_instance\_type) | The instance type for the webapps | `string` | `""` | no |
+
+## Outputs
+
+No outputs.
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 # Detailed Terraform Deployment Diagram
 

@@ -1,7 +1,7 @@
 resource "digitalocean_firewall" "workspaces-fw" {
   name = "${var.project_name}-fw"
 
-  tags = ["${digitalocean_tag.project.id}"]
+  tags = [digitalocean_tag.project.id]
 
   inbound_rule {
     protocol         = "tcp"

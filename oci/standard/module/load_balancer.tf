@@ -1,32 +1,32 @@
-resource "oci_load_balancer" "kasm_load_balancer" {
+resource "oci_load_balancer" "public" {
   shape          = "flexible"
   compartment_id = var.compartment_ocid
-  subnet_ids     = [for subnet_id in data.oci_core_subnets.data-kasm_webapp_subnets : subnet_id.subnets[0].id]
+  subnet_ids     = [oci_core_subnet.lb.id]
 
   shape_details {
     minimum_bandwidth_in_mbps = 10
-    maximum_bandwidth_in_mbps = 100
+    maximum_bandwidth_in_mbps = 1000
   }
 
   display_name = "${var.project_name}-kasm-load_balancer"
 }
 
-resource "oci_load_balancer_certificate" "kasm_lb_certificate" {
+resource "oci_load_balancer_certificate" "public" {
   certificate_name = "${var.project_name}-kasm-cert"
-  load_balancer_id = oci_load_balancer.kasm_load_balancer.id
+  load_balancer_id = oci_load_balancer.public.id
 
-  ca_certificate     = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_crt_path) : acme_certificate.certificate.certificate_pem
-  public_certificate = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_crt_path) : acme_certificate.certificate.certificate_pem
-  private_key        = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_key_path) : tls_private_key.certificate_private_key.private_key_pem
+  ca_certificate     = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_crt_path) : acme_certificate.this.certificate_pem
+  public_certificate = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_crt_path) : acme_certificate.this.certificate_pem
+  private_key        = var.letsencrypt_server_type == "" ? file(var.kasm_ssl_key_path) : tls_private_key.certificate.private_key_pem
 
   lifecycle {
     create_before_destroy = true
   }
 }
 
-resource "oci_load_balancer_backend_set" "kasm_load_balancer_backend_set" {
+resource "oci_load_balancer_backend_set" "public" {
   name             = "${var.project_name}-kasm-backend_set"
-  load_balancer_id = oci_load_balancer.kasm_load_balancer.id
+  load_balancer_id = oci_load_balancer.public.id
   policy           = "ROUND_ROBIN"
 
   health_checker {
@@ -42,22 +42,22 @@ resource "oci_load_balancer_backend_set" "kasm_load_balancer_backend_set" {
 
   ssl_configuration {
     protocols = [
-      "TLSv1.1",
       "TLSv1.2"
     ]
-    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.data-kasm_load_balancer_cipher_suite.name
-    certificate_name        = oci_load_balancer_certificate.kasm_lb_certificate.certificate_name
+    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.this.name
+    certificate_name        = oci_load_balancer_certificate.public.certificate_name
     verify_peer_certificate = false
   }
 }
 
-resource "oci_load_balancer_backend" "kasm_webapp_load_balancer_backend" {
-  count            = var.num_webapps
-  backendset_name  = oci_load_balancer_backend_set.kasm_load_balancer_backend_set.name
+resource "oci_load_balancer_backend" "public" {
+  count = var.num_webapps
+
+  backendset_name  = oci_load_balancer_backend_set.public.name
   backup           = false
   drain            = false
-  load_balancer_id = oci_load_balancer.kasm_load_balancer.id
-  ip_address       = data.oci_core_instance.data-kasm_webapp_instances[count.index].private_ip
+  load_balancer_id = oci_load_balancer.public.id
+  ip_address       = oci_core_instance.webapp[(count.index)].private_ip
   offline          = false
   port             = 443
   weight           = 1
@@ -65,24 +65,23 @@ resource "oci_load_balancer_backend" "kasm_webapp_load_balancer_backend" {
 
 resource "oci_load_balancer_listener" "kasm_https_ssl_listener" {
   name                     = "${var.project_name}-https-ssl-listener"
-  load_balancer_id         = oci_load_balancer.kasm_load_balancer.id
-  default_backend_set_name = oci_load_balancer_backend_set.kasm_load_balancer_backend_set.name
+  load_balancer_id         = oci_load_balancer.public.id
+  default_backend_set_name = oci_load_balancer_backend_set.public.name
   port                     = "443"
   protocol                 = "HTTP"
 
   ssl_configuration {
     protocols = [
-      "TLSv1.1",
       "TLSv1.2"
     ]
     server_order_preference = "ENABLED"
     verify_peer_certificate = false
-    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.data-kasm_load_balancer_cipher_suite.name
-    certificate_name        = oci_load_balancer_certificate.kasm_lb_certificate.certificate_name
+    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.this.name
+    certificate_name        = oci_load_balancer_certificate.public.certificate_name
   }
 }
 
-data "oci_load_balancer_ssl_cipher_suite" "data-kasm_load_balancer_cipher_suite" {
+data "oci_load_balancer_ssl_cipher_suite" "this" {
   name             = "oci-default-ssl-cipher-suite-v1"
-  load_balancer_id = oci_load_balancer.kasm_load_balancer.id
+  load_balancer_id = oci_load_balancer.public.id
 }
