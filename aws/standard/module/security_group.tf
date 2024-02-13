@@ -8,7 +8,7 @@ resource "aws_security_group" "public_lb" {
   }
 }
 
-resource "aws_security_group_rule" "public_lb" {
+resource "aws_security_group_rule" "public_lb_ingress" {
   for_each = var.public_lb_security_rules
 
   security_group_id = aws_security_group.public_lb.id
@@ -17,6 +17,15 @@ resource "aws_security_group_rule" "public_lb" {
   to_port           = each.value.to_port
   protocol          = each.value.protocol
   cidr_blocks       = var.web_access_cidrs
+}
+
+resource "aws_security_group_rule" "public_lb_egress" {
+  security_group_id = aws_security_group.public_lb.id
+  type              = "egress"
+  from_port         = var.default_egress.from_port
+  to_port           = var.default_egress.to_port
+  protocol          = var.default_egress.protocol
+  cidr_blocks       = [var.anywhere]
 }
 
 resource "aws_security_group" "private_lb" {
@@ -29,7 +38,18 @@ resource "aws_security_group" "private_lb" {
   }
 }
 
-resource "aws_security_group_rule" "private_lb" {
+resource "aws_security_group_rule" "private_lb_egress" {
+  for_each = var.private_lb_security_rules
+
+  security_group_id = aws_security_group.private_lb.id
+  type              = "egress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = aws_subnet.webapp[*].cidr_block
+}
+
+resource "aws_security_group_rule" "private_lb_agent" {
   for_each = var.private_lb_security_rules
 
   security_group_id        = aws_security_group.private_lb.id
@@ -37,7 +57,7 @@ resource "aws_security_group_rule" "private_lb" {
   from_port                = each.value.from_port
   to_port                  = each.value.to_port
   protocol                 = each.value.protocol
-  source_security_group_id = each.key
+  source_security_group_id = aws_security_group.agent.id
 }
 
 resource "aws_security_group" "webapp" {
@@ -50,15 +70,31 @@ resource "aws_security_group" "webapp" {
   }
 }
 
-resource "aws_security_group_rule" "webapp" {
-  for_each = local.webapp_security_rules
-
+resource "aws_security_group_rule" "webapp_agent_ingress" {
   security_group_id        = aws_security_group.webapp.id
   type                     = "ingress"
-  from_port                = each.value.from_port
-  to_port                  = each.value.to_port
-  protocol                 = each.value.protocol
-  source_security_group_id = each.key
+  from_port                = var.webapp_security_rules.from_port
+  to_port                  = var.webapp_security_rules.to_port
+  protocol                 = var.webapp_security_rules.protocol
+  source_security_group_id = aws_security_group.agent.id
+}
+
+resource "aws_security_group_rule" "webapp_private_lb_ingress" {
+  security_group_id        = aws_security_group.webapp.id
+  type                     = "ingress"
+  from_port                = var.webapp_security_rules.from_port
+  to_port                  = var.webapp_security_rules.to_port
+  protocol                 = var.webapp_security_rules.protocol
+  source_security_group_id = aws_security_group.private_lb.id
+}
+
+resource "aws_security_group_rule" "webapp_public_lb_ingress" {
+  security_group_id        = aws_security_group.webapp.id
+  type                     = "ingress"
+  from_port                = var.webapp_security_rules.from_port
+  to_port                  = var.webapp_security_rules.to_port
+  protocol                 = var.webapp_security_rules.protocol
+  source_security_group_id = aws_security_group.public_lb.id
 }
 
 resource "aws_security_group" "agent" {
@@ -125,6 +161,28 @@ resource "aws_security_group_rule" "cpx" {
   source_security_group_id = aws_security_group.webapp.id
 }
 
+resource "aws_security_group_rule" "private_lb_cpx" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
+
+  security_group_id        = aws_security_group.private_lb.id
+  type                     = "ingress"
+  from_port                = var.private_lb_security_rules.https.from_port
+  to_port                  = var.private_lb_security_rules.https.to_port
+  protocol                 = var.private_lb_security_rules.https.protocol
+  source_security_group_id = one(aws_security_group.cpx[*].id)
+}
+
+resource "aws_security_group_rule" "webapp_cpx" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
+
+  security_group_id        = aws_security_group.webapp.id
+  type                     = "ingress"
+  from_port                = var.webapp_security_rules.from_port
+  to_port                  = var.webapp_security_rules.to_port
+  protocol                 = var.webapp_security_rules.protocol
+  source_security_group_id = one(aws_security_group.cpx[*].id)
+}
+
 resource "aws_security_group" "windows" {
   count = var.num_cpx_nodes > 0 ? 1 : 0
 
@@ -148,13 +206,46 @@ resource "aws_security_group_rule" "windows" {
   source_security_group_id = can(regex("(?i:cpx)", each.key)) ? one(aws_security_group.cpx[*].id) : aws_security_group.webapp.id
 }
 
-resource "aws_security_group_rule" "egress" {
-  for_each = { for value in local.all_security_groups : value => var.default_egress }
+resource "aws_security_group_rule" "private_lb_windows" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
 
-  security_group_id = each.key
-  type              = each.value.rule_type
-  from_port         = each.value.from_port
-  to_port           = each.value.to_port
-  protocol          = each.value.protocol
-  cidr_blocks       = var.web_access_cidrs
+  security_group_id        = aws_security_group.private_lb.id
+  type                     = "ingress"
+  from_port                = var.private_lb_security_rules.https.from_port
+  to_port                  = var.private_lb_security_rules.https.to_port
+  protocol                 = var.private_lb_security_rules.https.protocol
+  source_security_group_id = one(aws_security_group.windows[*].id)
+}
+
+resource "aws_security_group_rule" "webapp_windows" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
+
+  security_group_id        = aws_security_group.webapp.id
+  type                     = "ingress"
+  from_port                = var.webapp_security_rules.from_port
+  to_port                  = var.webapp_security_rules.to_port
+  protocol                 = var.webapp_security_rules.protocol
+  source_security_group_id = one(aws_security_group.windows[*].id)
+}
+
+resource "aws_security_group_rule" "cpx_egress" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
+
+  security_group_id = one(aws_security_group.cpx[*].id)
+  type              = "egress"
+  from_port         = var.default_egress.from_port
+  to_port           = var.default_egress.to_port
+  protocol          = var.default_egress.protocol
+  cidr_blocks       = [var.anywhere]
+}
+
+resource "aws_security_group_rule" "windows_egress" {
+  count = var.num_cpx_nodes > 0 ? 1 : 0
+
+  security_group_id = one(aws_security_group.windows[*].id)
+  type              = "egress"
+  from_port         = var.default_egress.from_port
+  to_port           = var.default_egress.to_port
+  protocol          = var.default_egress.protocol
+  cidr_blocks       = [var.anywhere]
 }

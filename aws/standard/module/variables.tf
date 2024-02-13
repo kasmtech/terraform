@@ -196,16 +196,18 @@ variable "public_lb_security_rules" {
 
 variable "private_lb_security_rules" {
   description = "A map of objects of security rules to apply to the Private ALB"
-  type = object({
+  type = map(object({
     from_port = number
     to_port   = number
     protocol  = string
-  })
+  }))
 
   default = {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
   }
 }
 
