@@ -20,12 +20,14 @@ resource "aws_security_group_rule" "public_lb_ingress" {
 }
 
 resource "aws_security_group_rule" "public_lb_egress" {
+  for_each = var.default_egress
+
   security_group_id = aws_security_group.public_lb.id
   type              = "egress"
-  from_port         = var.default_egress.from_port
-  to_port           = var.default_egress.to_port
-  protocol          = var.default_egress.protocol
-  cidr_blocks       = [var.anywhere]
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
 }
 
 resource "aws_security_group" "private_lb" {
@@ -97,6 +99,17 @@ resource "aws_security_group_rule" "webapp_public_lb_ingress" {
   source_security_group_id = aws_security_group.public_lb.id
 }
 
+resource "aws_security_group_rule" "webapp_egress" {
+  for_each = var.default_egress
+
+  security_group_id = aws_security_group.webapp.id
+  type              = "egress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
+}
+
 resource "aws_security_group" "agent" {
   name        = "${var.project_name}-kasm-agent-access"
   description = "Allow access to agents"
@@ -116,6 +129,17 @@ resource "aws_security_group_rule" "agent" {
   to_port                  = each.value.to_port
   protocol                 = each.value.protocol
   source_security_group_id = aws_security_group.webapp.id
+}
+
+resource "aws_security_group_rule" "agent_egress" {
+  for_each = var.default_egress
+
+  security_group_id = aws_security_group.agent.id
+  type              = "egress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
 }
 
 resource "aws_security_group" "db" {
@@ -139,11 +163,23 @@ resource "aws_security_group_rule" "db" {
   source_security_group_id = aws_security_group.webapp.id
 }
 
+resource "aws_security_group_rule" "db_egress" {
+  for_each = var.default_egress
+
+  security_group_id = aws_security_group.db.id
+  type              = "egress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
+}
+
 resource "aws_security_group" "cpx" {
   count = var.num_cpx_nodes > 0 ? 1 : 0
 
   name        = "${var.project_name}-kasm-cpx-access"
   description = "Allow access to cpx RDP nodes"
+  vpc_id      = aws_vpc.this.id
 
   tags = {
     Name = "${var.project_name}-kasm-cpx-access"
@@ -181,6 +217,17 @@ resource "aws_security_group_rule" "webapp_cpx" {
   to_port                  = var.webapp_security_rules.to_port
   protocol                 = var.webapp_security_rules.protocol
   source_security_group_id = one(aws_security_group.cpx[*].id)
+}
+
+resource "aws_security_group_rule" "cpx_egress" {
+  for_each = var.num_cpx_nodes > 0 ? var.default_egress : {}
+
+  security_group_id = one(aws_security_group.cpx[*].id)
+  type              = "egress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
 }
 
 resource "aws_security_group" "windows" {
@@ -228,24 +275,13 @@ resource "aws_security_group_rule" "webapp_windows" {
   source_security_group_id = one(aws_security_group.windows[*].id)
 }
 
-resource "aws_security_group_rule" "cpx_egress" {
-  count = var.num_cpx_nodes > 0 ? 1 : 0
-
-  security_group_id = one(aws_security_group.cpx[*].id)
-  type              = "egress"
-  from_port         = var.default_egress.from_port
-  to_port           = var.default_egress.to_port
-  protocol          = var.default_egress.protocol
-  cidr_blocks       = [var.anywhere]
-}
-
 resource "aws_security_group_rule" "windows_egress" {
-  count = var.num_cpx_nodes > 0 ? 1 : 0
+  for_each = var.num_cpx_nodes > 0 ? var.default_egress : {}
 
   security_group_id = one(aws_security_group.windows[*].id)
   type              = "egress"
-  from_port         = var.default_egress.from_port
-  to_port           = var.default_egress.to_port
-  protocol          = var.default_egress.protocol
-  cidr_blocks       = [var.anywhere]
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_subnets
 }

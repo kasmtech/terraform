@@ -24,6 +24,6 @@ do
 done
 echo "WebApp is alive"
 
-bash kasm_release/install.sh -S agent -e -p $PRIVATE_IP -m ${manager_address} -M ${manager_token}
+bash kasm_release/install.sh -S agent -e -H -p $PRIVATE_IP -m ${manager_address} -M ${manager_token}
 
 echo "Done"

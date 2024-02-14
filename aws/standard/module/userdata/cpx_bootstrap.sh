@@ -24,6 +24,6 @@ do
 done
 echo "WebApp is alive"
 
-bash kasm_release/install.sh -S cpx -e -p $PRIVATE_IP -n ${manager_address} -k ${service_registration_token}
+bash kasm_release/install.sh -S guac -e -H -p $PRIVATE_IP -n ${manager_address} -k ${service_registration_token}
 
 echo "Done"

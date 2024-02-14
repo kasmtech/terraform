@@ -56,7 +56,6 @@ No modules.
 | [aws_route_table_association.webapp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
@@ -68,9 +67,11 @@ No modules.
 | [aws_security_group.webapp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.agent_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.cpx_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.db](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.db_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.private_lb_agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.private_lb_cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.private_lb_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
@@ -79,6 +80,7 @@ No modules.
 | [aws_security_group_rule.public_lb_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.webapp_agent_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.webapp_cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.webapp_private_lb_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.webapp_public_lb_ingress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.webapp_windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
@@ -93,6 +95,7 @@ No modules.
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_elb_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
+| [aws_iam_policy_document.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
@@ -108,6 +111,7 @@ No modules.
 | <a name="input_aws_key_pair"></a> [aws\_key\_pair](#input\_aws\_key\_pair) | The name of an aws keypair to use. | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region for the deployment. (e.g us-east-1) | `string` | n/a | yes |
 | <a name="input_aws_ssm_iam_role_name"></a> [aws\_ssm\_iam\_role\_name](#input\_aws\_ssm\_iam\_role\_name) | The name of the SSM EC2 role to associate with Kasm VMs for SSH access | `string` | `""` | no |
+| <a name="input_aws_ssm_instance_profile_name"></a> [aws\_ssm\_instance\_profile\_name](#input\_aws\_ssm\_instance\_profile\_name) | The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access | `string` | `""` | no |
 | <a name="input_cpx_hdd_size_gb"></a> [cpx\_hdd\_size\_gb](#input\_cpx\_hdd\_size\_gb) | The HDD size for Kasm Guac RDP nodes | `number` | n/a | yes |
 | <a name="input_cpx_instance_type"></a> [cpx\_instance\_type](#input\_cpx\_instance\_type) | The instance type for the cpxamole RDP nodes | `string` | `"t3.medium"` | no |
 | <a name="input_cpx_security_rules"></a> [cpx\_security\_rules](#input\_cpx\_security\_rules) | A map of objects of security rules to apply to the Kasm Connection Proxy server | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "https": {<br>    "from_port": 443,<br>    "protocol": "tcp",<br>    "to_port": 443<br>  }<br>}</pre> | no |
@@ -116,7 +120,7 @@ No modules.
 | <a name="input_db_hdd_size_gb"></a> [db\_hdd\_size\_gb](#input\_db\_hdd\_size\_gb) | The HDD size for Kasm DB | `number` | n/a | yes |
 | <a name="input_db_instance_type"></a> [db\_instance\_type](#input\_db\_instance\_type) | The instance type for the Database | `string` | `"t3.small"` | no |
 | <a name="input_db_security_rules"></a> [db\_security\_rules](#input\_db\_security\_rules) | A map of objects of security rules to apply to the Kasm DB | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "postgres": {<br>    "from_port": 5432,<br>    "protocol": "tcp",<br>    "to_port": 5432<br>  },<br>  "redis": {<br>    "from_port": 6379,<br>    "protocol": "tcp",<br>    "to_port": 6379<br>  }<br>}</pre> | no |
-| <a name="input_default_egress"></a> [default\_egress](#input\_default\_egress) | Default egress security rule for all security groups | <pre>object({<br>    from_port    = number<br>    to_port      = number<br>    protocol     = string<br>    cidr_subnets = list(string)<br>  })</pre> | <pre>{<br>  "cidr_subnets": [<br>    "0.0.0.0/0"<br>  ],<br>  "from_port": 0,<br>  "protocol": "-1",<br>  "to_port": 0<br>}</pre> | no |
+| <a name="input_default_egress"></a> [default\_egress](#input\_default\_egress) | Default egress security rule for all security groups | <pre>map(object({<br>    from_port    = number<br>    to_port      = number<br>    protocol     = string<br>    cidr_subnets = list(string)<br>  }))</pre> | <pre>{<br>  "all": {<br>    "cidr_subnets": [<br>      "0.0.0.0/0"<br>    ],<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "to_port": 0<br>  }<br>}</pre> | no |
 | <a name="input_ec2_ami"></a> [ec2\_ami](#input\_ec2\_ami) | The AMI used for the EC2 nodes. Recommended Ubuntu 20.04 LTS. | `string` | n/a | yes |
 | <a name="input_kasm_build"></a> [kasm\_build](#input\_kasm\_build) | The URL for the Kasm Workspaces build | `string` | n/a | yes |
 | <a name="input_kasm_zone_name"></a> [kasm\_zone\_name](#input\_kasm\_zone\_name) | A name given to the kasm deployment Zone | `string` | `"default"` | no |

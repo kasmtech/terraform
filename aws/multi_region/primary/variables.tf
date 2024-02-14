@@ -105,8 +105,20 @@ variable "num_cpx_nodes" {
   type        = number
 }
 
+variable "create_aws_ssm_iam_role" {
+  description = "Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs."
+  type        = bool
+  default     = false
+}
+
 variable "aws_ssm_iam_role_name" {
   description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+}
+
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
   type        = string
   default     = ""
 }
@@ -141,16 +153,18 @@ variable "public_lb_security_rules" {
 
 variable "webapp_security_rules" {
   description = "A map of objects of security rules to apply to the Kasm WebApp server"
-  type = object({
+  type = map(object({
     from_port = number
     to_port   = number
     protocol  = string
-  })
+  }))
 
   default = {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
   }
 }
 
@@ -224,12 +238,12 @@ variable "windows_security_rules" {
       to_port   = 3389
       protocol  = "tcp"
     }
-    cpx_screenshot = {
+    cpx_api = {
       from_port = 4902
       to_port   = 4902
       protocol  = "tcp"
     }
-    webapp_screenshot = {
+    webapp_api = {
       from_port = 4902
       to_port   = 4902
       protocol  = "tcp"
@@ -239,17 +253,19 @@ variable "windows_security_rules" {
 
 variable "default_egress" {
   description = "Default egress security rule for all security groups"
-  type = object({
+  type = map(object({
     from_port    = number
     to_port      = number
     protocol     = string
     cidr_subnets = list(string)
-  })
+  }))
 
   default = {
-    from_port    = 0
-    to_port      = 0
-    protocol     = "-1"
-    cidr_subnets = ["0.0.0.0/0"]
+    all = {
+      from_port    = 0
+      to_port      = 0
+      protocol     = "-1"
+      cidr_subnets = ["0.0.0.0/0"]
+    }
   }
 }

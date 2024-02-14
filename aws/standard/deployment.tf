@@ -1,15 +1,16 @@
 module "standard" {
-  source                  = "./module"
-  aws_key_pair            = var.aws_key_pair
-  aws_region              = var.aws_region
-  aws_domain_name         = var.aws_domain_name
-  project_name            = var.project_name
-  num_agents              = var.num_agents
-  num_webapps             = var.num_webapps
-  num_cpx_nodes           = var.num_cpx_nodes
-  vpc_subnet_cidr         = var.vpc_subnet_cidr
-  create_aws_ssm_iam_role = var.create_aws_ssm_iam_role
-  aws_ssm_iam_role_name   = var.aws_ssm_iam_role_name
+  source                        = "./module"
+  aws_key_pair                  = var.aws_key_pair
+  aws_region                    = var.aws_region
+  aws_domain_name               = var.aws_domain_name
+  project_name                  = var.project_name
+  num_agents                    = var.num_agents
+  num_webapps                   = var.num_webapps
+  num_cpx_nodes                 = var.num_cpx_nodes
+  vpc_subnet_cidr               = var.vpc_subnet_cidr
+  create_aws_ssm_iam_role       = var.create_aws_ssm_iam_role
+  aws_ssm_iam_role_name         = var.aws_ssm_iam_role_name
+  aws_ssm_instance_profile_name = var.aws_ssm_instance_profile_name
 
   ## Kasm Server settings
   webapp_instance_type = var.webapp_instance_type

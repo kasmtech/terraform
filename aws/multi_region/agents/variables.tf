@@ -48,8 +48,8 @@ variable "cpx_hdd_size_gb" {
   type        = number
 }
 
-variable "aws_ssm_iam_role_name" {
-  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
   type        = string
   default     = ""
 }
@@ -62,7 +62,7 @@ variable "num_proxy_nodes" {
 
 variable "proxy_instance_type" {
   description = "The instance type for the dedicated proxy nodes"
-  type        = number
+  type        = string
 }
 
 variable "proxy_hdd_size_gb" {
@@ -72,11 +72,6 @@ variable "proxy_hdd_size_gb" {
 
 variable "aws_region" {
   description = "The AWS region for the deployment. (e.g us-east-1)"
-  type        = string
-}
-
-variable "load_balancer_log_bucket" {
-  description = "S3 bucket name for load balancers to forward access logs to"
   type        = string
 }
 
@@ -118,6 +113,12 @@ variable "anywhere" {
   default     = "0.0.0.0/0"
 }
 
+variable "web_access_cidrs" {
+  description = "List of Networks in CIDR notation for IPs allowed to access the Kasm Web interface"
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+}
+
 variable "public_lb_security_rules" {
   description = "A map of objects of security rules to apply to the Public ALB"
   type = map(object({
@@ -142,16 +143,18 @@ variable "public_lb_security_rules" {
 
 variable "proxy_security_rules" {
   description = "A map of objects of security rules to apply to the Kasm WebApp server"
-  type = object({
+  type = map(object({
     from_port = number
     to_port   = number
     protocol  = string
-  })
+  }))
 
   default = {
-    from_port = 443
-    to_port   = 443
-    protocol  = "tcp"
+    https = {
+      from_port = 443
+      to_port   = 443
+      protocol  = "tcp"
+    }
   }
 }
 
@@ -213,17 +216,19 @@ variable "windows_security_rules" {
 
 variable "default_egress" {
   description = "Default egress security rule for all security groups"
-  type = object({
+  type = map(object({
     from_port    = number
     to_port      = number
     protocol     = string
     cidr_subnets = list(string)
-  })
+  }))
 
   default = {
-    from_port    = 0
-    to_port      = 0
-    protocol     = "-1"
-    cidr_subnets = ["0.0.0.0/0"]
+    all = {
+      from_port    = 0
+      to_port      = 0
+      protocol     = "-1"
+      cidr_subnets = ["0.0.0.0/0"]
+    }
   }
 }

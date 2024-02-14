@@ -79,6 +79,7 @@ No resources.
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS Region used for deployment | `string` | `"us-east-1"` | no |
 | <a name="input_aws_secret_key"></a> [aws\_secret\_key](#input\_aws\_secret\_key) | The AWS secret key used for deployment | `string` | n/a | yes |
 | <a name="input_aws_ssm_iam_role_name"></a> [aws\_ssm\_iam\_role\_name](#input\_aws\_ssm\_iam\_role\_name) | The name of the SSM EC2 role to associate with Kasm VMs for SSH access | `string` | `""` | no |
+| <a name="input_aws_ssm_instance_profile_name"></a> [aws\_ssm\_instance\_profile\_name](#input\_aws\_ssm\_instance\_profile\_name) | The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access | `string` | `""` | no |
 | <a name="input_cpx_hdd_size_gb"></a> [cpx\_hdd\_size\_gb](#input\_cpx\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm cpx RDP instances | `number` | n/a | yes |
 | <a name="input_cpx_instance_type"></a> [cpx\_instance\_type](#input\_cpx\_instance\_type) | The instance type for the cpxamole RDP nodes | `string` | n/a | yes |
 | <a name="input_create_aws_ssm_iam_role"></a> [create\_aws\_ssm\_iam\_role](#input\_create\_aws\_ssm\_iam\_role) | Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs. | `bool` | `false` | no |

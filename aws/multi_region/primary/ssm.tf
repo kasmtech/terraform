@@ -1,29 +1,35 @@
-resource "aws_iam_role" "this" {
-  count = var.aws_ssm_iam_role_name == "" ? 1 : 0
+data "aws_iam_policy_document" "this" {
+  statement {
+    effect = "Allow"
 
-  name = "Kasm_SSM_IAM_Instance_Role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
-      }
-    }]
-  })
+    principals {
+      type = "Service"
+      identifiers = [
+        "ec2.amazonaws.com"
+      ]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "this" {
+  count = var.create_aws_ssm_iam_role ? 1 : 0
+
+  name               = var.aws_ssm_iam_role_name != "" ? var.aws_ssm_iam_role_name : "Kasm_SSM_IAM_Instance_Role"
+  assume_role_policy = data.aws_iam_policy_document.this.json
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-  count = var.aws_ssm_iam_role_name == "" ? 1 : 0
+  count = var.create_aws_ssm_iam_role ? 1 : 0
 
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  role       = aws_iam_role.this[0].name
+  role       = one(aws_iam_role.this[*].name)
 }
 
 resource "aws_iam_instance_profile" "this" {
-  count = var.aws_ssm_iam_role_name == "" ? 1 : 0
+  count = var.create_aws_ssm_iam_role ? 1 : 0
 
-  name = "Kasm_SSM_Instance_Profile"
-  role = aws_iam_role.this[0].name
+  name = var.aws_ssm_instance_profile_name != "" ? var.aws_ssm_instance_profile_name : "Kasm_SSM_Instance_Profile"
+  role = one(aws_iam_role.this[*].name)
 }

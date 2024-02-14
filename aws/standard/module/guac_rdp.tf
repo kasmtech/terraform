@@ -21,6 +21,13 @@ resource "aws_instance" "cpx" {
     }
   )
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = null
+  }
+
   tags = {
     Name = "${var.project_name}-${var.kasm_zone_name}-kasm-cpx-${count.index}"
   }

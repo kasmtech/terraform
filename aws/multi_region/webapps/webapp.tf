@@ -6,7 +6,7 @@ resource "aws_instance" "webapp" {
   vpc_security_group_ids = [var.webapp_security_group_id]
   subnet_id              = var.webapp_subnet_ids[count.index]
   key_name               = var.aws_key_pair
-  iam_instance_profile   = var.aws_ssm_iam_role_name
+  iam_instance_profile   = var.aws_ssm_instance_profile_name
 
   root_block_device {
     volume_size = var.webapp_hdd_size_gb
@@ -23,7 +23,14 @@ resource "aws_instance" "webapp" {
     }
   )
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = null
+  }
+
   tags = {
-    Name = "${var.project_name}-${var.zone_name}-kasm-webapp"
+    Name = "${var.project_name}-${var.zone_name}-kasm-webapp-${count.index}"
   }
 }

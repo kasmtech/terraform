@@ -29,6 +29,6 @@ done
 echo "Redis is alive"
 
 
-bash kasm_release/install.sh -S app -e -z ${zone_name} -q "${db_ip}" -Q ${database_password} -R ${redis_password}
+bash kasm_release/install.sh -S app -e -H -z ${zone_name} -q "${db_ip}" -Q ${database_password} -R ${redis_password}
 
 echo "Done"

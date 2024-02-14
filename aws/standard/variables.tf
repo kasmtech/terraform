@@ -311,6 +311,17 @@ variable "aws_ssm_iam_role_name" {
   }
 }
 
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.aws_ssm_instance_profile_name == "" ? true : can(regex("[a-zA-Z0-9+=,.@-]{1,64}", var.aws_ssm_instance_profile_name))
+    error_message = "The aws_ssm_instance_profile_name must be unique across the account and can only consisit of between 1 and 64 characters consisting of letters, numbers, underscores (_), plus (+), equals (=), comman (,), period (.), at symbol (@), or dash (-)."
+  }
+}
+
 ## Non-validated variables
 variable "kasm_build" {
   description = "The URL for the Kasm Workspaces build"

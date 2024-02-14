@@ -172,8 +172,8 @@ variable "primary_vpc_id" {
   type        = string
 }
 
-variable "aws_ssm_iam_role_name" {
-  description = "The name of the SSM EC2 role to associate with Kasm VMs for SSH access"
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
   type        = string
   default     = ""
 }

@@ -6,7 +6,7 @@ vpc_subnet_cidr = "10.0.0.0/16"
 
 ## Kasm deployment settings
 kasm_zone_name = "default"
-project_name   = "contoso"
+project_name   = "test"
 
 ## Number of each Kasm role to deploy
 num_agents    = 2
@@ -17,8 +17,9 @@ num_cpx_nodes = 1
 web_access_cidrs = ["0.0.0.0/0"]
 
 ## AWS SSM setup for console/SSH access to VMs behind NAT gateway
-create_aws_ssm_iam_role = false
-aws_ssm_iam_role_name   = ""
+create_aws_ssm_iam_role       = true
+aws_ssm_iam_role_name         = ""
+aws_ssm_instance_profile_name = ""
 
 ## Kasm Server settings
 ec2_ami_id = ""
@@ -39,7 +40,6 @@ agent_hdd_size_gb   = 150
 ## Kasm CPX Instance Settings
 cpx_instance_type = "t3.small"
 cpx_hdd_size_gb   = 50
-
 
 ## Kasm passwords
 database_password          = "changeme"

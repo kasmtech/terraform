@@ -77,10 +77,9 @@ resource "aws_lb_target_group_attachment" "public" {
 }
 
 resource "aws_route53_record" "public" {
-  zone_id        = data.aws_route53_zone.this.zone_id
-  name           = var.aws_domain_name
-  type           = "A"
-  set_identifier = "${var.project_name}-${var.kasm_zone_name}-set-id"
+  zone_id = data.aws_route53_zone.this.zone_id
+  name    = var.aws_domain_name
+  type    = "A"
 
   alias {
     name                   = aws_lb.public.dns_name

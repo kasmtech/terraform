@@ -2,7 +2,7 @@
 set -ex
 echo "Starting Kasm Workspaces Agent Install"
 
-/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=${swap_size}
+/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count="${swap_size}"
 /sbin/mkswap /var/swap.1
 chmod 600 /var/swap.1
 /sbin/swapon /var/swap.1
@@ -24,6 +24,6 @@ do
 done
 echo "WebApp is alive"
 
-bash kasm_release/install.sh -S agent -e -p $PRIVATE_IP -m ${manager_address} -M ${manager_token}
+bash kasm_release/install.sh -S agent -e -p $PRIVATE_IP -m "${manager_address}" -M "${manager_token}"
 
 echo "Done"

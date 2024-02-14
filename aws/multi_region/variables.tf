@@ -52,6 +52,17 @@ variable "aws_ssm_iam_role_name" {
   }
 }
 
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.aws_ssm_instance_profile_name == "" ? true : can(regex("[a-zA-Z0-9+=,.@-]{1,64}", var.aws_ssm_instance_profile_name))
+    error_message = "The aws_ssm_instance_profile_name must be unique across the account and can only consisit of between 1 and 64 characters consisting of letters, numbers, underscores (_), plus (+), equals (=), comman (,), period (.), at symbol (@), or dash (-)."
+  }
+}
+
 variable "project_name" {
   description = "The name of the deployment (e.g dev, staging). A short single word"
   type        = string
@@ -106,12 +117,22 @@ variable "num_webapps" {
 }
 
 variable "num_cpx_nodes" {
-  description = "The number of Agent Role Servers to create in the deployment"
+  description = "The number of RDP Conection Proxy Role Servers to create in the deployment. Set this to zero (0) and this Terraform will not deploy ANY Connection Proxy or Windows resoures like subnets, security groups, etc."
   type        = number
 
   validation {
     condition     = var.num_cpx_nodes == 0 ? true : var.num_cpx_nodes >= 0 && var.num_cpx_nodes <= 100 && floor(var.num_cpx_nodes) == var.num_cpx_nodes
-    error_message = "If num_cpx_nodes is set to 0, this Terraform will not deploy the Connection Proxy node. Acceptable number of Kasm Agents range between 0-100."
+    error_message = "If num_cpx_nodes is set to 0, this Terraform will not deploy the Connection Proxy node. Acceptable number ranges between 0-100."
+  }
+}
+
+variable "num_proxy_nodes" {
+  description = "The number of Dedicated Proxy nodes to create in the deployment"
+  type        = number
+
+  validation {
+    condition     = var.num_proxy_nodes == 1 ? true : var.num_proxy_nodes >= 1 && var.num_proxy_nodes <= 100 && floor(var.num_proxy_nodes) == var.num_proxy_nodes
+    error_message = "The number of Dedicated Proxy nodes to deploy in remote regions. Acceptable number ranges between 1-100."
   }
 }
 
@@ -237,7 +258,7 @@ variable "secondary_regions_settings" {
   )
 
   validation {
-    condition     = alltrue([for region in var.secondary_regions_settings : can(regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.region))])
+    condition     = alltrue([for region in var.secondary_regions_settings : can(regex("^([a-z]{2}-[a-z]{4,}-[\\d]{1})$", region.agent_region))])
     error_message = "Verify the regions in the secondary_regions_settings variable and ensure they are valid AWS regions in a valid format (e.g. us-east-1)."
   }
   validation {
@@ -245,7 +266,7 @@ variable "secondary_regions_settings" {
     error_message = "Please verify that all of your Region's AMI IDs are in the correct format for AWS (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/finding-an-ami.html)."
   }
   validation {
-    condition     = alltrue([for subnet in var.secondary_regions_settings : can(cidrhost(subnet.vpc_cidr, 0))])
+    condition     = alltrue([for subnet in var.secondary_regions_settings : can(cidrhost(subnet.agent_vpc_cidr, 0))])
     error_message = "Verify the VPC subnet in your secondary_regions_settings. They must all be valid IPv4 CIDRs."
   }
 }

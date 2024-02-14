@@ -94,6 +94,7 @@ No resources.
 | <a name="input_aws_primary_region"></a> [aws\_primary\_region](#input\_aws\_primary\_region) | The AWS Region used for deployment | `string` | `"us-east-1"` | no |
 | <a name="input_aws_secret_key"></a> [aws\_secret\_key](#input\_aws\_secret\_key) | The AWS secret key used for deployment | `string` | n/a | yes |
 | <a name="input_aws_ssm_iam_role_name"></a> [aws\_ssm\_iam\_role\_name](#input\_aws\_ssm\_iam\_role\_name) | The name of the SSM EC2 role to associate with Kasm VMs for SSH access | `string` | `""` | no |
+| <a name="input_aws_ssm_instance_profile_name"></a> [aws\_ssm\_instance\_profile\_name](#input\_aws\_ssm\_instance\_profile\_name) | The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access | `string` | `""` | no |
 | <a name="input_cpx_hdd_size_gb"></a> [cpx\_hdd\_size\_gb](#input\_cpx\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm Guac RDP instances | `number` | n/a | yes |
 | <a name="input_cpx_instance_type"></a> [cpx\_instance\_type](#input\_cpx\_instance\_type) | The instance type for the Guac RDP nodes | `string` | n/a | yes |
 | <a name="input_create_aws_ssm_iam_role"></a> [create\_aws\_ssm\_iam\_role](#input\_create\_aws\_ssm\_iam\_role) | Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs. | `bool` | `false` | no |
@@ -103,7 +104,8 @@ No resources.
 | <a name="input_kasm_build"></a> [kasm\_build](#input\_kasm\_build) | Download URL for Kasm Workspaces | `string` | n/a | yes |
 | <a name="input_manager_token"></a> [manager\_token](#input\_manager\_token) | The manager token value for Agents to authenticate to webapps. No special characters | `string` | n/a | yes |
 | <a name="input_num_agents"></a> [num\_agents](#input\_num\_agents) | The number of Agent Role Servers to create in the deployment | `number` | `2` | no |
-| <a name="input_num_cpx_nodes"></a> [num\_cpx\_nodes](#input\_num\_cpx\_nodes) | The number of Agent Role Servers to create in the deployment | `number` | n/a | yes |
+| <a name="input_num_cpx_nodes"></a> [num\_cpx\_nodes](#input\_num\_cpx\_nodes) | The number of RDP Conection Proxy Role Servers to create in the deployment. Set this to zero (0) and this Terraform will not deploy ANY Connection Proxy or Windows resoures like subnets, security groups, etc. | `number` | n/a | yes |
+| <a name="input_num_proxy_nodes"></a> [num\_proxy\_nodes](#input\_num\_proxy\_nodes) | The number of Dedicated Proxy nodes to create in the deployment | `number` | n/a | yes |
 | <a name="input_num_webapps"></a> [num\_webapps](#input\_num\_webapps) | The number of WebApp role servers to create in the deployment | `number` | `2` | no |
 | <a name="input_primary_region_ec2_ami_id"></a> [primary\_region\_ec2\_ami\_id](#input\_primary\_region\_ec2\_ami\_id) | AMI Id of Kasm EC2 image in the primary region. Recommended AMI OS Version is Ubuntu 20.04 LTS. | `string` | n/a | yes |
 | <a name="input_primary_vpc_subnet_cidr"></a> [primary\_vpc\_subnet\_cidr](#input\_primary\_vpc\_subnet\_cidr) | The subnet CIDR to use for the VPC | `string` | `"10.0.0.0/16"` | no |

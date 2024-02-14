@@ -4,27 +4,30 @@
 # agents/webapps that map to this region.
 ###########################################################
 module "primary_region" {
-  source                     = "./primary"
-  aws_region                 = var.aws_primary_region
-  zone_name                  = var.aws_primary_region
-  vpc_subnet_cidr            = var.primary_vpc_subnet_cidr
-  ec2_ami                    = var.primary_region_ec2_ami_id
-  db_instance_type           = var.db_instance_type
-  num_webapps                = var.num_webapps
-  num_cpx_nodes              = var.num_cpx_nodes
-  project_name               = var.project_name
-  kasm_build                 = var.kasm_build
-  db_hdd_size_gb             = var.db_hdd_size_gb
-  swap_size                  = var.swap_size
-  database_password          = var.database_password
-  redis_password             = var.redis_password
-  user_password              = var.user_password
-  admin_password             = var.admin_password
-  manager_token              = var.manager_token
-  service_registration_token = var.service_registration_token
-  aws_key_pair               = var.aws_key_pair
-  aws_domain_name            = var.aws_domain_name
-  web_access_cidrs           = var.web_access_cidrs
+  source                        = "./primary"
+  aws_region                    = var.aws_primary_region
+  zone_name                     = var.aws_primary_region
+  vpc_subnet_cidr               = var.primary_vpc_subnet_cidr
+  ec2_ami                       = var.primary_region_ec2_ami_id
+  db_instance_type              = var.db_instance_type
+  num_webapps                   = var.num_webapps
+  num_cpx_nodes                 = var.num_cpx_nodes
+  project_name                  = var.project_name
+  kasm_build                    = var.kasm_build
+  db_hdd_size_gb                = var.db_hdd_size_gb
+  swap_size                     = var.swap_size
+  database_password             = var.database_password
+  redis_password                = var.redis_password
+  user_password                 = var.user_password
+  admin_password                = var.admin_password
+  manager_token                 = var.manager_token
+  service_registration_token    = var.service_registration_token
+  aws_key_pair                  = var.aws_key_pair
+  aws_domain_name               = var.aws_domain_name
+  web_access_cidrs              = var.web_access_cidrs
+  create_aws_ssm_iam_role       = var.create_aws_ssm_iam_role
+  aws_ssm_iam_role_name         = var.aws_ssm_iam_role_name
+  aws_ssm_instance_profile_name = var.aws_ssm_instance_profile_name
 }
 
 module "primary_region_webapps_and_agents" {
@@ -42,6 +45,7 @@ module "primary_region_webapps_and_agents" {
   webapp_security_group_id        = module.primary_region.webapp_security_group_id
   agent_subnet_id                 = module.primary_region.agent_subnet_id
   agent_security_group_id         = module.primary_region.agent_security_group_id
+  cpx_subnet_id                   = module.primary_region.cpx_subnet_id
   cpx_security_group_id           = module.primary_region.cpx_security_group_id
   load_balancer_security_group_id = module.primary_region.lb_security_group_id
   webapp_instance_type            = var.webapp_instance_type
@@ -62,6 +66,7 @@ module "primary_region_webapps_and_agents" {
   primary_vpc_id                  = module.primary_region.primary_vpc_id
   certificate_arn                 = module.primary_region.certificate_arn
   load_balancer_log_bucket        = module.primary_region.lb_log_bucket
+  aws_ssm_instance_profile_name   = var.aws_ssm_instance_profile_name
 }
 
 #####################################################################
@@ -94,6 +99,7 @@ module "region2_webapps" {
   primary_vpc_id                  = module.primary_region.primary_vpc_id
   certificate_arn                 = module.primary_region.certificate_arn
   load_balancer_log_bucket        = module.primary_region.lb_log_bucket
+  aws_ssm_instance_profile_name   = var.aws_ssm_instance_profile_name
 }
 
 module "region2_agents" {
@@ -101,7 +107,6 @@ module "region2_agents" {
   aws_region                    = var.secondary_regions_settings.region2.agent_region
   ec2_ami                       = var.secondary_regions_settings.region2.ec2_ami_id
   agent_vpc_cidr                = var.secondary_regions_settings.region2.agent_vpc_cidr
-  load_balancer_log_bucket      = module.primary_region.lb_log_bucket
   management_region_nat_gateway = module.primary_region.nat_gateway_ip
   proxy_instance_type           = var.proxy_instance_type
   proxy_hdd_size_gb             = var.proxy_hdd_size_gb
@@ -118,6 +123,8 @@ module "region2_agents" {
   aws_key_pair                  = var.aws_key_pair
   manager_token                 = var.manager_token
   service_registration_token    = var.service_registration_token
+  aws_ssm_instance_profile_name = var.aws_ssm_instance_profile_name
+  web_access_cidrs              = var.web_access_cidrs
 
   providers = {
     aws = aws.region2
@@ -156,6 +163,7 @@ module "region2_agents" {
 #   primary_vpc_id                  = module.primary_region.primary_vpc_id
 #   certificate_arn                 = module.primary_region.certificate_arn
 #   load_balancer_log_bucket        = module.primary_region.lb_log_bucket
+#   aws_ssm_instance_profile_name   = var.aws_ssm_instance_profile_name
 # }
 
 # module "region3_agents" {
@@ -180,6 +188,8 @@ module "region2_agents" {
 #   aws_key_pair                  = var.aws_key_pair
 #   manager_token                 = var.manager_token
 #   service_registration_token    = var.service_registration_token
+#   aws_ssm_instance_profile_name = var.aws_ssm_instance_profile_name
+#   web_access_cidrs              = var.web_access_cidrs
 
 #   providers = {
 #     aws = aws.region3

@@ -1,5 +1,5 @@
 resource "aws_lb" "this" {
-  name               = "${var.project_name}-lb"
+  name               = "${var.project_name}-${var.faux_aws_region}-lb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.load_balancer_security_group_id]
@@ -40,7 +40,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_target_group" "this" {
-  name     = "${var.project_name}-target-group"
+  name     = "${var.project_name}-${var.faux_aws_region}-tg"
   port     = 443
   protocol = "HTTPS"
   vpc_id   = var.primary_vpc_id
@@ -61,7 +61,7 @@ resource "aws_lb_target_group_attachment" "this" {
 
 resource "aws_route53_record" "alb" {
   zone_id = data.aws_route53_zone.this.zone_id
-  name    = "${var.zone_name}-lb.${var.aws_domain_name}"
+  name    = "${local.region_short_name_for_lb}-lb.${var.aws_domain_name}"
   type    = "A"
 
   alias {
@@ -75,7 +75,7 @@ resource "aws_route53_record" "latency" {
   zone_id        = data.aws_route53_zone.this.zone_id
   name           = var.aws_domain_name
   type           = "A"
-  set_identifier = "${var.project_name}-${var.zone_name}-set-id"
+  set_identifier = "${var.project_name}-${local.region_short_name_for_lb}-set-id"
 
   alias {
     name                   = aws_lb.this.dns_name
@@ -89,7 +89,7 @@ resource "aws_route53_record" "latency" {
 }
 
 resource "aws_route53_health_check" "this" {
-  fqdn              = "${var.zone_name}-lb.${var.aws_domain_name}"
+  fqdn              = "${local.region_short_name_for_lb}-lb.${var.aws_domain_name}"
   port              = 443
   type              = "HTTPS"
   resource_path     = "/api/__healthcheck"
@@ -97,6 +97,6 @@ resource "aws_route53_health_check" "this" {
   request_interval  = "30"
 
   tags = {
-    Name = "hc-${var.zone_name}-lb.${var.aws_domain_name}"
+    Name = "hc-${local.region_short_name_for_lb}-lb.${var.aws_domain_name}"
   }
 }

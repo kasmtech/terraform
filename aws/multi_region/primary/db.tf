@@ -4,7 +4,7 @@ resource "aws_instance" "db" {
   vpc_security_group_ids = [aws_security_group.db.id]
   subnet_id              = aws_subnet.db.id
   key_name               = var.aws_key_pair
-  iam_instance_profile   = var.aws_ssm_iam_role_name == "" ? aws_iam_instance_profile.this[0].name : var.aws_ssm_iam_role_name
+  iam_instance_profile   = var.create_aws_ssm_iam_role ? aws_iam_instance_profile.this[0].name : var.aws_ssm_instance_profile_name
 
   root_block_device {
     volume_size = var.db_hdd_size_gb
@@ -22,6 +22,13 @@ resource "aws_instance" "db" {
       swap_size                  = var.swap_size
     }
   )
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = null
+  }
 
   tags = {
     Name = "${var.project_name}-kasm-db"

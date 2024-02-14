@@ -119,6 +119,12 @@ variable "aws_ssm_iam_role_name" {
   default     = ""
 }
 
+variable "aws_ssm_instance_profile_name" {
+  description = "The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access"
+  type        = string
+  default     = ""
+}
+
 variable "database_password" {
   description = "The password for the database. No special characters"
   type        = string
@@ -311,17 +317,19 @@ variable "windows_security_rules" {
 
 variable "default_egress" {
   description = "Default egress security rule for all security groups"
-  type = object({
+  type = map(object({
     from_port    = number
     to_port      = number
     protocol     = string
     cidr_subnets = list(string)
-  })
+  }))
 
   default = {
-    from_port    = 0
-    to_port      = 0
-    protocol     = "-1"
-    cidr_subnets = ["0.0.0.0/0"]
+    all = {
+      from_port    = 0
+      to_port      = 0
+      protocol     = "-1"
+      cidr_subnets = ["0.0.0.0/0"]
+    }
   }
 }

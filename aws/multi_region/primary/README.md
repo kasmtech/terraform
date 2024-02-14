@@ -41,7 +41,6 @@ No modules.
 | [aws_route_table_association.webapp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
 | [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_acl.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl) | resource |
 | [aws_s3_bucket_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_s3_bucket_public_access_block.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
@@ -52,12 +51,20 @@ No modules.
 | [aws_security_group.webapp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group_rule.agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.agent_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.cpx_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.db](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.db_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.public_lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.webapp](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.public_lb_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_public_lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.webapp_windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.windows](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.windows_egress](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
 | [aws_subnet.agent](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.alb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
 | [aws_subnet.cpx](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
@@ -67,6 +74,7 @@ No modules.
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_elb_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
+| [aws_iam_policy_document.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
@@ -80,12 +88,14 @@ No modules.
 | <a name="input_aws_key_pair"></a> [aws\_key\_pair](#input\_aws\_key\_pair) | The name of an aws keypair to use. | `string` | n/a | yes |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region for the deployment. (e.g us-east-1) | `string` | n/a | yes |
 | <a name="input_aws_ssm_iam_role_name"></a> [aws\_ssm\_iam\_role\_name](#input\_aws\_ssm\_iam\_role\_name) | The name of the SSM EC2 role to associate with Kasm VMs for SSH access | `string` | `""` | no |
+| <a name="input_aws_ssm_instance_profile_name"></a> [aws\_ssm\_instance\_profile\_name](#input\_aws\_ssm\_instance\_profile\_name) | The name of the SSM EC2 Instance Profile to associate with Kasm VMs for SSH access | `string` | `""` | no |
 | <a name="input_cpx_security_rules"></a> [cpx\_security\_rules](#input\_cpx\_security\_rules) | A map of objects of security rules to apply to the Kasm Connection Proxy server | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "https": {<br>    "from_port": 443,<br>    "protocol": "tcp",<br>    "to_port": 443<br>  }<br>}</pre> | no |
+| <a name="input_create_aws_ssm_iam_role"></a> [create\_aws\_ssm\_iam\_role](#input\_create\_aws\_ssm\_iam\_role) | Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs. | `bool` | `false` | no |
 | <a name="input_database_password"></a> [database\_password](#input\_database\_password) | The password for the database. No special characters | `string` | n/a | yes |
 | <a name="input_db_hdd_size_gb"></a> [db\_hdd\_size\_gb](#input\_db\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm Database instances | `number` | n/a | yes |
 | <a name="input_db_instance_type"></a> [db\_instance\_type](#input\_db\_instance\_type) | The instance type for the Database | `string` | n/a | yes |
 | <a name="input_db_security_rules"></a> [db\_security\_rules](#input\_db\_security\_rules) | A map of objects of security rules to apply to the Kasm DB | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "postgres": {<br>    "from_port": 5432,<br>    "protocol": "tcp",<br>    "to_port": 5432<br>  },<br>  "redis": {<br>    "from_port": 6379,<br>    "protocol": "tcp",<br>    "to_port": 6379<br>  }<br>}</pre> | no |
-| <a name="input_default_egress"></a> [default\_egress](#input\_default\_egress) | Default egress security rule for all security groups | <pre>object({<br>    from_port    = number<br>    to_port      = number<br>    protocol     = string<br>    cidr_subnets = list(string)<br>  })</pre> | <pre>{<br>  "cidr_subnets": [<br>    "0.0.0.0/0"<br>  ],<br>  "from_port": 0,<br>  "protocol": "-1",<br>  "to_port": 0<br>}</pre> | no |
+| <a name="input_default_egress"></a> [default\_egress](#input\_default\_egress) | Default egress security rule for all security groups | <pre>map(object({<br>    from_port    = number<br>    to_port      = number<br>    protocol     = string<br>    cidr_subnets = list(string)<br>  }))</pre> | <pre>{<br>  "all": {<br>    "cidr_subnets": [<br>      "0.0.0.0/0"<br>    ],<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "to_port": 0<br>  }<br>}</pre> | no |
 | <a name="input_ec2_ami"></a> [ec2\_ami](#input\_ec2\_ami) | The AMI used for the EC2 nodes. Recommended Ubuntu 22.04 LTS. | `string` | n/a | yes |
 | <a name="input_kasm_build"></a> [kasm\_build](#input\_kasm\_build) | The URL for the Kasm Workspaces build | `string` | n/a | yes |
 | <a name="input_manager_token"></a> [manager\_token](#input\_manager\_token) | The manager token value for Agents to authenticate to webapps. No special characters | `string` | n/a | yes |
@@ -99,8 +109,8 @@ No modules.
 | <a name="input_user_password"></a> [user\_password](#input\_user\_password) | The standard (non administrator) user password. No special characters | `string` | n/a | yes |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | The subnet CIDR to use for the Primary VPC | `string` | n/a | yes |
 | <a name="input_web_access_cidrs"></a> [web\_access\_cidrs](#input\_web\_access\_cidrs) | List of Networks in CIDR notation for IPs allowed to access the Kasm Web interface | `list(string)` | n/a | yes |
-| <a name="input_webapp_security_rules"></a> [webapp\_security\_rules](#input\_webapp\_security\_rules) | A map of objects of security rules to apply to the Kasm WebApp server | <pre>object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  })</pre> | <pre>{<br>  "from_port": 443,<br>  "protocol": "tcp",<br>  "to_port": 443<br>}</pre> | no |
-| <a name="input_windows_security_rules"></a> [windows\_security\_rules](#input\_windows\_security\_rules) | A map of objects of security rules to apply to the Kasm Windows VMs | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "cpx_rdp": {<br>    "from_port": 3389,<br>    "protocol": "tcp",<br>    "to_port": 3389<br>  },<br>  "cpx_screenshot": {<br>    "from_port": 4902,<br>    "protocol": "tcp",<br>    "to_port": 4902<br>  },<br>  "webapp_screenshot": {<br>    "from_port": 4902,<br>    "protocol": "tcp",<br>    "to_port": 4902<br>  }<br>}</pre> | no |
+| <a name="input_webapp_security_rules"></a> [webapp\_security\_rules](#input\_webapp\_security\_rules) | A map of objects of security rules to apply to the Kasm WebApp server | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "https": {<br>    "from_port": 443,<br>    "protocol": "tcp",<br>    "to_port": 443<br>  }<br>}</pre> | no |
+| <a name="input_windows_security_rules"></a> [windows\_security\_rules](#input\_windows\_security\_rules) | A map of objects of security rules to apply to the Kasm Windows VMs | <pre>map(object({<br>    from_port = number<br>    to_port   = number<br>    protocol  = string<br>  }))</pre> | <pre>{<br>  "cpx_api": {<br>    "from_port": 4902,<br>    "protocol": "tcp",<br>    "to_port": 4902<br>  },<br>  "cpx_rdp": {<br>    "from_port": 3389,<br>    "protocol": "tcp",<br>    "to_port": 3389<br>  },<br>  "webapp_api": {<br>    "from_port": 4902,<br>    "protocol": "tcp",<br>    "to_port": 4902<br>  }<br>}</pre> | no |
 | <a name="input_zone_name"></a> [zone\_name](#input\_zone\_name) | A name given to the kasm deployment Zone | `string` | `"default"` | no |
 
 ## Outputs
