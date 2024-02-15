@@ -12,11 +12,11 @@ It is expected that administrators will configure the
 traffic does not always traverse the **Primary Region** and instead flows directly to the Agent in whichever region it
 is deployed.
 
-
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/aws-multi-region-new.png "Diagram"
+[Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-region-new.jpg "Diagram"
 
+> ***NOTE:*** This deployment has been tested and validated with both [Terraform](https://www.terraform.io/) and [OpenTofu](https://opentofu.org/)
 
 # Pre-Configuration
 Consider creating a special sub account for the Kasm deployment.
@@ -35,25 +35,31 @@ Create a user via the IAM console that will be used for the terraform deployment
 
 1. Initialize the project
 
-       terraform init
+    terraform init
 
-2. Open `settings.tfvars` and update the variable values. The variable definitions, descriptions, and validation expectations can be found in the `variables.tf` file.
+2. Open `terraform.tfvars` and update the variable values. The variable definitions, descriptions, and validation expectations can be found in the `variables.tf` file.
 
-> ***NOTE:*** This document assumes you are using a separate file named `secrets.tfvars` for the AWS credentials generated in the [AWS API Keys](#aws-api-keys) section above. The .gitignore file in this repository will ignore any files named `secrets.tfvars` since they are expected to have sensitive values in them. This will prevent you from accidentally committing them to source control.
+> ***NOTE:*** This document assumes you are using a separate file named `secrets.tfvars` for the AWS credentials generated in the [AWS API Keys](#aws-api-keys) section above. The .gitignore file in this repository will ignore any files named `secrets.tfvars` since they are expected to have sensitive values in them. This will prevent you from accidentally committing them to source control. If you would rather use Environment variables or some other AWS credential method in lieu of the `secrets.tfvars` file, check out the [AWS Terraform provider documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) for more information about configuring your environment.
 
-3. If you are deploying more than 2 regions, you will need to modify the `provider.tf` and the `deployment.tf` files. There are commented sections in both files indicating how to deploy additional regions.
+3. If you are deploying more than 2 regions, you will need to modify the `provider.tf`, `deployment.tf`, and `outputs.tf` files. There are commented sections in both files indicating how to deploy additional regions.
 
 3. Verify the configuration
 
-       terraform plan -var-file secrets.tfvars
+    terraform plan -var-file secrets.tfvars
 
 4. Deploy
 
-       terraform apply -var-file secrets.tfvars
+    terraform apply -var-file secrets.tfvars
 
-5. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`
+5. Login to the Deployment as an Admin via the domain defined; e.g., `https://kasm.contoso.com`
 
-6. Navigate to the Agents tab, and enable each Agent after it checks in. (May take a few minutes)
+6. Navigate to the `Infrastructure > Zones` section and update the following values according to output values from this deployment.
+    - Upstream Auth Address
+    - Proxy Hostname
+
+7. Navigate to the `Infrastructure > Agents` section and enable each Agent after it checks in. (May take a few minutes)
+
+8. Now you are ready to add Workspaces via the registry and start using Kasm!
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -124,7 +130,10 @@ No resources.
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_region1_zone_settings"></a> [region1\_zone\_settings](#output\_region1\_zone\_settings) | Upstream Auth and Proxy settings to apply to Kasm Primary Region Zone configuration |
+| <a name="output_region2_zone_settings"></a> [region2\_zone\_settings](#output\_region2\_zone\_settings) | Upstream Auth and Proxy settings to apply to Kasm Agent Region 2 Zone configuration |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 # Detailed Terraform Deployment Diagram

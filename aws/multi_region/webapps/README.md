@@ -80,5 +80,5 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_kasm_zone_settings"></a> [kasm\_zone\_settings](#output\_kasm\_zone\_settings) | Upstream Auth and Proxy Address settings to apply to Kasm Zone configuration |
+| <a name="output_kasm_zone_name"></a> [kasm\_zone\_name](#output\_kasm\_zone\_name) | The zone name used for this region/zone in Kasm |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -2,11 +2,12 @@
 This project will deploy Kasm Workspaces in a multi-server deployment in AWS within a single region of your choice.
 Each role is placed in a separate subnet and traffic from user sessions on the Agent egresses out of a Nat Gateway.
 
-
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/aws-multi-server-new.png "Diagram"
+[Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-server-new.jpg "Diagram"
 
+
+> ***NOTE:*** This deployment has been tested and validated with both [Terraform](https://www.terraform.io/) and [OpenTofu](https://opentofu.org/)
 
 # Pre-Configuration
 Consider creating a special sub account for the Kasm deployment.
@@ -27,9 +28,9 @@ Create a user via the IAM console that will be used for the terraform deployment
 
        terraform init
 
-2. Open `settings.tfvars` and update the variable values. The variable definitions, descriptions, and validation expectations can be found in the `variables.tf` file.
+2. Open `terraform.tfvars` and update the variable values. The variable definitions, descriptions, and validation expectations can be found in the `variables.tf` file.
 
-> ***NOTE:*** This document assumes you are using a separate file named `secrets.tfvars` for the AWS credentials generated in the [AWS API Keys](#aws-api-keys) section above. The .gitignore file in this repository will ignore any files named `secrets.tfvars` since they are expected to have sensitive values in them. This will prevent you from accidentally committing them to source control.
+> ***NOTE:*** This document assumes you are using a separate file named `secrets.tfvars` for the AWS credentials generated in the [AWS API Keys](#aws-api-keys) section above. The .gitignore file in this repository will ignore any files named `secrets.tfvars` since they are expected to have sensitive values in them. This will prevent you from accidentally committing them to source control. If you would rather use Environment variables or some other AWS credential method in lieu of the `secrets.tfvars` file, check out the [AWS Terraform provider documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#environment-variables) for more information about configuring your environment.
 
 3. Verify the configuration
 
@@ -37,11 +38,13 @@ Create a user via the IAM console that will be used for the terraform deployment
 
 4. Deploy
 
-       terraform apply -var-file settings.tfvars -var-file secrets.tfvars
+       terraform apply -var-file secrets.tfvars
 
-5. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`
+5. Login to the Deployment as an Admin via the domain defined; e.g., `https://kasm.contoso.com`
 
 6. Navigate to the Agents tab, and enable each Agent after it checks in. (May take a few minutes)
+
+7. Now you are ready to add Workspaces via the registry and start using Kasm!
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

@@ -1,8 +1,4 @@
-output "kasm_zone_settings" {
-  description = "Upstream Auth and Proxy Address settings to apply to Kasm Zone configuration"
-  value       = <<ZONE
-Kam Zone configuration for zone: ${var.faux_aws_region}
-Upstream Auth address: ${var.aws_domain_name}
-Proxy address: ${var.zone_name}-lb.${var.aws_domain_name}
-ZONE
+output "kasm_zone_name" {
+  description = "The zone name used for this region/zone in Kasm"
+  value       = var.aws_to_kasm_zone_map[(var.faux_aws_region)]
 }

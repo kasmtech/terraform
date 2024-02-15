@@ -134,7 +134,7 @@ module "region2_agents" {
 #########################################################################
 #
 # Uncomment the below section and update the provider and the settings
-# in the secondary_regions_settings variable in the settings.tfvars
+# in the secondary_regions_settings variable in the terraform.tfvars
 # file for your desired region.
 #
 #########################################################################
