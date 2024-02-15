@@ -15,7 +15,7 @@ is deployed.
 
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/aws-multi-region-int-gw.png "Diagram"
+[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/aws-multi-region-new.png "Diagram"
 
 
 # Pre-Configuration
