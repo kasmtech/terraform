@@ -1,7 +1,7 @@
 ## Kasm deployment settings
 oci_domain_name = "kasm.contoso.com"
 project_name    = "contoso"
-kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"
+kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"
 vcn_subnet_cidr = "10.0.0.0/16"
 
 ## OCI Authentication variables
@@ -33,16 +33,16 @@ redis_password             = "changeme"
 database_password          = "changeme"
 service_registration_token = "changeme"
 
-## SSH Public Keys
+## SSH Public Key
 ssh_authorized_keys = "changeme"
 
 ## OCI VM Settings
-instance_image_ocid = "ocid1.image.oc1.iad.aaaaaaaahiz6xym3a76xhwkmwmhrz6luyiehho7dpxpkphxhsq5q6z4m3nlq"
+instance_image_ocid = ""
 instance_shape      = "VM.Standard.E4.Flex"
 swap_size           = 2048
 num_webapps         = 2
 num_agents          = 2
-num_guac_rdp_nodes  = 1
+num_cpx_nodes       = 1
 
 kasm_webapp_vm_settings = {
   cpus        = 2
@@ -62,8 +62,14 @@ kasm_agent_vm_settings = {
   hdd_size_gb = 120
 }
 
-kasm_guac_vm_settings = {
+kasm_cpx_vm_settings = {
   cpus        = 4
   memory      = 4
+  hdd_size_gb = 50
+}
+
+bastion_vm_settings = {
+  cpus        = 1
+  memory      = 2
   hdd_size_gb = 50
 }

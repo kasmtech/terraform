@@ -1,21 +1,10 @@
-data "aws_elb_service_account" "main" {}
-
-resource "aws_s3_bucket" "kasm_s3_logs" {
+resource "aws_s3_bucket" "this" {
   bucket_prefix = "${var.project_name}-${var.zone_name}-"
   force_destroy = true
 }
 
-data "aws_s3_bucket" "data-kasm_s3_logs_bucket" {
-  bucket = aws_s3_bucket.kasm_s3_logs.bucket
-}
-
-resource "aws_s3_bucket_acl" "kasm_s3_acl" {
-  bucket = data.aws_s3_bucket.data-kasm_s3_logs_bucket.id
-  acl    = "private"
-}
-
-resource "aws_s3_bucket_policy" "kasm_s3_logs_policy" {
-  bucket = data.aws_s3_bucket.data-kasm_s3_logs_bucket.id
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.this.id
 
   policy = jsonencode({
     Id      = "Policy"
@@ -26,7 +15,7 @@ resource "aws_s3_bucket_policy" "kasm_s3_logs_policy" {
           "s3:PutObject"
         ]
         Effect   = "Allow"
-        Resource = "${aws_s3_bucket.kasm_s3_logs.arn}/AWSLogs/*"
+        Resource = "${aws_s3_bucket.this.arn}/AWSLogs/*"
         Principal = {
           AWS = [
             data.aws_elb_service_account.main.arn
@@ -37,8 +26,8 @@ resource "aws_s3_bucket_policy" "kasm_s3_logs_policy" {
   })
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_elb_bucket" {
-  bucket = data.aws_s3_bucket.data-kasm_s3_logs_bucket.id
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  bucket = aws_s3_bucket.this.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -47,8 +36,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_elb_bucke
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "s3_log_public_access" {
-  bucket                  = data.aws_s3_bucket.data-kasm_s3_logs_bucket.id
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket                  = aws_s3_bucket.this.id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true

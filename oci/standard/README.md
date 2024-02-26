@@ -35,56 +35,84 @@ Create an SSL certificate that matches the desired domain for the deployment. e.
        terraform init
 
 2. Open `settings.tfvars` and update the variables. The variable definitions, descriptions, and validation requirements can be found in `variables.tf`, or in the [table](#oci-terraform-variable-definitions) below.
-   
+
 3. Verify the configuration
 
-       terraform plan -var-file settings.tfvars
+       terraform plan
 
 4. Deploy
 
-       terraform apply -var-file settings.tfvars
+       terraform apply
 
 5. Login to the Deployment as an Admin via the domain defined e.g `https://kasm.contoso.com`. It may take several minutes for the deployment to fully come online.
 
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
 
-# OCI Terraform Variable definitions
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_acme"></a> [acme](#requirement\_acme) | ~> 2.0 |
+| <a name="requirement_oci"></a> [oci](#requirement\_oci) | ~> 5.0 |
+| <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.0 |
 
-| Variable | Description | Variable type | Example |
-|:--------:|-------------|---------------|---------|
-| `tenancy_ocid` | The OCI Tenancy OCID | String | `"ocid1.tenancy.oc1..aaaaaaaaai06vvcguozt39d4ilmwtpdovl998wsxpyn0hjkab2kuh7z16po7"` |
-| `compartment_ocid` | The OCI Compartment OCID | String | `"ocid1.compartment.oc1..aaaaaaaauepg1z967huiazuiwjt80rtbszp64x9oxaidkoi7wz0pgr950bzb"` |
-| `region` | The OCI Region name | String | `"us-ashburn-1"` |
-| `user_ocid` | The OCI User OCID | String | `"ocid1.user.oc1..aaaaaaaau3me8nojmdjrbj2vzfxeouscc1i7cf9w0aoy0iyv9b38t2y0a1ba"` |
-| `fingerprint` | The OCI User API Key fingerprint | String | `"66:e5:d1:85:cd:ba:ca:6a:d0:76:86:ef:1c:11:63:97"` |
-| `private_key_path` | The path for the API Key PEM encoded Private Key for the OCI User. ***NOTE:*** *Ensure the API Key contents are a valid PEM encoded RSA key file. You can tell this by ensuring that the value `-----BEGIN RSA PRIVATE KEY-----` is the first line in the key file. Otherwise, you can validate the key file by running the `openssl rsa -in oci-private-key.pem -check` command.*  | String | `"./oci-private-key.pem"` |
-| `project_name` | The name of the deployment (e.g dev, staging). A short single word of up to 15 characters. | String | `"kasm"` |
-| `oci_domain_name` | The public Zone used for the dns entries. This must already exist in the OCI account. (e.g kasm.contoso.com). The deployment will be accessed via this zone name using https. | String | `"kasm.contoso.com"` |
-| `letsencrypt_cert_support_email` | Email address to use for Terraform-generated Let's Encrypt SSL certificates | String | `"support@contoso.com"` |
-| `letsencrypt_server_type` | SSL Server type for certificate generation. Valid options are staging, prod, and empty string (""). Refer to [SSL Certificate Options](#ssl-certificate-options) section of this document for more information. | String | "prod" |
-| `kasm_ssl_crt_path` | Bring Your own Certificate - The file path fo the PEM encoded SSL Certificate file generated outside of Terraform. Copy/paste the contents of your generated SSL Certificate to the file designated in this path variable. | String | `"./kasm_ssl.crt"` |
-| `kasm_ssl_key_path` | Bring Your own Certificate - The file path to the PEM encoded SSL Private Key file generated outside of Terraform. Copy/paste the contents of your generated SSL Private Key to the file designated in this path variable. | String | `"./kasm_ssl.key"` |
-| `vcn_subnet_cidr` | The OCI VCN Subnet CIDR of the VCN where you wish to deploy Kasm | String | `"10.0.0.0/16"` |
-| `ssh_authorized_keys` | The SSH Public key to be installed on the Kasm servers for SSH access | String | `"ssh-rsa some_base64_encoded_ssh_public_key_data"` |
-| `instance_image_ocid` | The OCI Image OCID value of the OS to use. Kasm recommends using lates Ubuntu 20.04 LTS-Minimal for speed and efficiency. | String | `"ocid1.image.oc1.iad.aaaaaaaahiz6xym3a76xhwkmwmhrz6luyiehho7dpxpkphxhsq5q6z4m3nlq"` |
-| `allow_ssh_cidrs` | A list of subnets in CIDR notation allowed to SSH into your kasm servers | List(String) | `["10.0.0.0/16","172.217.22.14/32"]` |
-| `allow_web_cidrs` | A list of subnets in CIDR notation allowed Web access to your kasm servers | List(String) | `["0.0.0.0/0"]` |
-| `num_webapps` | The number of WebApp role servers to create in this deployment. Acceptable ranges from 1-3. | Number | `2` |
-| `num_agents` | The number of static Kasm Agents to create in this deploymenbt. Acceptable ranges from 0-100. | Number | `2` |
-| `num_guac_rdp_nodes` | The number of Guacamole RDP access servers to create in this deployment. Acceptable ranges from 0-100. | Number | `1` |
-| `database_password` | The Kasm PostgreSQL database password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `redis_password` | The Kasm Redis password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `admin_password` | The Kasm Administrative user login password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `user_password` | A Kasm standard (non-administrator) user password. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `manager_token` | The manager token value used by Kasm agents to authenticate to the Kasm WebApps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `service_registration_token` | The service registration token value used by Guac RDP servers to authenticate to the Kasm Webapps. String from 12-30 characters in length with no special characters. | String | `"1qaz2wsx3EDC4RFV"` |
-| `kasm_build_url` | The download URL for the desired Kasm Workspaces version. | String | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.13.0.002947.tar.gz"` |
-| `swap_size` | The amount of swap (in MB) to configure inside the Kasm servers. | Number | `2048` |
-| `instance_shape` | The OCI instance shape to use for Kasm deployment. Kasm recommends using a Flex instance type. | String | `"VM.Standard.E4.Flex"` |
-| `kasm_webapp_vm_settings` | The number of CPUs, memory in GB, and HDD size to use for Kasm WebApps. | Map(Any) | <pre align=left>{<br/>&nbsp;&nbsp;cpus = 2<br/>&nbsp;&nbsp;memory = 2<br/>&nbsp;&nbsp;hdd_size_gb = 50<br/>}</pre> |
-| `kasm_database_vm_settings` | The number of CPUs, memory in GB, and HDD size to use for the Kasm Database server. | Map(Any) | <pre align=left>{<br/>&nbsp;&nbsp;cpus = 2<br/>&nbsp;&nbsp;memory = 2<br/>&nbsp;&nbsp;hdd_size_gb = 50<br/>}</pre> |
-| `kasm_agent_vm_settings` | The number of CPUs, memory in GB, and HDD size to use for the Kasm Agent server(s). | Map(Any) | <pre align=left>{<br/>&nbsp;&nbsp;cpus = 4<br/>&nbsp;&nbsp;memory = 8<br/>&nbsp;&nbsp;hdd_size_gb = 120<br/>}</pre> |
-| `kasm_guac_vm_settings` | The number of CPUs, memory in GB, and HDD size to use for the Kasm Guac RDP server(s). | Map(Any) | <pre align=left>{<br/>&nbsp;&nbsp;cpus = 4<br/>&nbsp;&nbsp;memory = 4<br/>&nbsp;&nbsp;hdd_size_gb = 50<br/>}</pre> |
+## Providers
 
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_kasm"></a> [kasm](#module\_kasm) | ./module | n/a |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_admin_password"></a> [admin\_password](#input\_admin\_password) | The administrative user password. No special characters | `string` | n/a | yes |
+| <a name="input_allow_ssh_cidrs"></a> [allow\_ssh\_cidrs](#input\_allow\_ssh\_cidrs) | The CIDR notation to allow SSH access to the systems. | `list(string)` | n/a | yes |
+| <a name="input_allow_web_cidrs"></a> [allow\_web\_cidrs](#input\_allow\_web\_cidrs) | The CIDR notation to allow HTTPS access to the systems. | `list(string)` | n/a | yes |
+| <a name="input_bastion_vm_settings"></a> [bastion\_vm\_settings](#input\_bastion\_vm\_settings) | The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm SSH Bastion instance | <pre>object({<br>    cpus        = number<br>    memory      = number<br>    hdd_size_gb = number<br>  })</pre> | n/a | yes |
+| <a name="input_compartment_ocid"></a> [compartment\_ocid](#input\_compartment\_ocid) | The Compartment OCID | `string` | n/a | yes |
+| <a name="input_database_password"></a> [database\_password](#input\_database\_password) | The password for the database. No special characters | `string` | n/a | yes |
+| <a name="input_fingerprint"></a> [fingerprint](#input\_fingerprint) | API Key Fingerprint | `string` | n/a | yes |
+| <a name="input_instance_image_ocid"></a> [instance\_image\_ocid](#input\_instance\_image\_ocid) | The OCID for the instance image, such as ubuntu 22.04, to use. | `string` | n/a | yes |
+| <a name="input_instance_shape"></a> [instance\_shape](#input\_instance\_shape) | The instance shape to use. Should be a Flex type. | `string` | n/a | yes |
+| <a name="input_kasm_agent_vm_settings"></a> [kasm\_agent\_vm\_settings](#input\_kasm\_agent\_vm\_settings) | The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Agent instances | <pre>object({<br>    cpus        = number<br>    memory      = number<br>    hdd_size_gb = number<br>  })</pre> | n/a | yes |
+| <a name="input_kasm_build_url"></a> [kasm\_build\_url](#input\_kasm\_build\_url) | The URL for the Kasm Workspaces build | `string` | n/a | yes |
+| <a name="input_kasm_cpx_vm_settings"></a> [kasm\_cpx\_vm\_settings](#input\_kasm\_cpx\_vm\_settings) | The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm cpx RDP instances | <pre>object({<br>    cpus        = number<br>    memory      = number<br>    hdd_size_gb = number<br>  })</pre> | n/a | yes |
+| <a name="input_kasm_database_vm_settings"></a> [kasm\_database\_vm\_settings](#input\_kasm\_database\_vm\_settings) | The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm Database instance | <pre>object({<br>    cpus        = number<br>    memory      = number<br>    hdd_size_gb = number<br>  })</pre> | n/a | yes |
+| <a name="input_kasm_ssl_crt_path"></a> [kasm\_ssl\_crt\_path](#input\_kasm\_ssl\_crt\_path) | The file path to the PEM encoded SSL Certificate | `string` | `""` | no |
+| <a name="input_kasm_ssl_key_path"></a> [kasm\_ssl\_key\_path](#input\_kasm\_ssl\_key\_path) | The file path to the PEM encoded SSL Certificate Key | `string` | `""` | no |
+| <a name="input_kasm_webapp_vm_settings"></a> [kasm\_webapp\_vm\_settings](#input\_kasm\_webapp\_vm\_settings) | The number of CPUs, amount of memory in GB, and HDD size in GB to configure for the Kasm WebApp instances | <pre>object({<br>    cpus        = number<br>    memory      = number<br>    hdd_size_gb = number<br>  })</pre> | n/a | yes |
+| <a name="input_letsencrypt_cert_support_email"></a> [letsencrypt\_cert\_support\_email](#input\_letsencrypt\_cert\_support\_email) | Email address to use for Let's Encrypt SSL certificates for OCI Deployment | `string` | `""` | no |
+| <a name="input_letsencrypt_server_type"></a> [letsencrypt\_server\_type](#input\_letsencrypt\_server\_type) | SSL Server type to generate. Valid options are staging and prod, and prod certificates are limited to 5 certificates per week. | `string` | `""` | no |
+| <a name="input_manager_token"></a> [manager\_token](#input\_manager\_token) | The manager token value for Agents to authenticate to webapps. No special characters | `string` | n/a | yes |
+| <a name="input_num_agents"></a> [num\_agents](#input\_num\_agents) | The number of Agent Role Servers to create in the deployment | `number` | n/a | yes |
+| <a name="input_num_cpx_nodes"></a> [num\_cpx\_nodes](#input\_num\_cpx\_nodes) | The number of cpx RDP Role Servers to create in the deployment | `number` | n/a | yes |
+| <a name="input_num_webapps"></a> [num\_webapps](#input\_num\_webapps) | The number of WebApp role servers to create in the deployment | `number` | n/a | yes |
+| <a name="input_oci_domain_name"></a> [oci\_domain\_name](#input\_oci\_domain\_name) | The public Zone used for the dns entries. This must already exist in the OCI account. (e.g kasm.contoso.com). The deployment will be accessed via this zone name via https | `string` | n/a | yes |
+| <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | The path to the API Key PEM encoded Private Key | `string` | n/a | yes |
+| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
+| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the Redis server. No special characters | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | The OCI Region eg: (us-ashburn-1) | `string` | n/a | yes |
+| <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | n/a | yes |
+| <a name="input_ssh_authorized_keys"></a> [ssh\_authorized\_keys](#input\_ssh\_authorized\_keys) | The SSH Public Keys to be installed on the OCI compute instance | `string` | n/a | yes |
+| <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in MB) to configure inside the compute instances | `number` | n/a | yes |
+| <a name="input_tenancy_ocid"></a> [tenancy\_ocid](#input\_tenancy\_ocid) | The Tenancy OCID. | `string` | n/a | yes |
+| <a name="input_user_ocid"></a> [user\_ocid](#input\_user\_ocid) | The User OCID. | `string` | n/a | yes |
+| <a name="input_user_password"></a> [user\_password](#input\_user\_password) | The standard (non administrator) user password. No special characters | `string` | n/a | yes |
+| <a name="input_vcn_subnet_cidr"></a> [vcn\_subnet\_cidr](#input\_vcn\_subnet\_cidr) | VCN Subnet CIDR where you wish to deploy Kasm | `string` | n/a | yes |
+
+## Outputs
+
+No outputs.
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 # Detailed Terraform Deployment Diagram
 

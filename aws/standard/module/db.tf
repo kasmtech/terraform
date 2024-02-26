@@ -1,12 +1,13 @@
-resource "aws_instance" "kasm-db" {
+resource "aws_instance" "db" {
   ami                    = var.ec2_ami
   instance_type          = var.db_instance_type
-  vpc_security_group_ids = [data.aws_security_group.data-kasm_db_sg.id]
-  subnet_id              = data.aws_subnet.data-kasm_db_subnet.id
+  vpc_security_group_ids = [aws_security_group.db.id]
+  subnet_id              = aws_subnet.db.id
   key_name               = var.aws_key_pair
+  iam_instance_profile   = one(aws_iam_instance_profile.this[*].id)
 
   root_block_device {
-    volume_size = 40
+    volume_size = var.db_hdd_size_gb
   }
 
   user_data = templatefile("${path.module}/userdata/db_bootstrap.sh",
@@ -22,11 +23,14 @@ resource "aws_instance" "kasm-db" {
     }
   )
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = null
+  }
+
   tags = {
     Name = "${var.project_name}-kasm-db"
   }
-}
-
-data "aws_instance" "data-kasm_db" {
-  instance_id = aws_instance.kasm-db.id
 }

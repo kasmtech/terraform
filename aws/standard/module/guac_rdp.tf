@@ -1,17 +1,18 @@
-resource "aws_instance" "kasm-guac" {
-  count                       = var.num_guac_nodes
-  ami                         = var.ec2_ami
-  instance_type               = var.guac_instance_type
-  vpc_security_group_ids      = [data.aws_security_group.data-kasm_guac_sg.id]
-  subnet_id                   = data.aws_subnet.data-kasm_guac_subnet.id
-  key_name                    = var.aws_key_pair
-  associate_public_ip_address = false
+resource "aws_instance" "cpx" {
+  count = var.num_cpx_nodes
+
+  ami                    = var.ec2_ami
+  instance_type          = var.cpx_instance_type
+  vpc_security_group_ids = aws_security_group.cpx[*].id
+  subnet_id              = one(aws_subnet.cpx[*].id)
+  key_name               = var.aws_key_pair
+  iam_instance_profile   = one(aws_iam_instance_profile.this[*].id)
 
   root_block_device {
-    volume_size = 120
+    volume_size = var.cpx_hdd_size_gb
   }
 
-  user_data = templatefile("${path.module}/userdata/guac_bootstrap.sh",
+  user_data = templatefile("${path.module}/userdata/cpx_bootstrap.sh",
     {
       kasm_build_url             = var.kasm_build
       swap_size                  = var.swap_size
@@ -20,7 +21,14 @@ resource "aws_instance" "kasm-guac" {
     }
   )
 
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = null
+  }
+
   tags = {
-    Name = "${var.project_name}-${var.kasm_zone_name}-kasm-guac"
+    Name = "${var.project_name}-${var.kasm_zone_name}-kasm-cpx-${count.index}"
   }
 }

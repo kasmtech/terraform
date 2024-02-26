@@ -126,6 +126,7 @@ variable "allow_kasm_web_cidrs" {
 
 variable "swap_size" {
   description = "The amount of swap (in MB) to configure inside the compute instances"
+  type        = number
   default     = 2048
 
   validation {

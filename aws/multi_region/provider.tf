@@ -1,8 +1,10 @@
 terraform {
+  required_version = "~> 1.0"
+
   required_providers {
     aws = {
-      source = "hashicorp/aws"
-      #version = "4.56.0"
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
     }
   }
 }
@@ -31,7 +33,7 @@ provider "aws" {
 ##############################################################################
 ###
 ### Uncomment the below provider section if you want to deploy a 3rd region.
-### 
+###
 ### Copy/paste the provider below to deploy additional regions, then refer
 ### to the README.md, the deployment.tf file, and the settings.tfvars file for
 ### code blocks to copy/paste/configure to deploy the new regions.
