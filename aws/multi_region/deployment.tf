@@ -72,7 +72,7 @@ module "primary_region_webapps_and_agents" {
   redis_password                  = var.redis_password
   manager_token                   = var.manager_token
   service_registration_token      = var.service_registration_token
-  aws_key_pair                     = module.primary_aws_key_pairs.aws_key_pair_name
+  aws_key_pair                    = module.primary_aws_key_pairs.aws_key_pair_name
   kasm_db_ip                      = module.primary_region.kasm_db_ip
   primary_vpc_id                  = module.primary_region.primary_vpc_id
   certificate_arn                 = module.primary_region.certificate_arn
@@ -81,7 +81,7 @@ module "primary_region_webapps_and_agents" {
 }
 
 module "primary_aws_key_pairs" {
-  source = "./aws_key_pairs"
+  source              = "./aws_key_pairs"
   ssh_authorized_keys = module.ssh_keys.ssh_public_key
   project_name        = var.project_name
 }
@@ -112,12 +112,12 @@ module "region2_webapps" {
   database_password               = var.database_password
   redis_password                  = var.redis_password
   manager_token                   = var.manager_token
-  
-  kasm_db_ip                      = module.primary_region.kasm_db_ip
-  primary_vpc_id                  = module.primary_region.primary_vpc_id
-  certificate_arn                 = module.primary_region.certificate_arn
-  load_balancer_log_bucket        = module.primary_region.lb_log_bucket
-  aws_ssm_instance_profile_name   = var.aws_ssm_instance_profile_name
+
+  kasm_db_ip                    = module.primary_region.kasm_db_ip
+  primary_vpc_id                = module.primary_region.primary_vpc_id
+  certificate_arn               = module.primary_region.certificate_arn
+  load_balancer_log_bucket      = module.primary_region.lb_log_bucket
+  aws_ssm_instance_profile_name = var.aws_ssm_instance_profile_name
 }
 
 module "region2_agents" {

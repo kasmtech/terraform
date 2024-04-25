@@ -1,8 +1,8 @@
 ## AWS Environment settings
-ssh_authorized_keys    = ""
-aws_region             = ""
-aws_domain_name        = "example.kasmweb.com"
-vpc_subnet_cidr        = "10.0.0.0/16"
+ssh_authorized_keys = ""
+aws_region          = ""
+aws_domain_name     = "example.kasmweb.com"
+vpc_subnet_cidr     = "10.0.0.0/16"
 
 ## Kasm deployment settings
 kasm_zone_name = ""

@@ -89,7 +89,7 @@ module "webapp_private_load_balancer" {
   project      = var.project_id
   region       = each.key
   network      = module.vpc.network_name
-  subnetwork   = one([for subnet in module.vpc.subnets_names : subnet if can(regex("${each.key}.webapp", subnet)) ])  
+  subnetwork   = one([for subnet in module.vpc.subnets_names : subnet if can(regex("${each.key}.webapp", subnet))])
   name         = "${each.key}-webapp-private-load-balancer"
   port_range   = var.webapp_named_ports[0].port
   ip_protocol  = "TCP"
@@ -97,7 +97,7 @@ module "webapp_private_load_balancer" {
   health_check = var.webapp_health_check
   backends     = local.private_load_balancer_backends[each.key]
 
-  depends_on = [ module.vpc ]
+  depends_on = [module.vpc]
 }
 
 ## Public access Load balancer for client Kasm access
@@ -133,7 +133,7 @@ module "database_instance" {
   public_access_config = []
   kasm_region          = var.kasm_deployment_regions[0]
 
-  depends_on = [ module.vpc ]
+  depends_on = [module.vpc]
 }
 
 /*
@@ -156,7 +156,7 @@ module "agent_instances" {
   public_access_config = local.agent_public_ip
   kasm_region          = each.key
 
-  depends_on = [ module.vpc ]
+  depends_on = [module.vpc]
 }
 
 /*
@@ -183,7 +183,7 @@ module "cpx_instance_template" {
   startup_script       = local.cpx_startup_configs[each.key]
   labels               = local.resource_labels
 
-  depends_on = [ module.vpc ]
+  depends_on = [module.vpc]
 }
 
 ## Create Kasm Webapp Instance groups

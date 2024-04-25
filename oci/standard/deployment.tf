@@ -47,6 +47,6 @@ module "kasm" {
 
 output "ssh_key_info" {
   description = "SSH Keys to use with Kasm Deployment"
-  value   = module.standard.ssh_key_info
-  sensitive = true
+  value       = module.standard.ssh_key_info
+  sensitive   = true
 }

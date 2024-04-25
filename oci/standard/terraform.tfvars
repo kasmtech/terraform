@@ -39,7 +39,7 @@ ssh_authorized_keys = "changeme"
 ## OCI VM Settings
 instance_image_ocid = ""
 instance_shape      = "VM.Standard.E4.Flex"
-swap_size           = 2  
+swap_size           = 2
 num_webapps         = 2
 num_agents          = 2
 num_cpx_nodes       = 1
