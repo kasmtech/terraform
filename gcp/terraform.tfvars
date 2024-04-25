@@ -25,7 +25,7 @@ kasm_domain_name  = "example.kasmweb.com"
 kasm_project_name = ""
 deployment_type   = "Multi-Region" # Valid values Multi-Region or Multi-Server
 kasm_version      = "1.15.0"
-kasm_download_url = "https://github.com/kasmtech/kasm-install-wizard/releases/download/1.15.0/kasm_release.tar.gz"
+kasm_download_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz"
 
 ## Kasm VM instance configurations
 # Webapp
