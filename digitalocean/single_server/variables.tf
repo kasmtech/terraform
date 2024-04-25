@@ -125,12 +125,11 @@ variable "allow_kasm_web_cidrs" {
 }
 
 variable "swap_size" {
-  description = "The amount of swap (in MB) to configure inside the compute instances"
+  description = "The amount of swap (in GB) to configure inside the compute instances"
   type        = number
-  default     = 2048
 
   validation {
-    condition     = var.swap_size >= 1024 && var.swap_size <= 8192 && floor(var.swap_size) == var.swap_size
-    error_message = "Swap size is the amount of disk space to use for Kasm in MB and must be an integer between 1024 and 8192."
+    condition     = var.swap_size >= 1 && var.swap_size <= 8 && floor(var.swap_size) == var.swap_size
+    error_message = "Swap size is the amount of disk space to use for Kasm in GB and must be an integer between 1 and 8."
   }
 }

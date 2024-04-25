@@ -102,7 +102,7 @@ variable "kasm_build_url" {
 }
 
 variable "swap_size" {
-  description = "The amount of swap (in MB) to configure inside the compute instances"
+  description = "The amount of swap (in GB) to configure inside the compute instances"
   type        = number
 }
 

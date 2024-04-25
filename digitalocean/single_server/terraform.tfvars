@@ -5,12 +5,12 @@ digital_ocean_region = "nyc3"
 vpc_subnet_cidr      = "10.0.0.0/24"
 
 ## DO Authentication variables
-ssh_key_fingerprints = ["c2:4c:f2:5d:0c:59:5a:3f:93:a2:9d:25:94:24:9a:b1"]
+ssh_key_fingerprints = []
 
 ## VM Settings
 digital_ocean_image        = "docker-20-04"
 digital_ocean_droplet_slug = "s-2vcpu-4gb-intel"
-swap_size                  = 2048
+swap_size                  = 2
 
 ## Kasm passwords
 user_password  = "changeme"
@@ -21,4 +21,4 @@ allow_ssh_cidrs      = ["0.0.0.0/0"]
 allow_kasm_web_cidrs = ["0.0.0.0/0"]
 
 ## Kasm download URL
-kasm_build_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"
+kasm_build_url = "https://github.com/kasmtech/kasm-install-wizard/releases/download/1.15.0/kasm_release.tar.gz"

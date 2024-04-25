@@ -2,12 +2,12 @@
 set -ex
 echo "Starting Kasm Workspaces Agent Install"
 
-/bin/dd if=/dev/zero of=/var/swap.1 bs=1M count=${swap_size}
-/sbin/mkswap /var/swap.1
-chmod 600 /var/swap.1
-/sbin/swapon /var/swap.1
-
-echo '/var/swap.1 swap swap defaults 0 0' | tee -a /etc/fstab
+## Create Swap partition
+fallocate -l "${swap_size}"g /var/kasm.swap
+chmod 600 /var/kasm.swap
+mkswap /var/kasm.swap
+swapon /var/kasm.swap
+echo '/var/kasm.swap swap swap defaults 0 0' | tee -a /etc/fstab
 
 cd /tmp
 

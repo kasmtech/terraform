@@ -20,16 +20,6 @@ variable "aws_secret_key" {
   }
 }
 
-variable "aws_key_pair" {
-  description = "The name of an aws keypair to use."
-  type        = string
-
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9-_]{4,15}", var.aws_key_pair))
-    error_message = "The aws_key_pair variable contains invalid characters. Allowed values are between 4-15 characters consisting of letters, numbers, and dashes (-)."
-  }
-}
-
 variable "create_aws_ssm_iam_role" {
   description = "Create an AWS SSM IAM role to attach to VMs for SSH/console access to VMs."
   type        = bool
@@ -283,12 +273,22 @@ variable "aws_primary_region" {
 }
 
 variable "swap_size" {
-  description = "The amount of swap (in MB) to configure inside the compute instances"
+  description = "The amount of swap (in GB) to configure inside the compute instances"
   type        = number
 
   validation {
-    condition     = var.swap_size >= 1024 && var.swap_size <= 8192 && floor(var.swap_size) == var.swap_size
-    error_message = "Swap size is the amount of disk space to use for Kasm in MB and must be an integer between 1024 and 8192."
+    condition     = var.swap_size >= 1 && var.swap_size <= 8 && floor(var.swap_size) == var.swap_size
+    error_message = "Swap size is the amount of disk space to use for Kasm in GB and must be an integer between 1 and 8."
+  }
+}
+
+variable "ssh_authorized_keys" {
+  description = "The SSH Public Keys to be installed on the OCI compute instance"
+  type        = string
+
+  validation {
+    condition     = var.ssh_authorized_keys == "" ? true : can(regex("^(ssh-rsa|ssh-ed25519)", var.ssh_authorized_keys))
+    error_message = "The ssh_authorized_keys value is not in the correct format."
   }
 }
 
