@@ -5,7 +5,7 @@ resource "aws_instance" "webapp" {
   instance_type          = var.webapp_instance_type
   vpc_security_group_ids = [aws_security_group.webapp.id]
   subnet_id              = aws_subnet.webapp[count.index].id
-  key_name               = var.aws_key_pair
+  key_name               = aws_key_pair.ssh_keys.key_name
   iam_instance_profile   = one(aws_iam_instance_profile.this[*].id)
 
   root_block_device {

@@ -27,7 +27,7 @@ resource "oci_core_instance" "agent" {
 
 
   metadata = {
-    ssh_authorized_keys = var.ssh_authorized_keys
+    ssh_authorized_keys = var.ssh_authorized_keys == "" ? tls_private_key.ssh_key[0].public_key_openssh : var.ssh_authorized_keys
     user_data = base64encode(templatefile("${path.module}/userdata/agent_bootstrap.sh",
       {
         kasm_build_url  = var.kasm_build_url

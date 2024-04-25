@@ -16,7 +16,7 @@ resource "digitalocean_record" "static" {
 resource "digitalocean_certificate" "cert" {
   name    = "${var.project_name}-cert"
   type    = "lets_encrypt"
-  domains = [digitalocean_domain.default.id]
+  domains = [digitalocean_domain.default.name]
 
   lifecycle {
     create_before_destroy = true

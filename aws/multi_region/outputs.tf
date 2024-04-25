@@ -16,6 +16,10 @@ Proxy address:                   ${join("", slice(split("-", var.secondary_regio
 ZONE
 }
 
+output "ssh_keys" {
+  description = "SSH Keys to be used with your Kasm Deployment"  
+  value = module.ssh_keys.ssh_key_info
+}
 #########################################################################
 #
 # Uncomment the below section and update the provider and the settings

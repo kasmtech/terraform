@@ -34,3 +34,9 @@ module "kasm" {
   admin_password = var.admin_password
   user_password  = var.user_password
 }
+
+output "ssh_key_info" {
+  description = "SSH Keys to use with Kasm Deployment"
+  value   = module.standard.ssh_key_info
+  sensitive = true
+}

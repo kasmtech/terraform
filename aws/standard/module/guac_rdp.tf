@@ -5,7 +5,7 @@ resource "aws_instance" "cpx" {
   instance_type          = var.cpx_instance_type
   vpc_security_group_ids = aws_security_group.cpx[*].id
   subnet_id              = one(aws_subnet.cpx[*].id)
-  key_name               = var.aws_key_pair
+  key_name               = aws_key_pair.ssh_keys.key_name
   iam_instance_profile   = one(aws_iam_instance_profile.this[*].id)
 
   root_block_device {
