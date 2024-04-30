@@ -1,4 +1,4 @@
-module "kasm" {
+module "v" {
   source          = "./module"
   oci_domain_name = var.oci_domain_name
   project_name    = var.project_name
@@ -37,6 +37,6 @@ module "kasm" {
 
 output "ssh_key_info" {
   description = "SSH Keys to use with Kasm Deployment"
-  value       = module.standard.ssh_key_info
+  value       = module.kasm.ssh_key_info
   sensitive   = true
 }
