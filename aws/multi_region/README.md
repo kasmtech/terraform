@@ -1,4 +1,5 @@
 # AWS Multi-Region Deploy
+
 This project will deploy Kasm Workspaces within multiple AWS regions of your choice. Multiple [Deployment Zones](https://kasmweb.com/docs/latest/guide/zones/deployment_zones.html) will be configured for the
 deployment that correspond to the desired AWS regions.
 
@@ -16,20 +17,21 @@ is deployed.
 
 [Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-region-new.jpg "Diagram"
 
-> ***NOTE:*** This deployment has been tested and validated with both [Terraform](https://www.terraform.io/) and [OpenTofu](https://opentofu.org/)
-
 # Pre-Configuration
+
 Consider creating a special sub account for the Kasm deployment.
 
 ### DNS Zone
+
 In your AWS account create a DNS Public zone that matches the desired domain name for the deployment. e.g `kasm.contoso.com`
 
 ### SSH Key Pair
+
 In the each AWS region where you will deploy Kasm, create an aws Key pair with the same name. The key name will be value used in the `aws_key_pair` variable and it will be configured as the SSH key for the deployed EC2 machines.
 
 ### AWS API Keys
-Create a user via the IAM console that will be used for the terraform deployment. Give the user **Programatic Access** and attach the existing policy **AdministratorAccess**. Save the key and key secret.
 
+Create a user via the IAM console that will be used for the terraform deployment. Give the user **Programatic Access** and attach the existing policy **AdministratorAccess**. Save the key and key secret.
 
 # Terraform Configuration
 

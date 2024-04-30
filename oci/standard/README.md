@@ -9,22 +9,29 @@ This project will deploy Kasm Workspaces in a multi-server deployment in OCI.
 
 
 # Pre-Configuration
+
 Consider creating a new Compartment for the Kasm Workspaces deployment.
 
 ### DNS Zone
+
 In OCI create a public DNS zone that matches the desired domain name for the deployment. e.g `kasm.contoso.com`.
 
 ### API Keys
+
 Create an administative user in the OCI console that will be used for the terraform deployment. Add the user to the **Administrators** Group. Generate an API Key for the user. The API Key Fingerprint will be used as a variable in the deployment configuration. Save the private key to the local directory replacing `oci-private-key.pem`.
 
 ### SSL Certificate Options
+
 #### Terraform-generated Let's Encrypt Certificate
+
 To use Terraform to generate a Let's Encrypt certificate automatically, set the `letsencrypt_cert_support_email` to a valid email address and set the `letsencrypt_server_type` to either "staging" or "prod" and leave the `kasm_ssl_crt_path` and `kasm_ssl_key_path` variables empty.
-***NOTE:***
-- Staging generates certificates that a browser will not trust, but are formatted correctly and are designed for testing and validating the system configuraiton and deployment and has a limit of hundreds of certificates per domain per week.
-- Prod generates valid Let's Encrypt certificates but is limited to 5 certificates per week per domain.
+
+> ***NOTE:***
+> - Staging generates certificates that a browser will not trust, but are formatted correctly and are designed for testing and validating the system configuraiton and deployment and has a limit of hundreds of certificates per domain per week.
+> - Prod generates trusted Let's Encrypt certificates but is limited to 5 certificates per week per domain.
 
 #### Bring Your Own Certificates
+
 Create an SSL certificate that matches the desired domain for the deployment. e.g (kasm.contoso.com). Place the pem encoded cert and key in this directory overwriting  `kasm_ssl.crt` and `kasm_ssl.key`.
 
 

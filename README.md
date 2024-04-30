@@ -3,6 +3,7 @@
 These projects are intended to be starting examples and for automating Kasm Workspaces deployments via terraform.
 Administators should review the projects and add additional customizations and security enhancements as desired.
 
+> ***NOTE:*** All of these deployments have been tested and validated with both [Terraform](https://www.terraform.io/) and [OpenTofu](https://opentofu.org/)
 
 # AWS
 - [Multi-Server Single Region](aws/standard/README.md)
@@ -14,3 +15,8 @@ Administators should review the projects and add additional customizations and s
 
 # DigitalOcean
 - [Single Server](digitalocean/single_server/README.md)
+
+# GCP
+- [GCP Requirements](gcp/README.md)
+- [Multi-Server Single Region](gcp/MULTI_SERVER.md)
+- [Multi-Region](gcp/MULTI_REGION.md)

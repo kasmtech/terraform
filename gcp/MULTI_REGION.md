@@ -1,6 +1,8 @@
 # GCP Multi-Server Single Region
+
 This project will deploy Kasm Workspaces in a multi-server deployment in GCP within multiple regions of your choice. Each Kasm server role is placed in a separate subnet and you can optionally forward traffic from user sessions on the Kasm Agent through a NAT Gateway.
 
+> **NOTE:** Make sure you read and understand the [GCP requirements](./README.md) before continuing!
 
 ![Diagram][Image_Diagram]
 
@@ -8,9 +10,11 @@ This project will deploy Kasm Workspaces in a multi-server deployment in GCP wit
 
 
 # Pre-Configuration
+
 Consider creating a separate GCP Project for the Kasm deployment.
 
 ### DNS Zone
+
 There are a couple of DNS options available with this GCP Terraform. Regardless of method, Terraform will:
   - Add a DNS record for the load balancer
   - Add a private DNS zone and add records for the private load balancer used by Agents to communicate with the webapps
@@ -22,6 +26,7 @@ There are a couple of DNS options available with this GCP Terraform. Regardless 
     - Using this method, Terraform will create a public DNS zone using the values you provide, and you must manually add the name server (NS) records to the parent DNS zone so queries are forwarded correctly
 
 ### Create Terraform service account and generate an API key
+
 Create a GCP Service Account to use with Terraform (https://cloud.google.com/iam/docs/service-accounts-create), and generate an API key. Once the API Key credential file is downloaded, copy it's contents into the `gcp_credentials.json` file in this directory, and Terraform will use these credentials to perform all operations.
 
 Recommended Service Account roles:
@@ -31,6 +36,7 @@ Recommended Service Account roles:
 - Service Account Admin
 
 ### GCP APIs to enable before running Terraform
+
 There are several GCP service APIs that must be enabled before this Terraform can build successfully. In your GCP project, navigate to each of these and ensure they are enabled before running the Terraform configuration stage below.
 
 GCP APIs:
