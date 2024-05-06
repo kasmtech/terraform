@@ -1,4 +1,5 @@
 # AWS Multi-Server Single Region
+
 This project will deploy Kasm Workspaces in a multi-server deployment in AWS within a single region of your choice.
 Each role is placed in a separate subnet and traffic from user sessions on the Agent egresses out of a Nat Gateway.
 
@@ -6,21 +7,21 @@ Each role is placed in a separate subnet and traffic from user sessions on the A
 
 [Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-server-new.jpg "Diagram"
 
-
-> ***NOTE:*** This deployment has been tested and validated with both [Terraform](https://www.terraform.io/) and [OpenTofu](https://opentofu.org/)
-
 # Pre-Configuration
+
 Consider creating a special sub account for the Kasm deployment.
 
 ### DNS Zone
+
 In your AWS account create a DNS Public zone that matches the desired domain name for the deployment. e.g `kasm.contoso.com`
 
 ### SSH Key Pair
+
 In the desired AWS region create an aws Key pair. The key name will be value used in the `aws_key_pair` variable and it will be configured as the SSH key for the deployed EC2 machines.
 
 ### AWS API Keys
-Create a user via the IAM console that will be used for the terraform deployment. Give the user **Programatic Access** and attach the existing policy **AdministratorAccess**. Save the key and key secret
 
+Create a user via the IAM console that will be used for the terraform deployment. Give the user **Programatic Access** and attach the existing policy **AdministratorAccess**. Save the key and key secret
 
 # Terraform Configuration
 

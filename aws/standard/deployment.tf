@@ -1,6 +1,5 @@
 module "standard" {
   source                        = "./module"
-  aws_key_pair                  = var.aws_key_pair
   aws_region                    = var.aws_region
   aws_domain_name               = var.aws_domain_name
   project_name                  = var.project_name
@@ -23,6 +22,7 @@ module "standard" {
   cpx_hdd_size_gb      = var.cpx_hdd_size_gb
   ec2_ami              = var.ec2_ami_id
   swap_size            = var.swap_size
+  ssh_authorized_keys  = var.ssh_authorized_keys
 
   web_access_cidrs           = var.web_access_cidrs
   database_password          = var.database_password

@@ -5,7 +5,7 @@ resource "aws_instance" "agent" {
   instance_type               = var.agent_instance_type
   vpc_security_group_ids      = [aws_security_group.agent.id]
   subnet_id                   = aws_subnet.agent.id
-  key_name                    = var.aws_key_pair
+  key_name                    = aws_key_pair.ssh_keys.key_name
   iam_instance_profile        = one(aws_iam_instance_profile.this[*].id)
   associate_public_ip_address = true
 

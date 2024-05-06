@@ -1,7 +1,7 @@
 ## AWS Environment settings
-aws_key_pair            = ""
+ssh_authorized_keys     = ""
 aws_primary_region      = ""
-aws_domain_name         = "contoso.kasm.com"
+aws_domain_name         = "example.kasmweb.com"
 primary_vpc_subnet_cidr = "10.0.0.0/16"
 
 ## Kasm deployment project
@@ -16,7 +16,7 @@ manager_token              = "changeme"
 service_registration_token = "changeme"
 
 ## Kasm download URL
-kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"
+kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz"
 
 ## VM Public Access subnets
 web_access_cidrs = ["0.0.0.0/0"]
@@ -27,7 +27,7 @@ aws_ssm_iam_role_name         = ""
 aws_ssm_instance_profile_name = ""
 
 ## Kasm Server Settings
-swap_size                 = 2048
+swap_size                 = 2
 primary_region_ec2_ami_id = ""
 
 ## Kasm Webapp Instance Settings
@@ -84,5 +84,5 @@ aws_default_tags = {
   Deployed_by     = "Terraform"
   Deployment_type = "Multi-Region"
   Service_name    = "Kasm Workspaces"
-  Kasm_version    = "1.14"
+  Kasm_version    = "1.15"
 }

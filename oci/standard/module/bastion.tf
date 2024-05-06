@@ -25,6 +25,6 @@ resource "oci_core_instance" "bastion" {
   }
 
   metadata = {
-    ssh_authorized_keys = var.ssh_authorized_keys
+    ssh_authorized_keys = var.ssh_authorized_keys == "" ? tls_private_key.ssh_key[0].public_key_openssh : var.ssh_authorized_keys
   }
 }

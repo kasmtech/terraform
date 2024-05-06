@@ -1,12 +1,12 @@
 ## AWS Environment settings
-aws_key_pair    = ""
-aws_region      = ""
-aws_domain_name = ""
-vpc_subnet_cidr = "10.0.0.0/16"
+ssh_authorized_keys = ""
+aws_region          = ""
+aws_domain_name     = "example.kasmweb.com"
+vpc_subnet_cidr     = "10.0.0.0/16"
 
 ## Kasm deployment settings
-kasm_zone_name = "default"
-project_name   = "test"
+kasm_zone_name = ""
+project_name   = ""
 
 ## Number of each Kasm role to deploy
 num_agents    = 2
@@ -23,7 +23,7 @@ aws_ssm_instance_profile_name = ""
 
 ## Kasm Server settings
 ec2_ami_id = ""
-swap_size  = 2048
+swap_size  = 2
 
 ## Kasm Webapp Instance Settings
 webapp_instance_type = "t3.small"
@@ -50,12 +50,12 @@ manager_token              = "changeme"
 service_registration_token = "changeme"
 
 ## Kasm download URL
-kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.14.0.3a7abb.tar.gz"
+kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz"
 
 ## Default tags for all AWS resources
 aws_default_tags = {
   Deployed_by     = "Terraform"
   Deployment_type = "Multi-Server"
   Service_name    = "Kasm Workspaces"
-  Kasm_version    = "1.14"
+  Kasm_version    = "1.15"
 }

@@ -8,11 +8,6 @@ variable "aws_domain_name" {
   type        = string
 }
 
-variable "aws_key_pair" {
-  description = "The name of an aws keypair to use."
-  type        = string
-}
-
 variable "vpc_subnet_cidr" {
   description = "The subnet CIDR to use for the VPC"
   type        = string
@@ -103,7 +98,7 @@ variable "kasm_build" {
 }
 
 variable "swap_size" {
-  description = "The amount of swap (in MB) to configure inside the compute instances"
+  description = "The amount of swap (in GB) to configure inside the compute instances"
   type        = number
 }
 
@@ -332,4 +327,9 @@ variable "default_egress" {
       cidr_subnets = ["0.0.0.0/0"]
     }
   }
+}
+
+variable "ssh_authorized_keys" {
+  description = "The SSH Public Keys to be installed on the OCI compute instance"
+  type        = string
 }

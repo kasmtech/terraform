@@ -99,7 +99,7 @@ variable "ssh_authorized_keys" {
   type        = string
 
   validation {
-    condition     = can(regex("^ssh-rsa\\s+[A-Za-z0-9+/]+[=]{0,3}(\\s+.+)?\\s*$", var.ssh_authorized_keys))
+    condition     = var.ssh_authorized_keys == "" ? true : can(regex("^(ssh-rsa|ssh-ed25519)", var.ssh_authorized_keys))
     error_message = "The ssh_authorized_keys value is not in the correct format."
   }
 }
@@ -212,12 +212,12 @@ variable "admin_password" {
 }
 
 variable "swap_size" {
-  description = "The amount of swap (in MB) to configure inside the compute instances"
+  description = "The amount of swap (in GB) to configure inside the compute instances"
   type        = number
 
   validation {
-    condition     = var.swap_size >= 1024 && var.swap_size <= 8192 && floor(var.swap_size) == var.swap_size
-    error_message = "Swap size is the amount of disk space to use for Kasm in MB and must be an integer between 1024 and 8192."
+    condition     = var.swap_size >= 1 && var.swap_size <= 8 && floor(var.swap_size) == var.swap_size
+    error_message = "Swap size is the amount of disk space to use for Kasm in GB and must be an integer between 1 and 8."
   }
 }
 
