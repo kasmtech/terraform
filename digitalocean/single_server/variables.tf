@@ -25,7 +25,7 @@ variable "do_domain_name" {
   type        = string
 
   validation {
-    condition     = can(regex("^[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,6}", var.do_domain_name))
+    condition     = can(regex("^[a-z0-9_-]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,6}", var.do_domain_name))
     error_message = "There are invalid characters in the do_domain_name - it must be a valid domain name."
   }
 }

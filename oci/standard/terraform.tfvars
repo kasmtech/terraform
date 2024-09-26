@@ -1,8 +1,8 @@
 ## Kasm deployment settings
 oci_domain_name = "kasm.contoso.com"
 project_name    = "contoso"
-kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz"
 vcn_subnet_cidr = "10.0.0.0/16"
+kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.0.f2d6e1.tar.gz"
 
 ## OCI Authentication variables
 tenancy_ocid     = ""

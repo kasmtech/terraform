@@ -78,7 +78,7 @@ No resources.
 | <a name="input_kasm_build_url"></a> [kasm\_build\_url](#input\_kasm\_build\_url) | The Kasm build file to install | `string` | `"https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the project/deployment/company eg (acme). | `string` | n/a | yes |
 | <a name="input_ssh_key_fingerprints"></a> [ssh\_key\_fingerprints](#input\_ssh\_key\_fingerprints) | Keys used for sshing into kasm hosts | `list(string)` | n/a | yes |
-| <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in MB) to configure inside the compute instances | `number` | `2048` | no |
+| <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in GB) to configure inside the compute instances | `number` | n/a | yes |
 | <a name="input_user_password"></a> [user\_password](#input\_user\_password) | The default password to be used for the default user@kasm.local account. Only use alphanumeric characters | `string` | `"changeme"` | no |
 | <a name="input_vpc_subnet_cidr"></a> [vpc\_subnet\_cidr](#input\_vpc\_subnet\_cidr) | VPC Subnet CIDR where you wish to deploy Kasm | `string` | `"10.0.0.0/24"` | no |
 
