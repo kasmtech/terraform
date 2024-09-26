@@ -1,4 +1,4 @@
-module "v" {
+module "kasm" {
   source          = "./module"
   oci_domain_name = var.oci_domain_name
   project_name    = var.project_name

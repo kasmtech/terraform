@@ -13,7 +13,7 @@ swapon /mnt/kasm.swap
 echo '/mnt/kasm.swap swap swap defaults 0 0' | tee -a /etc/fstab
 
 ## Install useful packages
-apt update && apt install iputils-ping dnsutils netcat -y
+apt update && apt install iputils-ping dnsutils netcat-openbsd -y
 
 ## Test Database connectivity before installing
 while ! nc -w 1 -z ${DB_PRIVATE_IP} 5432

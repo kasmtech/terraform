@@ -15,7 +15,7 @@ wget  ${kasm_build_url} -O kasm_workspaces.tar.gz
 tar -xf kasm_workspaces.tar.gz
 
 echo "Checking for Kasm DB and Redis..."
-apt-get update && apt-get install -y netcat
+apt-get update && apt-get install -y netcat-openbsd
 while ! nc -w 1  -z ${db_ip} 5432; do
   echo "Database not ready..."
   sleep 5

@@ -50,12 +50,12 @@ manager_token              = "changeme"
 service_registration_token = "changeme"
 
 ## Kasm download URL
-kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.15.0.06fdc8.tar.gz"
+kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.0.f2d6e1.tar.gz"
 
 ## Default tags for all AWS resources
 aws_default_tags = {
   Deployed_by     = "Terraform"
   Deployment_type = "Multi-Server"
   Service_name    = "Kasm Workspaces"
-  Kasm_version    = "1.15"
+  Kasm_version    = "1.16"
 }
