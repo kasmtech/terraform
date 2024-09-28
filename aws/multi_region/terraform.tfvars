@@ -16,7 +16,7 @@ manager_token              = "changeme"
 service_registration_token = "changeme"
 
 ## Kasm download URL
-kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.0.f2d6e1.tar.gz"
+kasm_build = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.0.a1d5b7.tar.gz"
 
 ## VM Public Access subnets
 web_access_cidrs = ["0.0.0.0/0"]
