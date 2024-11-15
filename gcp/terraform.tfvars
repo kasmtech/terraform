@@ -24,8 +24,8 @@ show_passwords                        = true
 kasm_domain_name  = "example.kasmweb.com"
 kasm_project_name = ""
 deployment_type   = "Multi-Region" # Valid values Multi-Region or Multi-Server
-kasm_version      = "1.16.0"
-kasm_download_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.0.a1d5b7.tar.gz"
+kasm_version      = "1.16.1"
+kasm_download_url = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.16.1.6efdbd.tar.gz"
 
 ## Kasm VM instance configurations
 # Webapp
