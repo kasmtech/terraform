@@ -704,7 +704,7 @@ variable "kasm_source_image" {
 
   default = {
     project = "ubuntu-os-cloud"
-    family  = "ubuntu-minimal-2004-lts"
+    family  = "ubuntu-minimal-2204-lts"
   }
 }
 

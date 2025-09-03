@@ -81,6 +81,7 @@ variable "allow_stopping_for_update" {
   default     = false
 }
 
+## please change the default to true, apply and then try destroy. If terraform destroy doesn't work 
 variable "instance_delete_protection" {
   description = "Prevent instance from accidental deletion"
   type        = bool
