@@ -26,7 +26,6 @@ module "standard" {
 
   web_access_cidrs           = var.web_access_cidrs
   database_password          = var.database_password
-  redis_password             = var.redis_password
   user_password              = var.user_password
   admin_password             = var.admin_password
   manager_token              = var.manager_token

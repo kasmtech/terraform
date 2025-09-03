@@ -31,12 +31,6 @@ variable "database_password" {
   sensitive   = true
 }
 
-variable "redis_password" {
-  description = "The password for the database. No special characters"
-  type        = string
-  sensitive   = true
-}
-
 variable "service_registration_token" {
   description = "The service registration token value for cpx RDP servers to authenticate to webapps. No special characters"
   type        = string

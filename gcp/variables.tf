@@ -107,18 +107,6 @@ variable "kasm_database_password" {
   }
 }
 
-variable "kasm_redis_password" {
-  description = "The password for the Redis server. No special characters"
-  type        = string
-  sensitive   = true
-  default     = ""
-
-  validation {
-    condition     = var.kasm_redis_password == "" ? true : can(regex("^[a-zA-Z0-9]{12,40}", var.kasm_redis_password))
-    error_message = "The Kasm Redis should be a string between 12 and 40 letters or numbers with no special characters."
-  }
-}
-
 variable "kasm_user_password" {
   description = "The standard (non administrator) user password. No special characters"
   type        = string

@@ -30,7 +30,6 @@ resource "oci_core_instance" "db" {
         kasm_build_url             = var.kasm_build_url
         user_password              = var.user_password
         admin_password             = var.admin_password
-        redis_password             = var.redis_password
         database_password          = var.database_password
         service_registration_token = var.service_registration_token
         manager_token              = var.manager_token

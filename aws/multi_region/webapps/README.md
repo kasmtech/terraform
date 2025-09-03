@@ -67,7 +67,6 @@ No modules.
 | <a name="input_primary_aws_region"></a> [primary\_aws\_region](#input\_primary\_aws\_region) | The AWS region for primary region of the deployment. (e.g us-east-1) | `string` | n/a | yes |
 | <a name="input_primary_vpc_id"></a> [primary\_vpc\_id](#input\_primary\_vpc\_id) | The VPC ID of the primary region | `string` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
-| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the database. No special characters | `string` | n/a | yes |
 | <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | `""` | no |
 | <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in MB) to configure inside the compute instances | `number` | n/a | yes |
 | <a name="input_webapp_hdd_size_gb"></a> [webapp\_hdd\_size\_gb](#input\_webapp\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm WebApp instances | `number` | n/a | yes |

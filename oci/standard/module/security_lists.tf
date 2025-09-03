@@ -69,10 +69,10 @@ resource "oci_core_security_list" "allow_bastion_ssh" {
   }
 }
 
-resource "oci_core_security_list" "allow_db_redis" {
+resource "oci_core_security_list" "allow_db" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_vcn.this.id
-  display_name   = "allow_db_redis"
+  display_name   = "allow_db"
 
   dynamic "egress_security_rules" {
     for_each = var.anywhere
@@ -90,15 +90,6 @@ resource "oci_core_security_list" "allow_db_redis" {
     tcp_options {
       max = "5432"
       min = "5432"
-    }
-  }
-
-  ingress_security_rules {
-    protocol = "6"
-    source   = oci_core_subnet.webapp.cidr_block
-    tcp_options {
-      max = "6379"
-      min = "6379"
     }
   }
 }

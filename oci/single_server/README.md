@@ -4,7 +4,7 @@ This project will deploy Kasm Workspaces in a single-server deployment in OCI.
 
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/oci-single-server.png "Diagram"
+[Image_Diagram]: ../readme_diagrams/oci_single_server.png "Diagram"
 
 
 

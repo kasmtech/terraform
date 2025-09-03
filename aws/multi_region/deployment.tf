@@ -28,7 +28,6 @@ module "primary_region" {
   db_hdd_size_gb                = var.db_hdd_size_gb
   swap_size                     = var.swap_size
   database_password             = var.database_password
-  redis_password                = var.redis_password
   user_password                 = var.user_password
   admin_password                = var.admin_password
   manager_token                 = var.manager_token
@@ -69,7 +68,6 @@ module "primary_region_webapps_and_agents" {
   project_name                    = var.project_name
   kasm_build                      = var.kasm_build
   database_password               = var.database_password
-  redis_password                  = var.redis_password
   manager_token                   = var.manager_token
   service_registration_token      = var.service_registration_token
   aws_key_pair                    = module.primary_aws_key_pairs.aws_key_pair_name
@@ -110,7 +108,6 @@ module "region2_webapps" {
   project_name                    = var.project_name
   kasm_build                      = var.kasm_build
   database_password               = var.database_password
-  redis_password                  = var.redis_password
   manager_token                   = var.manager_token
 
   kasm_db_ip                    = module.primary_region.kasm_db_ip
@@ -186,7 +183,6 @@ module "region2_aws_key_pairs" {
 #   project_name                    = var.project_name
 #   kasm_build                      = var.kasm_build
 #   database_password               = var.database_password
-#   redis_password                  = var.redis_password
 #   manager_token                   = var.manager_token
 #   aws_key_pair                    = module.region2_aws_key_pairs
 #   kasm_db_ip                      = module.primary_region.kasm_db_ip

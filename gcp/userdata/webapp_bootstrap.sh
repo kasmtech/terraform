@@ -22,13 +22,6 @@ do
     sleep 5
 done
 
-## Test Redis connectivity before installing
-while ! nc -w 1 -z ${DB_PRIVATE_IP} 6379
-do
-    echo "Waiting for Redis connection..."
-    sleep 5
-done
-
 ## Install Kasm
 ## Kasm install arguments used:
 ##  -S = Kasm role - webapp in this case
@@ -36,8 +29,7 @@ done
 ##  -e = accept EULA
 ##  -q = Database Server IP
 ##  -Q = Database password
-##  -R = Redis password
 ##  -z = The Zone name to use for the webapp
 ## Useful additional arguments:
 ##  -O = use Rolling images (ensures the most up-to-date containers are used)
-bash kasm_release/install.sh -S app -H -e -z ${KASM_ZONE_NAME} -q ${DB_PRIVATE_IP} -Q ${KASM_DB_PASS} -R ${KASM_REDIS_PASS} ${ADDITIONAL_WEBAPP_INSTALL_ARGS}
+bash kasm_release/install.sh -S app -H -e -z ${KASM_ZONE_NAME} -q ${DB_PRIVATE_IP} -Q ${KASM_DB_PASS} ${ADDITIONAL_WEBAPP_INSTALL_ARGS}

@@ -22,13 +22,6 @@ do
     sleep 10
 done
 
-## Ensure connection to remote Redis before installing
-while ! nc -w 1 -z ${REDIS_IP} 6379
-do
-    echo "Waiting for Redis connection..."
-    sleep 10
-done
-
 ## Install Kasm
 ## Kasm install arguments used:
 ##  -S = Kasm role - init_remote_db in this case
@@ -36,8 +29,6 @@ done
 ##  -e = accept EULA
 ##  -q = Database IP or Hostname
 ##  -Q = Database password
-##  -o = Redis IP or Hostname
-##  -R = Redis password
 ##  -U = Password to use for user@kasm.local built-in account
 ##  -P = Password to use for admin@kasm.local built-in admin account
 ##  -M = Management token to use for agent registration
@@ -45,4 +36,4 @@ done
 ##  Useful additional arguments:
 ##   -O = use Rolling images (ensures the most up-to-date containers are used)
 bash kasm_release/install_dependencies.sh
-bash kasm_release/install.sh -S init_remote_db -e -H -q ${DATABASE_IP} -Q ${KASM_DB_PASS} -U ${KASM_USER_PASS} -P ${KASM_ADMIN_PASS} -o ${REDIS_IP} -R ${KASM_REDIS_PASS} -M ${KASM_SERVICE_TOKEN} -g ${DB_MASTER_USER} -G ${DB_MASTER_PASSWORD} -k ${KASM_SERVICE_TOKEN} ${ADDITIONAL_DATABASE_INSTALL_ARGS}
+bash kasm_release/install.sh -S init_remote_db -e -H -q ${DATABASE_IP} -Q ${KASM_DB_PASS} -U ${KASM_USER_PASS} -P ${KASM_ADMIN_PASS} -M ${KASM_SERVICE_TOKEN} -g ${DB_MASTER_USER} -G ${DB_MASTER_PASSWORD} -k ${KASM_SERVICE_TOKEN} ${ADDITIONAL_DATABASE_INSTALL_ARGS}

@@ -126,12 +126,6 @@ variable "database_password" {
   sensitive   = true
 }
 
-variable "redis_password" {
-  description = "The password for the Redis server. No special characters"
-  type        = string
-  sensitive   = true
-}
-
 variable "user_password" {
   description = "The standard (non administrator) user password. No special characters"
   type        = string
@@ -239,11 +233,6 @@ variable "db_security_rules" {
     postgres = {
       from_port = 5432
       to_port   = 5432
-      protocol  = "tcp"
-    }
-    redis = {
-      from_port = 6379
-      to_port   = 6379
       protocol  = "tcp"
     }
   }

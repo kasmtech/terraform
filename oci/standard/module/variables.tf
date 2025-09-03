@@ -105,12 +105,6 @@ variable "database_password" {
   sensitive   = true
 }
 
-variable "redis_password" {
-  description = "The password for the Redis server. No special characters"
-  type        = string
-  sensitive   = true
-}
-
 variable "user_password" {
   description = "The standard (non administrator) user password. No special characters"
   type        = string

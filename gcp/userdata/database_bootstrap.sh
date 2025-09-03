@@ -21,11 +21,10 @@ apt update && apt install iputils-ping dnsutils netcat -y
 ##  -H = Don't check for swap (since we created it already)
 ##  -e = accept EULA
 ##  -Q = Database password
-##  -R = Redis password
 ##  -U = Password to use for user@kasm.local built-in account
 ##  -P = Password to use for admin@kasm.local built-in admin account
 ##  -M = Management token to use for agent registration
 ##  -k = Service registration token to use for Connection Proxy (Guac) registration
 ##  Useful additional arguments:
 ##   -O = use Rolling images (ensures the most up-to-date containers are used)
-bash kasm_release/install.sh -S db -e -Q ${KASM_DB_PASS} -R ${KASM_REDIS_PASS} -U ${KASM_USER_PASS} -P ${KASM_ADMIN_PASS} -M ${KASM_MANAGER_TOKEN} -k ${KASM_SERVICE_TOKEN} ${ADDITIONAL_DATABASE_INSTALL_ARGS}
+bash kasm_release/install.sh -S db -e -Q ${KASM_DB_PASS} -U ${KASM_USER_PASS} -P ${KASM_ADMIN_PASS} -M ${KASM_MANAGER_TOKEN} -k ${KASM_SERVICE_TOKEN} ${ADDITIONAL_DATABASE_INSTALL_ARGS}

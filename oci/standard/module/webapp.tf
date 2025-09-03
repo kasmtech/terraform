@@ -32,7 +32,6 @@ resource "oci_core_instance" "webapp" {
         kasm_build_url    = var.kasm_build_url
         db_ip             = oci_core_instance.db.private_ip
         database_password = var.database_password
-        redis_password    = var.redis_password
         swap_size         = var.swap_size
         zone_name         = "default"
       }

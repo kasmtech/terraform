@@ -8,7 +8,6 @@ locals {
   admin_password    = var.kasm_admin_password == "" ? module.passwords[0].password : var.kasm_admin_password
   user_password     = var.kasm_user_password == "" ? module.passwords[1].password : var.kasm_user_password
   database_password = var.kasm_database_password == "" ? module.passwords[2].password : var.kasm_database_password
-  redis_password    = var.kasm_redis_password == "" ? module.passwords[3].password : var.kasm_redis_password
   service_token     = var.kasm_service_token == "" ? module.passwords[4].password : var.kasm_service_token
   manager_token     = var.kasm_manager_token == "" ? module.passwords[5].password : var.kasm_manager_token
 
@@ -41,7 +40,6 @@ locals {
   webapp_startup_scripts = { for region in var.kasm_deployment_regions : region => templatefile("${path.module}/userdata/webapp_bootstrap.sh", {
     DB_PRIVATE_IP                  = local.database_private_ip
     KASM_DB_PASS                   = local.database_password
-    KASM_REDIS_PASS                = local.redis_password
     KASM_DOWNLOAD_URL              = var.kasm_download_url
     ADDITIONAL_WEBAPP_INSTALL_ARGS = join(" ", distinct(flatten([var.additional_kasm_install_options, var.additional_webapp_install_options])))
     KASM_ZONE_NAME                 = region
@@ -57,7 +55,6 @@ locals {
     KASM_MANAGER_TOKEN               = local.manager_token
     KASM_SERVICE_TOKEN               = local.service_token
     KASM_DB_PASS                     = local.database_password
-    KASM_REDIS_PASS                  = local.redis_password
     KASM_DOWNLOAD_URL                = var.kasm_download_url
     ADDITIONAL_DATABASE_INSTALL_ARGS = join(" ", distinct(flatten([var.additional_kasm_install_options, var.additional_database_install_options])))
   })]

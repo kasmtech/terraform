@@ -234,17 +234,6 @@ variable "database_password" {
   }
 }
 
-variable "redis_password" {
-  description = "The password for the Redis server. No special characters"
-  type        = string
-  sensitive   = true
-
-  validation {
-    condition     = can(regex("^[a-zA-Z0-9]{12,30}$", var.redis_password))
-    error_message = "The Redis Password should be a string between 12 and 30 letters or numbers with no special characters."
-  }
-}
-
 variable "user_password" {
   description = "The standard (non administrator) user password. No special characters"
   type        = string
