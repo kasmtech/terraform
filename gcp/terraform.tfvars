@@ -1,14 +1,14 @@
 ## Connection variables
-project_id                  = ""
+project_id                  = "development-451616"
 google_credential_file_path = "./gcp_credentials.json"
 
 ## VPC and deployment environment variables
-vpc_name        = ""
+vpc_name        = "kasm-vpc-test"
 kasm_vpc_subnet = "10.0.0.0/16"
 
 ## Ensure the desired Database region is the first value in the list
 kasm_deployment_regions = ["us-east1"] # Use only one region for Multi-Server (single-region)
-#kasm_deployment_regions = ["us-west2", "asia-southeast1"]   # Use multiple regions for Multi-Region deployment
+# kasm_deployment_regions = ["us-west2", "asia-southeast1"]   # Use multiple regions for Multi-Region deployment
 
 ## DNS Zone settings
 create_public_dns_zone    = true
@@ -24,7 +24,7 @@ show_passwords                        = true
 kasm_domain_name  = "example.kasmweb.com"
 kasm_project_name = ""
 deployment_type   = "Multi-Server" # Valid values Multi-Region or Multi-Server
-kasm_version      = "developer preview"
+kasm_version      = "developer_preview"
 kasm_download_url = "https://kasmweb-build-artifacts.s3.amazonaws.com/kasm_backend/branches/develop/kasm_workspaces_develop.tar.gz"
 
 ## Kasm VM instance configurations
