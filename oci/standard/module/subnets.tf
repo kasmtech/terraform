@@ -38,7 +38,7 @@ resource "oci_core_subnet" "db" {
   display_name    = "${var.project_name}-db-subnet"
   dns_label       = "${var.project_name}db"
   security_list_ids = [
-    oci_core_security_list.allow_db_redis.id,
+    oci_core_security_list.allow_db.id,
     oci_core_security_list.allow_bastion_ssh.id
   ]
 }

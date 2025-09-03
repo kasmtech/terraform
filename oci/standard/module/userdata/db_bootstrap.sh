@@ -17,6 +17,6 @@ wget  ${kasm_build_url} -O kasm_workspaces.tar.gz
 tar -xf kasm_workspaces.tar.gz
 
 sleep 30
-bash kasm_release/install.sh -S db -e -Q ${database_password} -R ${redis_password} -U ${user_password} -P ${admin_password} -M ${manager_token} -k ${service_registration_token}
+bash kasm_release/install.sh -S db -e -Q ${database_password} -U ${user_password} -P ${admin_password} -M ${manager_token} -k ${service_registration_token}
 
 echo "Done"

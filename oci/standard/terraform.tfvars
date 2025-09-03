@@ -29,7 +29,6 @@ allow_web_cidrs = ["0.0.0.0/0"]
 manager_token              = "changeme"
 admin_password             = "changeme"
 user_password              = "changeme"
-redis_password             = "changeme"
 database_password          = "changeme"
 service_registration_token = "changeme"
 

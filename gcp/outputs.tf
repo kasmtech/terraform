@@ -13,7 +13,6 @@ output "kasm_passwords" {
     kasm_admin_password    = local.admin_password
     kasm_user_password     = local.user_password
     kasm_database_password = local.database_password
-    kasm_redis_password    = local.redis_password
     kasm_service_token     = local.service_token
     kasm_manager_token     = local.manager_token
   } : null

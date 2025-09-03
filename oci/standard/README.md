@@ -4,7 +4,7 @@ This project will deploy Kasm Workspaces in a multi-server deployment in OCI.
 
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://f.hubspotusercontent30.net/hubfs/5856039/terraform/diagrams/oci-multi-server.png "Diagram"
+[Image_Diagram]: ../readme_diagrams/oci_multi_server.png "Diagram"
 
 
 
@@ -106,7 +106,6 @@ No resources.
 | <a name="input_oci_domain_name"></a> [oci\_domain\_name](#input\_oci\_domain\_name) | The public Zone used for the dns entries. This must already exist in the OCI account. (e.g kasm.contoso.com). The deployment will be accessed via this zone name via https | `string` | n/a | yes |
 | <a name="input_private_key_path"></a> [private\_key\_path](#input\_private\_key\_path) | The path to the API Key PEM encoded Private Key | `string` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
-| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the Redis server. No special characters | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The OCI Region eg: (us-ashburn-1) | `string` | n/a | yes |
 | <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | n/a | yes |
 | <a name="input_ssh_authorized_keys"></a> [ssh\_authorized\_keys](#input\_ssh\_authorized\_keys) | The SSH Public Keys to be installed on the OCI compute instance | `string` | n/a | yes |

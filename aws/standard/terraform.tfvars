@@ -43,7 +43,6 @@ cpx_hdd_size_gb   = 50
 
 ## Kasm passwords
 database_password          = "changeme"
-redis_password             = "changeme"
 user_password              = "changeme"
 admin_password             = "changeme"
 manager_token              = "changeme"

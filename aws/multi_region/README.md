@@ -15,7 +15,7 @@ is deployed.
 
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-region-new.jpg "Diagram"
+[Image_Diagram]: ../readme_diagrams/multi_region.png  "Diagram"
 
 # Pre-Configuration
 
@@ -120,7 +120,6 @@ No resources.
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
 | <a name="input_proxy_hdd_size_gb"></a> [proxy\_hdd\_size\_gb](#input\_proxy\_hdd\_size\_gb) | The HDD size in GB to configure for the Kasm dedicated proxy instances | `number` | n/a | yes |
 | <a name="input_proxy_instance_type"></a> [proxy\_instance\_type](#input\_proxy\_instance\_type) | The instance type for the dedicated proxy node | `string` | `""` | no |
-| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the Redis server. No special characters | `string` | n/a | yes |
 | <a name="input_secondary_regions_settings"></a> [secondary\_regions\_settings](#input\_secondary\_regions\_settings) | Map of Kasm settings for secondary regions | <pre>map(object({<br>    agent_region   = string<br>    agent_vpc_cidr = string<br>    ec2_ami_id     = string<br>    })<br>  )</pre> | n/a | yes |
 | <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | n/a | yes |
 | <a name="input_ssh_access_cidrs"></a> [ssh\_access\_cidrs](#input\_ssh\_access\_cidrs) | CIDR notation of the bastion host allowed to SSH in to the machines | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |

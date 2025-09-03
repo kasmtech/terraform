@@ -40,7 +40,6 @@ module "kasm" {
   manager_token              = var.manager_token
   admin_password             = var.admin_password
   user_password              = var.user_password
-  redis_password             = var.redis_password
   database_password          = var.database_password
   service_registration_token = var.service_registration_token
 }

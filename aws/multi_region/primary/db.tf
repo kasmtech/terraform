@@ -15,7 +15,6 @@ resource "aws_instance" "db" {
       kasm_build_url             = var.kasm_build
       user_password              = var.user_password
       admin_password             = var.admin_password
-      redis_password             = var.redis_password
       database_password          = var.database_password
       manager_token              = var.manager_token
       service_registration_token = var.service_registration_token

@@ -5,7 +5,7 @@ Each role is placed in a separate subnet and traffic from user sessions on the A
 
 ![Diagram][Image_Diagram]
 
-[Image_Diagram]: https://5856039.fs1.hubspotusercontent-na1.net/hubfs/5856039/terraform/diagrams/aws-multi-server-new.jpg "Diagram"
+[Image_Diagram]: ../readme_diagrams/multi_server_single_region.png "Diagram"
 
 # Pre-Configuration
 
@@ -98,7 +98,6 @@ No resources.
 | <a name="input_num_cpx_nodes"></a> [num\_cpx\_nodes](#input\_num\_cpx\_nodes) | The number of Agent Role Servers to create in the deployment | `number` | n/a | yes |
 | <a name="input_num_webapps"></a> [num\_webapps](#input\_num\_webapps) | The number of WebApp role servers to create in the deployment | `number` | n/a | yes |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | The name of the deployment (e.g dev, staging). A short single word | `string` | n/a | yes |
-| <a name="input_redis_password"></a> [redis\_password](#input\_redis\_password) | The password for the Redis server. No special characters | `string` | n/a | yes |
 | <a name="input_service_registration_token"></a> [service\_registration\_token](#input\_service\_registration\_token) | The service registration token value for cpx RDP servers to authenticate to webapps. No special characters | `string` | n/a | yes |
 | <a name="input_swap_size"></a> [swap\_size](#input\_swap\_size) | The amount of swap (in MB) to configure inside the compute instances | `number` | n/a | yes |
 | <a name="input_user_password"></a> [user\_password](#input\_user\_password) | The standard (non administrator) user password. No special characters | `string` | n/a | yes |

@@ -9,7 +9,6 @@ project_name = ""
 
 ## Kasm passwords
 database_password          = "changeme"
-redis_password             = "changeme"
 user_password              = "changeme"
 admin_password             = "changeme"
 manager_token              = "changeme"
