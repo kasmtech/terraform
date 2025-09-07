@@ -19,6 +19,7 @@ ZONE
 output "ssh_keys" {
   description = "SSH Keys to be used with your Kasm Deployment"
   value       = module.ssh_keys.ssh_key_info
+  sensitive   = true
 }
 #########################################################################
 #

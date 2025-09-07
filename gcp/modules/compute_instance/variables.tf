@@ -81,6 +81,7 @@ variable "allow_stopping_for_update" {
   default     = false
 }
 
+## If `destroy` doesn't work, please change the default to true, `apply`, and then try `destroy` again. 
 variable "instance_delete_protection" {
   description = "Prevent instance from accidental deletion"
   type        = bool

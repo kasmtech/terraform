@@ -380,6 +380,6 @@ variable "aws_default_tags" {
   type        = map(any)
   default = {
     Service_name = "Kasm Workspaces"
-    Kasm_version = "1.14"
+    Kasm_version = "1.18"
   }
 }

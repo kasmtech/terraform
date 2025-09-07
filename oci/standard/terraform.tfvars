@@ -2,7 +2,7 @@
 oci_domain_name = "kasm.contoso.com"
 project_name    = "contoso"
 vcn_subnet_cidr = "10.0.0.0/16"
-kasm_build_url  = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.17.0.bbc15c.tar.gz"
+kasm_build_url  = "https://kasmweb-build-artifacts.s3.amazonaws.com/kasm_backend/branches/develop/kasm_workspaces_develop.tar.gz"
 
 ## OCI Authentication variables
 tenancy_ocid     = ""
