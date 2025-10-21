@@ -83,5 +83,5 @@ aws_default_tags = {
   Deployed_by     = "Terraform"
   Deployment_type = "Multi-Region"
   Service_name    = "Kasm Workspaces"
-  Kasm_version    = "developer_preview"
+  Kasm_version    = "1.18.0"
 }
