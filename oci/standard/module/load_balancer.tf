@@ -44,7 +44,7 @@ resource "oci_load_balancer_backend_set" "public" {
     protocols = [
       "TLSv1.2"
     ]
-    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.this.name
+    cipher_suite_name       = "oci-default-ssl-cipher-suite-v1"
     certificate_name        = oci_load_balancer_certificate.public.certificate_name
     verify_peer_certificate = false
   }
@@ -76,12 +76,7 @@ resource "oci_load_balancer_listener" "kasm_https_ssl_listener" {
     ]
     server_order_preference = "ENABLED"
     verify_peer_certificate = false
-    cipher_suite_name       = data.oci_load_balancer_ssl_cipher_suite.this.name
+    cipher_suite_name       = "oci-default-ssl-cipher-suite-v1"
     certificate_name        = oci_load_balancer_certificate.public.certificate_name
   }
-}
-
-data "oci_load_balancer_ssl_cipher_suite" "this" {
-  name             = "oci-default-ssl-cipher-suite-v1"
-  load_balancer_id = oci_load_balancer.public.id
 }
