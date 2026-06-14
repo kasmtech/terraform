@@ -13,6 +13,8 @@ cd /tmp
 
 PRIVATE_IP=(`hostname -I | cut -d ' ' -f1 | tr -d '\\n'`)
 
+sleep 60
+
 wget  ${kasm_build_url} -O kasm_workspaces.tar.gz
 tar -xf kasm_workspaces.tar.gz
 
@@ -24,7 +26,6 @@ echo -e "${nginx_key_in}" > /opt/kasm/current/certs/kasm_nginx.key
 
 echo "Stopping and restarting Kasm services to apply certificates..."
 /opt/kasm/bin/stop
-docker rm $(docker ps -aq)
 /opt/kasm/bin/start
 
 echo "Done"
