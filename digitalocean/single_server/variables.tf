@@ -77,7 +77,7 @@ variable "digital_ocean_image" {
 variable "kasm_build_url" {
   description = "The Kasm build file to install"
   type        = string
-  default     = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.12.0.d4fd8a.tar.gz"
+  default     = "https://kasm-static-content.s3.amazonaws.com/kasm_release_1.19.0-latest.tar.gz"
 }
 
 variable "user_password" {
