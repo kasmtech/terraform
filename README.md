@@ -20,6 +20,7 @@ Administators should review the projects and add additional customizations and s
 - [GCP Requirements](gcp/README.md)
 - [Multi-Server Single Region](gcp/MULTI_SERVER.md)
 - [Multi-Region](gcp/MULTI_REGION.md)
-## Reporting Issues
+
+# Reporting Issues
 
 To report any issues for this repository, please use our central issue tracker: **[Kasm Workspaces Issue Tracker](https://github.com/kasmtech/workspaces-issues/issues)**
